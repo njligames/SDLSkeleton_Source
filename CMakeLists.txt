@@ -24,7 +24,7 @@ if(ANDROID)
 
     list(APPEND PROJECT_SOURCES "platform/android/native-lib.cpp")
 
-    configure_file("${CMAKE_SOURCE_DIR}/../resources/platform/android/strings.xml.in" "${CMAKE_SOURCE_DIR}/../resources/platform/android/res/values/strings.xml")
+    configure_file("${CMAKE_SOURCE_DIR}/../src/resources/platform/android/strings.xml.in" "${CMAKE_SOURCE_DIR}/../src/resources/platform/android/res/values/strings.xml")
 
 
 # Creates and names a library, sets it as either STATIC
