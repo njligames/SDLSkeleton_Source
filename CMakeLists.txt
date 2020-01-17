@@ -23,8 +23,6 @@ if(ANDROID)
 
     list(APPEND PROJECT_SOURCES "platform/android/native-lib.cpp")
 
-#    configure_file("${CMAKEIN_REPO_DIRECTORY}/platform.in/facebook/facebook_shell.html.in"
-#            "${CMAKE_BINARY_DIR}/facebook_shell.html")
     configure_file("${CMAKE_SOURCE_DIR}/../resources/platform/android/strings.xml.in" "${CMAKE_SOURCE_DIR}/../resources/platform/android/res/values/strings.xml")
 endif()
 
@@ -69,3 +67,8 @@ target_link_libraries( # Specifies the target library.
         # Links the target library to the log library
         # included in the NDK.
         ${log-lib})
+
+if(NOT ANDROID)
+    enable_testing()
+    add_subdirectory(test)
+endif()
