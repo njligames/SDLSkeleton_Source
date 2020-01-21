@@ -25,7 +25,8 @@ target_link_libraries( ${CMAKE_PROJECT_NAME} ${TARGET_LIBRARIES})
 
 if(TARGET_PROJECT_SOURCES)
     add_library(${CMAKE_PROJECT_NAME}-static STATIC ${TARGET_PROJECT_SOURCES})
-    target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
-    target_link_libraries( ${CMAKE_PROJECT_NAME} ${TARGET_LIBRARIES})
+    target_compile_definitions(${CMAKE_PROJECT_NAME}-static PUBLIC ${TARGET_DEFINITIONS})
+    target_link_libraries( ${CMAKE_PROJECT_NAME}-static ${TARGET_LIBRARIES})
+    set_target_properties(${CMAKE_PROJECT_NAME}-static PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${TARGET_INCLUDE_DIRS}")
 endif()
 
