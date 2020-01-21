@@ -1,30 +1,27 @@
-# For more information about using CMake with Android Studio, read the
-# documentation: https://d.android.com/studio/projects/add-native-code.html
-
-# Sets the minimum version of CMake required to build the native library.
-
 cmake_minimum_required(VERSION 3.4.1)
 
 project(SDLSkeleton)
 
+include(CheckCXXCompilerFlag)
+
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX11)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+elseif(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+else()
+    message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+endif()
+
 set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty")
+set(RESOURCES_DIR "${CMAKE_SOURCE_DIR}/resources")
 set(TARGET_DEFINITIONS "")
-set(TARGET_LIBRARIES "")
-SET(TARGET_MAIN_SOURCES "main.cpp")
-SET(TARGET_PROJECT_SOURCES "")
+SET(TARGET_MAIN_SOURCES "${CMAKE_SOURCE_DIR}/main.cpp")
 
 add_subdirectory(platform)
 
-if(ANDROID)
-    add_library(native-lib SHARED ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES})
-    target_compile_definitions(native-lib PUBLIC ${TARGET_DEFINITIONS})
-    target_link_libraries( native-lib ${TARGET_LIBRARIES})
-else()
-    add_executable(${CMAKE_PROJECT_NAME} SHARED ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES})
-    target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
-    target_link_libraries( ${CMAKE_PROJECT_NAME} ${TARGET_LIBRARIES})
-
+if(NOT ANDROID)
     enable_testing()
     add_subdirectory(test)
 endif()
-

@@ -1,0 +1,31 @@
+add_library(SDL2 UNKNOWN IMPORTED)
+set_property(TARGET SDL2 APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/macos/libSDL2.a")
+list(APPEND TARGET_LIBRARIES SDL2)
+
+add_library(SDL_test UNKNOWN IMPORTED)
+set_property(TARGET SDL_test APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/macos/libSDL_test.a")
+list(APPEND TARGET_LIBRARIES SDL_test)
+
+list(APPEND TARGET_LIBRARIES "-framework CoreVideo")
+list(APPEND TARGET_LIBRARIES "-framework Cocoa")
+list(APPEND TARGET_LIBRARIES "-framework IOKit")
+list(APPEND TARGET_LIBRARIES "-framework ForceFeedback")
+list(APPEND TARGET_LIBRARIES "-framework Carbon")
+list(APPEND TARGET_LIBRARIES "-framework CoreAudio")
+list(APPEND TARGET_LIBRARIES "-framework AudioToolbox")
+list(APPEND TARGET_LIBRARIES "-framework Metal")
+
+set_target_properties(SDL2 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${THIRDPARTY_DIR}/includes/SDL2")
+
+list(APPEND TARGET_PROJECT_SOURCES "")
+
+add_executable(${CMAKE_PROJECT_NAME} ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES})
+target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
+target_link_libraries( ${CMAKE_PROJECT_NAME} ${TARGET_LIBRARIES})
+
+if(TARGET_PROJECT_SOURCES)
+    add_library(${CMAKE_PROJECT_NAME}-static STATIC ${TARGET_PROJECT_SOURCES})
+    target_compile_definitions(${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
+    target_link_libraries( ${CMAKE_PROJECT_NAME} ${TARGET_LIBRARIES})
+endif()
+

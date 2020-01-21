@@ -1,21 +1,25 @@
-
 add_library(hidapi UNKNOWN IMPORTED)
+set_property(TARGET hidapi APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/android/${ANDROID_ABI}/libhidapi.so")
+list(APPEND TARGET_LIBRARIES hidapi)
+
 add_library(main UNKNOWN IMPORTED)
+set_property(TARGET main APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/android/${ANDROID_ABI}/libmain.so")
+list(APPEND TARGET_LIBRARIES main)
+
 add_library(SDL2 UNKNOWN IMPORTED)
+set_property(TARGET SDL2 APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/android/${ANDROID_ABI}/libSDL2.so")
+list(APPEND TARGET_LIBRARIES SDL2)
 
 set_target_properties(SDL2 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${THIRDPARTY_DIR}/includes/SDL2")
 
-set_property(TARGET hidapi APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/android/${ANDROID_ABI}/libhidapi.so")
-set_property(TARGET main APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/android/${ANDROID_ABI}/libmain.so")
-set_property(TARGET SDL2 APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/android/${ANDROID_ABI}/libSDL2.so")
-
-list(APPEND TARGET_PROJECT_SOURCES "platform/android/native-lib.cpp")
-
-configure_file("${CMAKE_SOURCE_DIR}/../src/resources/platform/android/strings.xml.in" "${CMAKE_SOURCE_DIR}/../src/resources/platform/android/res/values/strings.xml")
-
 find_library( log-lib log)
-
-list(APPEND TARGET_LIBRARIES SDL2)
-list(APPEND TARGET_LIBRARIES hidapi)
-list(APPEND TARGET_LIBRARIES main)
 list(APPEND TARGET_LIBRARIES ${log-lib})
+
+list(APPEND TARGET_PROJECT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/native-lib.cpp")
+
+configure_file("${RESOURCES_DIR}/platform/android/strings.xml.in" "${RESOURCES_DIR}/platform/android/res/values/strings.xml")
+
+add_library(native-lib SHARED ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES})
+target_compile_definitions(native-lib PUBLIC ${TARGET_DEFINITIONS})
+target_link_libraries( native-lib ${TARGET_LIBRARIES})
+

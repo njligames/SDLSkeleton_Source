@@ -2,15 +2,15 @@
 #include "gtest/gtest.h"
 
 // The fixture for testing class Foo.
-class TestCurlExample : public ::testing::Test {
+class TestExample : public ::testing::Test {
 
 protected:
 
     // You can do set-up work for each test here.
-    TestCurlExample();
+    TestExample();
 
     // You can do clean-up work that doesn't throw exceptions here.
-    virtual ~TestCurlExample();
+    virtual ~TestExample();
 
     // If the constructor and destructor are not enough for setting up
     // and cleaning up each test, you can define the following methods:
