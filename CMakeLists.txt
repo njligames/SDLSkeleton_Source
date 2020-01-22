@@ -15,13 +15,8 @@ else()
 endif()
 
 set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty")
-set(RESOURCES_DIR "${CMAKE_SOURCE_DIR}/resources")
 set(TARGET_DEFINITIONS "")
-SET(TARGET_MAIN_SOURCES "${CMAKE_SOURCE_DIR}/main.cpp")
+set(TARGET_MAIN_SOURCES "${CMAKE_SOURCE_DIR}/main.cpp")
+set(TARGET_PLATFORM "none")
 
 add_subdirectory(platform)
-
-if(NOT ANDROID)
-    enable_testing()
-    add_subdirectory(test)
-endif()
