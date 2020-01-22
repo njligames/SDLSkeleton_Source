@@ -19,9 +19,9 @@ list(APPEND TARGET_PROJECT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/native-lib.cpp")
 
 configure_file("${RESOURCES_DIR}/platform/android/strings.xml.in" "${RESOURCES_DIR}/platform/android/res/values/strings.xml")
 
-#MESSAGE(FATAL_ERROR "RESOURCES_DIR ${RESOURCES_DIR}")
-
 add_library(native-lib SHARED ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES})
 target_compile_definitions(native-lib PUBLIC ${TARGET_DEFINITIONS})
 target_link_libraries( native-lib ${TARGET_LIBRARIES})
+set_target_properties(native-lib PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${TARGET_INCLUDE_DIRS}")
+include_directories(${TARGET_INCLUDE_DIRS})
 

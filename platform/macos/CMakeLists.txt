@@ -28,5 +28,6 @@ if(TARGET_PROJECT_SOURCES)
     target_compile_definitions(${CMAKE_PROJECT_NAME}-static PUBLIC ${TARGET_DEFINITIONS})
     target_link_libraries( ${CMAKE_PROJECT_NAME}-static ${TARGET_LIBRARIES})
     set_target_properties(${CMAKE_PROJECT_NAME}-static PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${TARGET_INCLUDE_DIRS}")
+    include_directories(${TARGET_INCLUDE_DIRS})
 endif()
 

@@ -16,7 +16,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-
+#include "TestClass.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #endif
