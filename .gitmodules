@@ -1,6 +1,3 @@
-[submodule "resources"]
-	path = resources
-	url = https://github.com/jfolk1/SDLSkeleton_Resources.git
 [submodule "thirdparty"]
 	path = thirdparty
 	url = https://github.com/jfolk1/SDLSkeleton_Thirdparty.git
