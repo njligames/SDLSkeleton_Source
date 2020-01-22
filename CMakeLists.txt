@@ -18,5 +18,6 @@ set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty")
 set(TARGET_DEFINITIONS "")
 set(TARGET_MAIN_SOURCES "${CMAKE_SOURCE_DIR}/main.cpp")
 set(TARGET_PLATFORM "none")
+set(TARGET_BUNDLE_ID "com.njligames.${CMAKE_PROJECT_NAME}")
 
 add_subdirectory(platform)
