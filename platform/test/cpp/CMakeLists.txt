@@ -3,18 +3,18 @@ if (TARGET ${CMAKE_PROJECT_NAME}-static)
     file(GLOB SRCS ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
     file(GLOB HDRS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 
-    ADD_EXECUTABLE(Test-${CMAKE_PROJECT_NAME}-static ${SRCS} ${HDRS})
+    ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}-static-test ${SRCS} ${HDRS})
 
     TARGET_LINK_LIBRARIES(
-      Test-${CMAKE_PROJECT_NAME}-static
+      ${CMAKE_PROJECT_NAME}-static-test
       ${CMAKE_PROJECT_NAME}-static
       ${GTEST_LIBRARY}
       ${GMOCK_LIBRARY}
     )
 
-    set_target_properties(Test-${CMAKE_PROJECT_NAME}-static PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}")
+    set_target_properties(${CMAKE_PROJECT_NAME}-static-test PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${CMAKE_CURRENT_SOURCE_DIR}")
 
-    add_test(NAME Test-${CMAKE_PROJECT_NAME}-static COMMAND Test-${CMAKE_PROJECT_NAME}-static)
+    add_test(NAME ${CMAKE_PROJECT_NAME}-static-test COMMAND ${CMAKE_PROJECT_NAME}-static-test)
 endif()
 
 
