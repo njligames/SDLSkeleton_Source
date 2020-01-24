@@ -1,3 +1,4 @@
+
 add_library(hidapi UNKNOWN IMPORTED)
 set_property(TARGET hidapi APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/android/${ANDROID_ABI}/libhidapi.so")
 list(APPEND TARGET_LIBRARIES hidapi)
