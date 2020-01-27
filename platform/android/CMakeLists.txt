@@ -18,7 +18,7 @@ list(APPEND TARGET_LIBRARIES ${log-lib})
 
 list(APPEND TARGET_PROJECT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/native-lib.cpp")
 
-configure_file("${RESOURCES_DIR}/platform/android/strings.xml.in" "${RESOURCES_DIR}/platform/android/res/values/strings.xml")
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/resources/strings.xml.in" "${CMAKE_CURRENT_SOURCE_DIR}/resources/res/values/strings.xml")
 
 add_library(native-lib SHARED ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES})
 target_compile_definitions(native-lib PUBLIC ${TARGET_DEFINITIONS})

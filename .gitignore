@@ -1,4 +1,5 @@
 build_*
 buildbot_*
+.build_*
 
 .DS_Store

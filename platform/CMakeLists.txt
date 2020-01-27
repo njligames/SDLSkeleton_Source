@@ -1,6 +1,4 @@
 
-set(RESOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/resources")
-
 if(EMSCRIPTEN)
     set(TARGET_PLATFORM "emscripten")
     list(APPEND TARGET_DEFINITIONS "__EMSCRIPTEN__=1")
@@ -53,6 +51,8 @@ elseif(ANDROID)
     set(TARGET_PLATFORM "android")
     list(APPEND TARGET_DEFINITIONS "__ANDROID__=1")
 endif()
+
+set(TARGET_RESOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/shared/resources)
 
 list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/shared)
 add_subdirectory(shared)
