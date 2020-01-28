@@ -52,7 +52,10 @@ elseif(ANDROID)
     list(APPEND TARGET_DEFINITIONS "__ANDROID__=1")
 endif()
 
-set(TARGET_RESOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/shared/resources)
+set(TARGET_PROJECT_SOURCES "")
+set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/shared/resources")
+
+# set(TARGET_RESOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/shared/resources)
 
 list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/shared)
 add_subdirectory(shared)
@@ -60,10 +63,4 @@ add_subdirectory(shared)
 list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/${TARGET_PLATFORM})
 add_subdirectory(${TARGET_PLATFORM})
 
-if(NOT ANDROID)
-    enable_testing()
-    add_subdirectory(test)
-
-    add_subdirectory(doc)
-endif()
 

@@ -139,8 +139,8 @@ else
   cmake -E env CFLAGS='-O0 -g' cmake .. -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
 fi
 
-cmake --build . --target clean
-cmake --build . --config ${CONFIGURATION} # --target install
+# cmake --build . --target clean
+# cmake --build . --config ${CONFIGURATION} # --target install
 
 cd ..
 

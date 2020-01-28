@@ -36,6 +36,8 @@ static SDL_BlendMode blendMode = SDL_BLENDMODE_NONE;
 
 int done;
 
+TestClass testClass;
+
 void
 DrawPoints(SDL_Renderer * renderer)
 {
@@ -196,6 +198,8 @@ loop()
         DrawRects(renderer);
         DrawLines(renderer);
         DrawPoints(renderer);
+        
+        testClass.loadfile(renderer);
 
         SDL_RenderPresent(renderer);
     }

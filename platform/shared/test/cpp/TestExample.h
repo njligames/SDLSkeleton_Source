@@ -1,6 +1,8 @@
 
 #include "gtest/gtest.h"
 
+ #include "SDL_test_common.h"
+
 // The fixture for testing class Foo.
 class TestExample : public ::testing::Test {
 
@@ -22,6 +24,18 @@ protected:
     // Code here will be called immediately after each test (right
     // before the destructor).
     virtual void TearDown();
+
+    
+    SDLTest_CommonState *state;
+    typedef struct {
+        SDL_Window *window;
+        SDL_Renderer *renderer;
+        SDL_Texture *background;
+        SDL_Texture *sprite;
+        SDL_Rect sprite_rect;
+        int scale_direction;
+    } DrawState;
+    DrawState *drawstates;
 };
 
 
