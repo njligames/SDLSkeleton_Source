@@ -55,8 +55,6 @@ endif()
 set(TARGET_PROJECT_SOURCES "")
 set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/shared/resources")
 
-# set(TARGET_RESOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/shared/resources)
-
 list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/shared)
 add_subdirectory(shared)
 
