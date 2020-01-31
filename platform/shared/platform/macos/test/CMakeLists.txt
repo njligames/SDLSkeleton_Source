@@ -73,8 +73,5 @@ add_dependencies(${GMOCK_MAIN_LIBRARY} ${GTEST_LIBRARY})
 include_directories("${GTEST_INCLUDE_DIRS}"
                     "${GMOCK_INCLUDE_DIRS}")
 
-set( TARGET_RESOURCES ${TARGET_RESOURCES} ${ASSET_CATALOGUE} )
-set( TARGET_RESOURCES ${TARGET_RESOURCES} ${ASSET_CATALOGUE} PARENT_SCOPE )
-
 add_subdirectory(cpp)
 
