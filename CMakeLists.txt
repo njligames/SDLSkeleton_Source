@@ -73,7 +73,7 @@ elseif(ANDROID)
     list(APPEND TARGET_DEFINITIONS "__ANDROID__=1")
 endif()
 
-set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/platform/resources")
+set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/resources")
 
-add_subdirectory(platform)
+add_subdirectory(src)
 
