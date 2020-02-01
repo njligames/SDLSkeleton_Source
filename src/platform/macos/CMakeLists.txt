@@ -44,7 +44,44 @@ if(TARGET_PROJECT_SOURCES)
     target_compile_definitions(${CMAKE_PROJECT_NAME}-static PUBLIC ${TARGET_DEFINITIONS})
     target_link_libraries( ${CMAKE_PROJECT_NAME}-static ${TARGET_LIBRARIES})
     set_property(TARGET ${CMAKE_PROJECT_NAME}-static PROPERTY INCLUDE_DIRECTORIES ${TARGET_INCLUDE_DIRS})
+
+    install(TARGETS ${CMAKE_PROJECT_NAME}-static EXPORT ${CMAKE_PROJECT_NAME}Targets
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION archive
+        RUNTIME DESTINATION bin)
+
+    set(INCLUDE_FILES "")
+    foreach(include_dir ${TARGET_INCLUDE_DIRS})
+        set(_INCLUDE_FILES "")
+        file(GLOB _INCLUDE_FILES ${include_dir}/*.h*)
+        list(APPEND INCLUDE_FILES ${INCLUDE_FILES})
+    endforeach()
+
+    install(FILES ${INCLUDE_FILES} DESTINATION include/${CMAKE_PROJECT_NAME})
+
+    add_library(${CMAKE_PROJECT_NAME}Framework SHARED ${TARGET_PROJECT_SOURCES})
+    target_compile_definitions(${CMAKE_PROJECT_NAME}Framework PUBLIC ${TARGET_DEFINITIONS})
+    target_link_libraries( ${CMAKE_PROJECT_NAME}Framework ${TARGET_LIBRARIES})
+    set_property(TARGET ${CMAKE_PROJECT_NAME}Framework PROPERTY INCLUDE_DIRECTORIES ${TARGET_INCLUDE_DIRS})
+    set_target_properties(${CMAKE_PROJECT_NAME}Framework PROPERTIES
+        FRAMEWORK TRUE
+        FRAMEWORK_VERSION C
+        MACOSX_FRAMEWORK_IDENTIFIER ${TARGET_BUNDLE_ID}.macOS.framework
+        MACOSX_FRAMEWORK_INFO_PLIST ${CMAKE_BINARY_DIR}/Info.plist
+        VERSION 1.0.0
+        SOVERSION 1.0.0
+        PUBLIC_HEADER dynamicFramework.h
+        XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Mac Developer"
+        )
+
+    install(TARGETS ${CMAKE_PROJECT_NAME}Framework EXPORT ${CMAKE_PROJECT_NAME}Targets
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION archive
+        RUNTIME DESTINATION bin
+        FRAMEWORK DESTINATION framework)
+
 endif()
+
 
 enable_testing()
 add_subdirectory(test)
