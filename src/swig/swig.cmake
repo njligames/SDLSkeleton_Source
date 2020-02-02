@@ -36,7 +36,7 @@ macro(LUA_SWIG INTERFACE_NAME)
     #     MESSAGE(FATAL_ERROR "${CMAKE_PROJECT_NAME}_REPO_DIRECTORY variable is empty.")
     # endif ()
 
-    set(${INTERFACE_NAME}_SWIG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/swig.in/script/${BASE_PATH}/${INTERFACE_NAME_LOWER})
+    set(${INTERFACE_NAME}_SWIG_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../swig.in/${BASE_PATH}/${INTERFACE_NAME_LOWER})
     message(STATUS "${INTERFACE_NAME}_SWIG_INCLUDE_DIR ${${INTERFACE_NAME}_SWIG_INCLUDE_DIR}")
 
     if (NOT ${INTERFACE_NAME}_SWIG_INCLUDE_DIR)
@@ -63,9 +63,9 @@ macro(LUA_SWIG INTERFACE_NAME)
 
     list(APPEND LUA_SWIG_SOURCE_FILES "${${INTERFACE_NAME}_SWIG_INCLUDE_DIR}/${INTERFACE_NAME_LOWER}.i")
 
-    SUBDIRLIST(SUBDIRS "${${INTERFACE_NAME}_SWIG_INCLUDE_DIR}" ${INTERFACE_NAME}_SWIG_INCLUDE_DIRS)
+    # SUBDIRLIST(SUBDIRS "${${INTERFACE_NAME}_SWIG_INCLUDE_DIR}" ${INTERFACE_NAME}_SWIG_INCLUDE_DIRS)
 
-    list(APPEND ${INTERFACE_NAME}_SWIG_INCLUDE_DIRS ${${INTERFACE_NAME}_INCLUDE_DIRS})
+    # list(APPEND ${INTERFACE_NAME}_SWIG_INCLUDE_DIRS ${${INTERFACE_NAME}_INCLUDE_DIRS})
 
     set(CMAKE_SWIG_FLAGS "-includeall")
     list(APPEND CMAKE_SWIG_FLAGS "-fvirtual")
@@ -246,12 +246,12 @@ else ()
         # configure_file("${CMAKE_BINARY_DIR}/swig.in/script/njlic/_Defines.swg.in" "${CMAKE_BINARY_DIR}/swig.in/script/njlic/_Defines.swg")
 
         if (ANDROID)
-            LUA_SWIG(NJLIC TRUE)
-            LUA_SWIG(BULLET3 TRUE "thirdparty")
+            LUA_SWIG(${CMAKE_PROJECT_NAME} TRUE)
+            # LUA_SWIG(BULLET3 TRUE "thirdparty")
             # LUA_SWIG(GLM "thirdparty")
         else ()
-            LUA_SWIG(NJLIC FALSE)
-            LUA_SWIG(BULLET3 FALSE "thirdparty")
+            LUA_SWIG(${CMAKE_PROJECT_NAME} FALSE)
+            # LUA_SWIG(BULLET3 FALSE "thirdparty")
             # LUA_SWIG(GLM "thirdparty")
         endif ()
 
