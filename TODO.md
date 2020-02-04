@@ -1,5 +1,5 @@
 X * Link in the resources directory
-* setup swig for lua, python and javascript.
+X * setup swig for lua, python and javascript.
 * setup clang build
 *
 

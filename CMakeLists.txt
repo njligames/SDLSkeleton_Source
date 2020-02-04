@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4.1)
+cmake_minimum_required(VERSION 3.5.1)
 
 project(SDLSkeleton)
 
@@ -22,7 +22,7 @@ set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty")
 set(TARGET_DEFINITIONS "")
 set(TARGET_MAIN_SOURCES "${CMAKE_SOURCE_DIR}/main.cpp")
 set(TARGET_PLATFORM "none")
-set(TARGET_BUNDLE_ID "com.njligames.${CMAKE_PROJECT_NAME}")
+set(TARGET_BUNDLE_ID "com.njligames.engine.${CMAKE_PROJECT_NAME}")
 
 if(EMSCRIPTEN)
     set(TARGET_PLATFORM "emscripten")
