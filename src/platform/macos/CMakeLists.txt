@@ -1,3 +1,4 @@
+set(XCODE_DEVELOPMENT_TEAM $ENV{XCODE_DEVELOPMENT_TEAM})
 
 add_library(SDL2 UNKNOWN IMPORTED)
 set_property(TARGET SDL2 APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/macos/libSDL2.a")
@@ -21,7 +22,6 @@ list(APPEND TARGET_LIBRARIES "-framework AudioToolbox")
 list(APPEND TARGET_LIBRARIES "-framework Metal")
 
 set(ASSET_CATALOGUE ${CMAKE_CURRENT_SOURCE_DIR}/resources/Assets.xcassets)
-
 list(APPEND TARGET_RESOURCES ${ASSET_CATALOGUE})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/Info.plist.in ${CMAKE_BINARY_DIR}/Info.plist)

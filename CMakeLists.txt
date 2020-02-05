@@ -18,6 +18,7 @@ else()
     message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
+set(TARGET_EXECUTABLE_NAME "PLACEHOLDER" CACHE STRING "The name of the executable")
 set(THIRDPARTY_DIR "${CMAKE_SOURCE_DIR}/thirdparty")
 set(TARGET_DEFINITIONS "")
 set(TARGET_MAIN_SOURCES "${CMAKE_SOURCE_DIR}/main.cpp")
@@ -77,7 +78,7 @@ elseif(ANDROID)
     list(APPEND TARGET_DEFINITIONS "__ANDROID__=1")
 endif()
 
-set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/resources")
+set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/assets")
 
 add_subdirectory(src)
 

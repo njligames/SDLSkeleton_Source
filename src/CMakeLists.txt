@@ -17,5 +17,5 @@ if(NOT ANDROID)
     add_subdirectory(doc)
 endif()
 
-add_subdirectory(swig)
+# add_subdirectory(swig)
 
