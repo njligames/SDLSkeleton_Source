@@ -4,8 +4,8 @@ project(SDLSkeleton)
 
 include(CheckCXXCompilerFlag)
 
-cmake_policy(SET CMP0078 OLD)
-cmake_policy(SET CMP0086 OLD)
+# cmake_policy(SET CMP0078 OLD)
+# cmake_policy(SET CMP0086 OLD)
 
 
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
