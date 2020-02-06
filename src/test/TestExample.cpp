@@ -11,15 +11,27 @@ TestExample::~TestExample() {};
 
 void TestExample::SetUp() {
     
+    SDL_SetMainReady();
+    
     char *argv[] = {"", nullptr};
     state = SDLTest_CommonCreateState(argv, SDL_INIT_VIDEO);
     
     if (!SDLTest_CommonInit(state)) {
 //        quit(2);
     }
+    
+    /* Create the windows and initialize the renderers */
+    for (int i = 0; i < state->num_windows; ++i) {
+        SDL_Renderer *renderer = state->renderers[i];
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+        SDL_SetRenderDrawColor(renderer, 0xA0, 0xA0, 0xA0, 0xFF);
+        SDL_RenderClear(renderer);
+    }
 };
 
-void TestExample::TearDown() {};
+void TestExample::TearDown() {
+    SDLTest_CommonQuit(state);
+};
 
 TEST(test_cookie_interface, ShouldReturnZero) {
     TestClass t(10);
