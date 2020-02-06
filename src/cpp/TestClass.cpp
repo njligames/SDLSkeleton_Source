@@ -60,7 +60,7 @@ TestClass::~TestClass(){}
 bool TestClass::loadfile(SDL_Renderer *renderer) {
     int w,h;
     
-    SDL_Texture *sprite = LoadTexture(renderer, "assets/sample.bmp", SDL_TRUE);
+    SDL_Texture *sprite = LoadTexture(renderer, (char*)"assets/sample.bmp", SDL_TRUE);
     if(nullptr == sprite) {
         SDL_Log("Could not find the sprite");
         return false;

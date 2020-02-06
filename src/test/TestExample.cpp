@@ -30,7 +30,7 @@ void TestExample::SetUp() {
 };
 
 void TestExample::TearDown() {
-    SDLTest_CommonQuit(state);
+//    SDLTest_CommonQuit(state);
 };
 
 TEST(test_cookie_interface, ShouldReturnZero) {

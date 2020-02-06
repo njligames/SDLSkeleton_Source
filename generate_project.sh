@@ -25,17 +25,13 @@ fi
 
 if [ "${PLATFORM}" == "emscripten" ]
 then
-  # export CC=/usr/bin/cc
-  # export CXX=/usr/bin/c++
+    source ${EMSDK_DIR}/emsdk_env.sh
 
-  # export EMSCRIPTEN_VERSION=1.37.9
-  export EMSCRIPTEN_VERSION=1.38.10
-  export EMSCRIPTEN_LOCATION=/Users/jamesfolk/Work/tools/emsdk/emscripten/${EMSCRIPTEN_VERSION}
-  export EMSCRIPTEN_INCLUDE_LOCATION=${EMSCRIPTEN_LOCATION}/system/include
+    export EMSCRIPTEN_INCLUDE_LOCATION=${EMSDK_DIR}/system/include
 
-  emcmake cmake .. \
-  -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
-  -G "Ninja"
+    emcmake cmake .. \
+        -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+        -G "Ninja"
 
 elif [ "${PLATFORM}" == "facebook" ]
 then
@@ -139,8 +135,8 @@ else
   cmake -E env CFLAGS='-O0 -g' cmake .. -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
 fi
 
-# cmake --build . --target clean
-# cmake --build . --config ${CONFIGURATION} # --target install
+cmake --build . --target clean
+cmake --build . --config ${CONFIGURATION} # --target install
 
 cd ..
 

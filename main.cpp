@@ -223,7 +223,7 @@ main(int argc, char *argv[])
     num_objects = NUM_OBJECTS;
 
     /* Initialize test framework */
-    state = SDLTest_CommonCreateState(argv, SDL_INIT_VIDEO);
+    state = SDLTest_CommonCreateState(argv, SDL_INIT_VIDEO | SDL_INIT_JOYSTICK);
     if (!state) {
         return 1;
     }
