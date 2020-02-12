@@ -927,12 +927,12 @@ static void Update() {
 
         SDL_GL_DeleteContext(gGlContext);
 
-        while (!gGameJoysticks.empty())
-          {
-            SDL_Joystick *joystick = gGameJoysticks.back();
-            gGameJoysticks.pop_back();
-            SDL_JoystickClose(joystick);
-          }
+        // while (!gGameJoysticks.empty())
+        //   {
+        //     SDL_Joystick *joystick = gGameJoysticks.back();
+        //     gGameJoysticks.pop_back();
+        //     SDL_JoystickClose(joystick);
+        //   }
 
         SDL_DestroyWindow(gWindow);
         SDL_Quit();
