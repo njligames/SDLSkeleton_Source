@@ -33,16 +33,16 @@ void TestExample::TearDown() {
 //    SDLTest_CommonQuit(state);
 };
 
-TEST(test_cookie_interface, ShouldReturnZero) {
-    TestClass t(10);
-    
-    ASSERT_EQ(t.increment(10), 20);
-}
+//TEST(test_cookie_interface, ShouldReturnZero) {
+//    TestClass t(10);
+//
+//    ASSERT_EQ(t.increment(10), 20);
+//}
 
 TEST_F(TestExample, loadfile) {
     bool ret = true;
     
-    TestClass t;
+    TestClass::create(nullptr, nullptr);
     
     drawstates = SDL_stack_alloc(DrawState, state->num_windows);
     for (int i = 0; i < state->num_windows; ++i) {
@@ -51,7 +51,7 @@ TEST_F(TestExample, loadfile) {
         drawstate->window = state->windows[i];
         drawstate->renderer = state->renderers[i];
         
-        ret = ret && t.loadfile(state->renderers[i]);
+        ret = ret && TestClass::get()->loadfile(state->renderers[i]);
         
 //        SDL_QueryTexture(drawstate->sprite, NULL, NULL, &drawstate->sprite_rect.w, &drawstate->sprite_rect.h);
         drawstate->scale_direction = 1;

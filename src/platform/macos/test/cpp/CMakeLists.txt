@@ -1,3 +1,7 @@
+add_library(SDL_test UNKNOWN IMPORTED)
+set_property(TARGET SDL_test APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/${TARGET_PLATFORM}/libSDL_test.a")
+list(APPEND TARGET_LIBRARIES SDL_test)
+
 list(APPEND TARGET_INCLUDE_DIRS ${GTEST_INCLUDE_DIRS})
 list(APPEND TARGET_INCLUDE_DIRS ${GMOCK_INCLUDE_DIRS})
 list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
@@ -31,7 +35,7 @@ set_target_properties(
     )
 
 target_compile_definitions( ${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
-target_link_libraries( ${CMAKE_PROJECT_NAME}-test-static ${CMAKE_PROJECT_NAME}-static ${GTEST_LIBRARY} ${GMOCK_LIBRARY})
+target_link_libraries( ${CMAKE_PROJECT_NAME}-test-static ${CMAKE_PROJECT_NAME}-static ${GTEST_LIBRARY} ${GMOCK_LIBRARY} ${TARGET_LIBRARIES})
 
 add_test(NAME ${CMAKE_PROJECT_NAME}-test-static COMMAND ${CMAKE_PROJECT_NAME}-test-static)
 
@@ -57,7 +61,7 @@ set_target_properties(
     )
 
 target_compile_definitions( ${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
-target_link_libraries( ${CMAKE_PROJECT_NAME}-test-framework ${CMAKE_PROJECT_NAME}Framework ${GTEST_LIBRARY} ${GMOCK_LIBRARY})
+target_link_libraries( ${CMAKE_PROJECT_NAME}-test-framework ${CMAKE_PROJECT_NAME}Framework ${GTEST_LIBRARY} ${GMOCK_LIBRARY} ${TARGET_LIBRARIES})
 
 add_test(NAME ${CMAKE_PROJECT_NAME}-test-framework COMMAND ${CMAKE_PROJECT_NAME}-test-framework)
 
