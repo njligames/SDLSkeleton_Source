@@ -4,9 +4,9 @@ add_library(SDL2 UNKNOWN IMPORTED)
 set_property(TARGET SDL2 APPEND PROPERTY IMPORTED_LOCATION "${THIRDPARTY_DIR}/platform/${TARGET_PLATFORM}/Release\$(EFFECTIVE_PLATFORM_NAME)/libSDL2.a")
 list(APPEND TARGET_LIBRARIES SDL2)
 
-add_library(SDL_test UNKNOWN IMPORTED)
-set_property(TARGET SDL_test APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/${TARGET_PLATFORM}/Release\$(EFFECTIVE_PLATFORM_NAME)/libSDL2test.a")
-list(APPEND TARGET_LIBRARIES SDL_test)
+# add_library(SDL_test UNKNOWN IMPORTED)
+# set_property(TARGET SDL_test APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/${TARGET_PLATFORM}/Release\$(EFFECTIVE_PLATFORM_NAME)/libSDL2test.a")
+# list(APPEND TARGET_LIBRARIES SDL_test)
 
 set_target_properties(SDL2 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${THIRDPARTY_DIR}/includes/SDL2)
 
@@ -17,20 +17,15 @@ list(APPEND TARGET_RESOURCES ${ASSET_CATALOGUE})
 
 set_source_files_properties( "${TARGET_RESOURCES}" PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-
-
-
-
-
-
-
 SET(CMAKE_OSX_SYSROOT "appletvos")
 SET(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-appletvos;-appletvsimulator")
 
+set(CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "10.0" CACHE STRING "Minimum supported iOS version")
+
 # https://svn.scolring.org/trunk/dependencies/CMake/toolchain/IOS.toolchain.cmake
-set(IOS_IPHONEOS_ARCHS "arm64" CACHE STRING "Target AppleTV architectures")
-set(IOS_IPHONESIMULATOR_ARCHS "i386 x86_64" CACHE STRING "Target AppleTV simulator architectures")
-# Set iPhoneOS architectures
+set(IOS_IPHONEOS_ARCHS "arm64" CACHE STRING "Target iPhone architectures")
+set(IOS_IPHONESIMULATOR_ARCHS "i386 x86_64" CACHE STRING "Target iPhone simulator architectures")
+# Set appletvOS architectures
 set(CMAKE_XCODE_ATTRIBUTE_ARCHS[sdk=appletvos*] "${IOS_IPHONEOS_ARCHS}")
 set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=appletvos*] "${IOS_IPHONEOS_ARCHS}")
 
@@ -38,41 +33,17 @@ set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=appletvos*] "${IOS_IPHONEOS_ARCHS}")
 set(CMAKE_XCODE_ATTRIBUTE_ARCHS[sdk=appletvsimulator*] "${IOS_IPHONESIMULATOR_ARCHS}")
 set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=appletvsimulator*] "${IOS_IPHONESIMULATOR_ARCHS}")
 
-list(APPEND EXTRA_LIBS "-framework OpenGLES")
-list(APPEND EXTRA_LIBS "-framework UIKit")
-list(APPEND EXTRA_LIBS "-framework Foundation")
-list(APPEND EXTRA_LIBS "-framework AVFoundation")
-list(APPEND EXTRA_LIBS "-framework GameController")
-list(APPEND EXTRA_LIBS "-framework CoreGraphics")
-list(APPEND EXTRA_LIBS "-framework QuartzCore")
 
-# SET(CMAKE_OSX_SYSROOT "iphoneos")
-# SET(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
-#
-# set(CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum supported iOS version")
-#
-# # https://svn.scolring.org/trunk/dependencies/CMake/toolchain/IOS.toolchain.cmake
-# set(IOS_IPHONEOS_ARCHS "arm64 armv7" CACHE STRING "Target iPhone architectures")
-# set(IOS_IPHONESIMULATOR_ARCHS "i386 x86_64" CACHE STRING "Target iPhone simulator architectures")
-# # Set iPhoneOS architectures
-# set(CMAKE_XCODE_ATTRIBUTE_ARCHS[sdk=iphoneos*] "${IOS_IPHONEOS_ARCHS}")
-# set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=iphoneos*] "${IOS_IPHONEOS_ARCHS}")
-#
-# # Set iPhoneSimulator architectures
-# set(CMAKE_XCODE_ATTRIBUTE_ARCHS[sdk=iphonesimulator*] "${IOS_IPHONESIMULATOR_ARCHS}")
-# set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=iphonesimulator*] "${IOS_IPHONESIMULATOR_ARCHS}")
-#
-#
-# list(APPEND TARGET_LIBRARIES "-framework OpenGLES")
-# list(APPEND TARGET_LIBRARIES "-framework UIKit")
-# list(APPEND TARGET_LIBRARIES "-framework Foundation")
-# list(APPEND TARGET_LIBRARIES "-framework AVFoundation")
-# list(APPEND TARGET_LIBRARIES "-framework GameController")
-# list(APPEND TARGET_LIBRARIES "-framework CoreMotion")
-# list(APPEND TARGET_LIBRARIES "-framework CoreGraphics")
-# list(APPEND TARGET_LIBRARIES "-framework QuartzCore")
-# list(APPEND TARGET_LIBRARIES "-framework Metal")
-# list(APPEND TARGET_LIBRARIES "-framework AudioToolbox")
+list(APPEND TARGET_LIBRARIES "-framework OpenGLES")
+list(APPEND TARGET_LIBRARIES "-framework UIKit")
+list(APPEND TARGET_LIBRARIES "-framework Foundation")
+list(APPEND TARGET_LIBRARIES "-framework AVFoundation")
+list(APPEND TARGET_LIBRARIES "-framework GameController")
+list(APPEND TARGET_LIBRARIES "-framework CoreMotion")
+list(APPEND TARGET_LIBRARIES "-framework CoreGraphics")
+list(APPEND TARGET_LIBRARIES "-framework QuartzCore")
+list(APPEND TARGET_LIBRARIES "-framework Metal")
+list(APPEND TARGET_LIBRARIES "-framework AudioToolbox")
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/Info.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
 
@@ -93,7 +64,7 @@ set_target_properties(
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_BINARY_DIR}/Info.plist"
     XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "App Icon & Top Shelf Image"
     XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${TARGET_BUNDLE_ID}.${TARGET_PLATFORM}
-    XCODE_ATTRIBUTE_SDKROOT "appletvos"
+    XCODE_ATTRIBUTE_SDKROOT "appletvsimulator"
     XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES
     XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME "LaunchImage"
     XCODE_ATTRIBUTE_PRODUCT_NAME ${TARGET_EXECUTABLE_NAME}
@@ -113,12 +84,12 @@ if(TARGET_PROJECT_SOURCES)
         ${CMAKE_PROJECT_NAME}-static PROPERTIES
 
         OUTPUT_NAME "${TARGET_EXECUTABLE_NAME}"
+        XCODE_ATTRIBUTE_PRODUCT_NAME ${TARGET_EXECUTABLE_NAME}
         POSITION_INDEPENDENT_CODE ON
         XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "3"
         XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES "NO"
-        XCODE_ATTRIBUTE_SDKROOT "appletvos"
+        XCODE_ATTRIBUTE_SDKROOT "appletvsimulator"
         XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES
-        XCODE_ATTRIBUTE_PRODUCT_NAME ${TARGET_EXECUTABLE_NAME}
         XCODE_ATTRIBUTE_ENABLE_BITCODE NO
         INCLUDE_DIRECTORIES "${TARGET_INCLUDE_DIRS}"
         )
@@ -146,7 +117,7 @@ if(TARGET_PROJECT_SOURCES)
         MACOSX_BUNDLE_INFO_PLIST "${CMAKE_BINARY_DIR}/Info.plist"
         XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "App Icon & Top Shelf Image"
         XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${TARGET_BUNDLE_ID}.${TARGET_PLATFORM}.framework
-        XCODE_ATTRIBUTE_SDKROOT "appletvos"
+        XCODE_ATTRIBUTE_SDKROOT "appletvsimulator"
         XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES
         XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME "LaunchImage"
         XCODE_ATTRIBUTE_PRODUCT_NAME ${TARGET_EXECUTABLE_NAME}

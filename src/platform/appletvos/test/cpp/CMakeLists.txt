@@ -1,3 +1,7 @@
+add_library(SDL_test UNKNOWN IMPORTED)
+set_property(TARGET SDL_test APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/${TARGET_PLATFORM}/Release\$(EFFECTIVE_PLATFORM_NAME)/libSDL2test.a")
+list(APPEND TARGET_LIBRARIES SDL_test)
+
 list(APPEND TARGET_INCLUDE_DIRS ${GTEST_INCLUDE_DIRS})
 list(APPEND TARGET_INCLUDE_DIRS ${GMOCK_INCLUDE_DIRS})
 list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
@@ -10,9 +14,11 @@ list(APPEND TARGET_PROJECT_SOURCES_TEST ${SRCS} ${HDRS})
 SET(CMAKE_OSX_SYSROOT "appletvos")
 SET(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-appletvos;-appletvsimulator")
 
+set(CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "10.0" CACHE STRING "Minimum supported iOS version")
+
 # https://svn.scolring.org/trunk/dependencies/CMake/toolchain/IOS.toolchain.cmake
-set(IOS_IPHONEOS_ARCHS "arm64" CACHE STRING "Target AppleTV architectures")
-set(IOS_IPHONESIMULATOR_ARCHS "i386 x86_64" CACHE STRING "Target AppleTV simulator architectures")
+set(IOS_IPHONEOS_ARCHS "arm64 armv7" CACHE STRING "Target iPhone architectures")
+set(IOS_IPHONESIMULATOR_ARCHS "i386 x86_64" CACHE STRING "Target iPhone simulator architectures")
 # Set iPhoneOS architectures
 set(CMAKE_XCODE_ATTRIBUTE_ARCHS[sdk=appletvos*] "${IOS_IPHONEOS_ARCHS}")
 set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=appletvos*] "${IOS_IPHONEOS_ARCHS}")
@@ -20,22 +26,6 @@ set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=appletvos*] "${IOS_IPHONEOS_ARCHS}")
 # Set iPhoneSimulator architectures
 set(CMAKE_XCODE_ATTRIBUTE_ARCHS[sdk=appletvsimulator*] "${IOS_IPHONESIMULATOR_ARCHS}")
 set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=appletvsimulator*] "${IOS_IPHONESIMULATOR_ARCHS}")
-
-# SET(CMAKE_OSX_SYSROOT "iphoneos")
-# SET(CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
-#
-# set(CMAKE_XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum supported iOS version")
-#
-# # https://svn.scolring.org/trunk/dependencies/CMake/toolchain/IOS.toolchain.cmake
-# set(IOS_IPHONEOS_ARCHS "arm64 armv7" CACHE STRING "Target iPhone architectures")
-# set(IOS_IPHONESIMULATOR_ARCHS "i386 x86_64" CACHE STRING "Target iPhone simulator architectures")
-# # Set iPhoneOS architectures
-# set(CMAKE_XCODE_ATTRIBUTE_ARCHS[sdk=iphoneos*] "${IOS_IPHONEOS_ARCHS}")
-# set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=iphoneos*] "${IOS_IPHONEOS_ARCHS}")
-#
-# # Set iPhoneSimulator architectures
-# set(CMAKE_XCODE_ATTRIBUTE_ARCHS[sdk=iphonesimulator*] "${IOS_IPHONESIMULATOR_ARCHS}")
-# set(CMAKE_XCODE_ATTRIBUTE_VALID_ARCHS[sdk=iphonesimulator*] "${IOS_IPHONESIMULATOR_ARCHS}")
 
 add_executable( ${CMAKE_PROJECT_NAME}-test-static ${TARGET_PROJECT_SOURCES_TEST} ${TARGET_RESOURCES})
 # set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY XCODE_STARTUP_PROJECT ${CMAKE_PROJECT_NAME})
@@ -52,8 +42,8 @@ set_target_properties(
     XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES "NO"
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_BINARY_DIR}/Info.plist"
     XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "App Icon & Top Shelf Image"
-    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${TARGET_BUNDLE_ID}.${TARGET_PLATFORM}.test
-    XCODE_ATTRIBUTE_SDKROOT "appletvos"
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${TARGET_BUNDLE_ID}.${TARGET_PLATFORM}.test-static
+    XCODE_ATTRIBUTE_SDKROOT "appletvsimulator"
     XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES
     XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME "LaunchImage"
     XCODE_ATTRIBUTE_ENABLE_BITCODE NO
@@ -61,9 +51,9 @@ set_target_properties(
     INCLUDE_DIRECTORIES "${TARGET_INCLUDE_DIRS}"
     )
 
-target_compile_definitions( ${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
-target_link_libraries( ${CMAKE_PROJECT_NAME}-test-static ${CMAKE_PROJECT_NAME}-static ${GTEST_LIBRARY} ${GMOCK_LIBRARY})
-
+target_compile_definitions( ${CMAKE_PROJECT_NAME}-test-static PUBLIC ${TARGET_DEFINITIONS})
+target_link_libraries( ${CMAKE_PROJECT_NAME}-test-static ${CMAKE_PROJECT_NAME}-static ${GTEST_LIBRARY} ${GMOCK_LIBRARY} SDL_test)
+add_dependencies( ${CMAKE_PROJECT_NAME}-test-static ${CMAKE_PROJECT_NAME}-static ${GTEST_LIBRARY} ${GMOCK_LIBRARY})
 add_test(NAME ${CMAKE_PROJECT_NAME}-test-static COMMAND ${CMAKE_PROJECT_NAME}-test-static)
 
 add_executable( ${CMAKE_PROJECT_NAME}-test-framework ${TARGET_PROJECT_SOURCES_TEST} ${TARGET_RESOURCES})
@@ -81,8 +71,8 @@ set_target_properties(
     XCODE_ATTRIBUTE_COMBINE_HIDPI_IMAGES "NO"
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_BINARY_DIR}/Info.plist"
     XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "App Icon & Top Shelf Image"
-    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${TARGET_BUNDLE_ID}.${TARGET_PLATFORM}.test
-    XCODE_ATTRIBUTE_SDKROOT "appletvos"
+    XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${TARGET_BUNDLE_ID}.${TARGET_PLATFORM}.test-framework
+    XCODE_ATTRIBUTE_SDKROOT "appletvsimulator"
     XCODE_ATTRIBUTE_CLANG_ENABLE_OBJC_ARC YES
     XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME "LaunchImage"
     XCODE_ATTRIBUTE_ENABLE_BITCODE NO
@@ -90,8 +80,8 @@ set_target_properties(
     INCLUDE_DIRECTORIES "${TARGET_INCLUDE_DIRS}"
     )
 
-target_compile_definitions( ${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
-target_link_libraries( ${CMAKE_PROJECT_NAME}-test-framework ${CMAKE_PROJECT_NAME}Framework ${GTEST_LIBRARY} ${GMOCK_LIBRARY})
-
+target_compile_definitions( ${CMAKE_PROJECT_NAME}-test-framework PUBLIC ${TARGET_DEFINITIONS})
+target_link_libraries( ${CMAKE_PROJECT_NAME}-test-framework ${CMAKE_PROJECT_NAME}Framework ${GTEST_LIBRARY} ${GMOCK_LIBRARY} SDL_test)
+add_dependencies( ${CMAKE_PROJECT_NAME}-test-framework ${CMAKE_PROJECT_NAME}-static ${GTEST_LIBRARY} ${GMOCK_LIBRARY})
 add_test(NAME ${CMAKE_PROJECT_NAME}-test-framework COMMAND ${CMAKE_PROJECT_NAME}-test-framework)
 
