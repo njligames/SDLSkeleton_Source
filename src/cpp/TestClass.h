@@ -3,6 +3,8 @@ class SDL_Window;
 
 
 #include <mutex>
+
+#include "curl.h"
  
 
 class TestClass {
