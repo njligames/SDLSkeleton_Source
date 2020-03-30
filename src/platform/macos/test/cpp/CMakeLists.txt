@@ -35,7 +35,7 @@ set_target_properties(
     )
 
 target_compile_definitions( ${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
-target_link_libraries( ${CMAKE_PROJECT_NAME}-test-static ${CMAKE_PROJECT_NAME}-static ${GTEST_LIBRARY} ${GMOCK_LIBRARY} ${TARGET_LIBRARIES})
+target_link_libraries( ${CMAKE_PROJECT_NAME}-test-static ${CMAKE_PROJECT_NAME}-static gtest gmock_main ${TARGET_LIBRARIES})
 
 add_test(NAME ${CMAKE_PROJECT_NAME}-test-static COMMAND ${CMAKE_PROJECT_NAME}-test-static)
 
@@ -61,7 +61,7 @@ set_target_properties(
     )
 
 target_compile_definitions( ${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
-target_link_libraries( ${CMAKE_PROJECT_NAME}-test-framework ${CMAKE_PROJECT_NAME}Framework ${GTEST_LIBRARY} ${GMOCK_LIBRARY} ${TARGET_LIBRARIES})
+target_link_libraries( ${CMAKE_PROJECT_NAME}-test-framework ${CMAKE_PROJECT_NAME}Framework gtest gmock_main ${TARGET_LIBRARIES})
 
 add_test(NAME ${CMAKE_PROJECT_NAME}-test-framework COMMAND ${CMAKE_PROJECT_NAME}-test-framework)
 

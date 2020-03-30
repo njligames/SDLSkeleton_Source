@@ -1,3 +1,7 @@
+list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+
+set( TARGET_PROJECT_SOURCES ${TARGET_PROJECT_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/GraphicsPlatform.h )
+
 set(XCODE_DEVELOPMENT_TEAM $ENV{XCODE_DEVELOPMENT_TEAM})
 
 add_library(SDL2 UNKNOWN IMPORTED)
@@ -11,6 +15,30 @@ list(APPEND TARGET_LIBRARIES SDL2)
 set_target_properties(SDL2 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${THIRDPARTY_DIR}/includes/SDL2)
 
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/SDL2)
+
+
+
+
+
+
+add_library(curl UNKNOWN IMPORTED)
+set_property(TARGET curl APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/${TARGET_PLATFORM}/Release\$(EFFECTIVE_PLATFORM_NAME)/libcurl.a")
+list(APPEND TARGET_LIBRARIES curl)
+set_target_properties(curl PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${THIRDPARTY_DIR}/includes/curl)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/curl)
+
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/rapidjson)
+
+
+
+
+
+
+
+
+
+
+
 
 set(ASSET_CATALOGUE ${CMAKE_CURRENT_SOURCE_DIR}/resources/Assets.xcassets)
 list(APPEND TARGET_RESOURCES ${ASSET_CATALOGUE})
@@ -131,7 +159,15 @@ if(TARGET_PROJECT_SOURCES)
 
     target_compile_definitions( ${CMAKE_PROJECT_NAME}Framework PUBLIC ${TARGET_DEFINITIONS})
     target_link_libraries( ${CMAKE_PROJECT_NAME}Framework ${TARGET_LIBRARIES})
+
+    set(CLANG_FORMAT_BIN "/usr/local/bin/clang-format" CACHE STRING "use: `brew install clang-format` to install")
+    add_custom_target(
+        clang-format
+        COMMAND ${CLANG_FORMAT_BIN} -style=file -i ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES} -verbose
+        SOURCES
+        "${CMAKE_SOURCE_DIR}/.clang-format"
+        )
 endif()
 
-enable_testing()
-add_subdirectory(test)
+# enable_testing()
+# add_subdirectory(test)

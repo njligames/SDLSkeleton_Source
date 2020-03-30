@@ -1,3 +1,8 @@
+list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR})
+
+set( TARGET_PROJECT_SOURCES ${TARGET_PROJECT_SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/GraphicsPlatform.h )
+
+
 set(XCODE_DEVELOPMENT_TEAM $ENV{XCODE_DEVELOPMENT_TEAM})
 
 add_library(SDL2 UNKNOWN IMPORTED)
@@ -14,8 +19,8 @@ list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/curl)
 
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/rapidjson)
 
-find_package(ZLIB REQUIRED)
-list(APPEND TARGET_LIBRARIES ${ZLIB_LIBRARIES})
+# find_package(ZLIB REQUIRED)
+# list(APPEND TARGET_LIBRARIES ${ZLIB_LIBRARIES})
 
 list(APPEND TARGET_LIBRARIES "-framework CoreVideo")
 list(APPEND TARGET_LIBRARIES "-framework Cocoa")
@@ -25,6 +30,7 @@ list(APPEND TARGET_LIBRARIES "-framework Carbon")
 list(APPEND TARGET_LIBRARIES "-framework CoreAudio")
 list(APPEND TARGET_LIBRARIES "-framework AudioToolbox")
 list(APPEND TARGET_LIBRARIES "-framework Metal")
+list(APPEND TARGET_LIBRARIES "-framework OpenGL")
 
 set(ASSET_CATALOGUE ${CMAKE_CURRENT_SOURCE_DIR}/resources/Assets.xcassets)
 list(APPEND TARGET_RESOURCES ${ASSET_CATALOGUE})
@@ -92,6 +98,14 @@ if(TARGET_PROJECT_SOURCES)
         ARCHIVE DESTINATION archive
         RUNTIME DESTINATION bin
         FRAMEWORK DESTINATION framework)
+
+    set(CLANG_FORMAT_BIN "/usr/local/bin/clang-format" CACHE STRING "use: `brew install clang-format` to install")
+    add_custom_target(
+        clang-format
+        COMMAND ${CLANG_FORMAT_BIN} -style=file -i ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES} -verbose
+        SOURCES
+        "${CMAKE_SOURCE_DIR}/.clang-format"
+)
 
 endif()
 

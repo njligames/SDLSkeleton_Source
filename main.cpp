@@ -13,33 +13,36 @@
 
 /* Simple program:  draw as many random objects on the screen as possible */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
 #include "TestClass.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #endif
+
+//#include "curl.h"
+//#include "nlohmann/json.hpp"
 
 //#include "SDL_test_common.h"
 //
 //#define NUM_OBJECTS 100
 //
-//static SDLTest_CommonState *state;
-//static int num_objects;
-//static SDL_bool cycle_color;
-//static SDL_bool cycle_alpha;
-//static int cycle_direction = 1;
-//static int current_alpha = 255;
-//static int current_color = 255;
-//static SDL_BlendMode blendMode = SDL_BLENDMODE_NONE;
+// static SDLTest_CommonState *state;
+// static int num_objects;
+// static SDL_bool cycle_color;
+// static SDL_bool cycle_alpha;
+// static int cycle_direction = 1;
+// static int current_alpha = 255;
+// static int current_color = 255;
+// static SDL_BlendMode blendMode = SDL_BLENDMODE_NONE;
 //
-//int done;
+// int done;
 //
-//TestClass testClass;
+// TestClass testClass;
 //
-//void
-//DrawPoints(SDL_Renderer * renderer)
+// void
+// DrawPoints(SDL_Renderer * renderer)
 //{
 //    int i;
 //    int x, y;
@@ -81,8 +84,8 @@
 //    }
 //}
 //
-//void
-//DrawLines(SDL_Renderer * renderer)
+// void
+// DrawLines(SDL_Renderer * renderer)
 //{
 //    int i;
 //    int x1, y1, x2, y2;
@@ -119,10 +122,11 @@
 //                               (Uint8) current_color, (Uint8) current_alpha);
 //
 //        if (i == 0) {
-//            SDL_RenderDrawLine(renderer, 0, 0, viewport.w - 1, viewport.h - 1);
-//            SDL_RenderDrawLine(renderer, 0, viewport.h - 1, viewport.w - 1, 0);
-//            SDL_RenderDrawLine(renderer, 0, viewport.h / 2, viewport.w - 1, viewport.h / 2);
-//            SDL_RenderDrawLine(renderer, viewport.w / 2, 0, viewport.w / 2, viewport.h - 1);
+//            SDL_RenderDrawLine(renderer, 0, 0, viewport.w - 1, viewport.h -
+//            1); SDL_RenderDrawLine(renderer, 0, viewport.h - 1, viewport.w -
+//            1, 0); SDL_RenderDrawLine(renderer, 0, viewport.h / 2, viewport.w
+//            - 1, viewport.h / 2); SDL_RenderDrawLine(renderer, viewport.w / 2,
+//            0, viewport.w / 2, viewport.h - 1);
 //        } else {
 //            x1 = (rand() % (viewport.w*2)) - viewport.w;
 //            x2 = (rand() % (viewport.w*2)) - viewport.w;
@@ -133,8 +137,8 @@
 //    }
 //}
 //
-//void
-//DrawRects(SDL_Renderer * renderer)
+// void
+// DrawRects(SDL_Renderer * renderer)
 //{
 //    int i;
 //    SDL_Rect rect;
@@ -178,8 +182,8 @@
 //    }
 //}
 //
-//void
-//loop()
+// void
+// loop()
 //{
 //    int i;
 //    SDL_Event event;
@@ -213,21 +217,19 @@
 #include "SDL.h"
 #include <memory>
 
+class Graphics {
+  private:
+    SDL_Window *_window;
 
-class Graphics
-{
-private:
-  SDL_Window *_window;
+  public:
+    Graphics(SDL_Window *window) { _window = window; }
 
-public:
-  Graphics(SDL_Window *window) { _window = window; }
+    void update() {
+        TestClass::getInstance()->render();
+        //    njli::NJLIGameEngine::render();
 
-  void update()
-  {
-//    njli::NJLIGameEngine::render();
-
-    SDL_GL_SwapWindow(_window);
-  }
+        SDL_GL_SwapWindow(_window);
+    }
 };
 
 std::unique_ptr<Graphics> gGraphics;
@@ -238,79 +240,98 @@ SDL_DisplayMode gDisplayMode;
 SDL_GLContext gGlContext;
 int gDone;
 
-
-
-
-#include <iostream>
-#include <thread>
 #include <chrono>
+#include <iostream>
 #include <mutex>
- 
+#include <thread>
+
 std::mutex g_display_mutex;
 std::thread *gUpdateThread;
 std::mutex g_update_mutex;
 
-
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
 
-  static int EventFilter(void *userdata, SDL_Event *event)
-  {
+static int EventFilter(void *userdata, SDL_Event *event) {
     //#if ((defined(__IPHONEOS__) && __IPHONEOS__) || (defined(__ANDROID__) &&
     //__ANDROID__))
     //    NJLI_HandleStartTouches();
     //#endif
 
-//    njli::NJLIGameEngine::handleEvent(&event);
+    //    njli::NJLIGameEngine::handleEvent(&event);
     //    SDLTest_PrintEvent(event);
 
     Uint32 eventType = event->type;
 
-    switch (eventType)
-      {
-          case SDL_JOYDEVICEMOTION:
-          {
-//              SDL_Log("Joystick device %d motion. [%f, %f, %f, %f, %f, %f, %f, %f, %f]\n", (int) event->jmotion.which, event->jmotion.m11, event->jmotion.m12, event->jmotion.m13, event->jmotion.m21, event->jmotion.m22, event->jmotion.m23, event->jmotion.m31, event->jmotion.m32, event->jmotion.m33);
-//              SDL_Log("Yaw, Pitch, Roll (%f, %f, %f)\n", event->jmotion.yaw, event->jmotion.pitch, event->jmotion.roll);
-              
-//              float _transform[] = {static_cast<float>(event->jmotion.m11), static_cast<float>(event->jmotion.m12), static_cast<float>(event->jmotion.m13), static_cast<float>(event->jmotion.m21), static_cast<float>(event->jmotion.m22), static_cast<float>(event->jmotion.m23), static_cast<float>(event->jmotion.m31), static_cast<float>(event->jmotion.m32), static_cast<float>(event->jmotion.m33)};
-              
-              
-              
-//              glm::mat4 transform = glm::make_mat4(_transform);
-//              NJLI_HandleVRCameraRotation(static_cast<float>(event->jmotion.m11), static_cast<float>(event->jmotion.m12), static_cast<float>(event->jmotion.m13), static_cast<float>(event->jmotion.m21), static_cast<float>(event->jmotion.m22), static_cast<float>(event->jmotion.m23), static_cast<float>(event->jmotion.m31), static_cast<float>(event->jmotion.m32), static_cast<float>(event->jmotion.m33));
-              
-//              NJLI_HandleVRCameraRotationYPR(static_cast<float>(event->jmotion.yaw),
-//                                             static_cast<float>(event->jmotion.pitch),
-//                                             static_cast<float>(event->jmotion.roll));
-              // = glm::mat4(event->jmotion.m11, event->jmotion.m12, event->jmotion.m13, event->jmotion.m21, event->jmotion.m22, event->jmotion.m23, event->jmotion.m31, event->jmotion.m32, event->jmotion.m33);
-              
-          }
-              break;
-      //#if ((defined(__MACOSX__) && __MACOSX__) || (defined(__EMSCRIPTEN__) &&
-      //__EMSCRIPTEN__))
-      case SDL_MOUSEMOTION:
-      case SDL_MOUSEBUTTONDOWN:
-      case SDL_MOUSEBUTTONUP:
+    switch (eventType) {
+    case SDL_JOYDEVICEMOTION: {
+        //              SDL_Log("Joystick device %d motion. [%f, %f, %f, %f, %f,
+        //              %f, %f, %f, %f]\n", (int) event->jmotion.which,
+        //              event->jmotion.m11, event->jmotion.m12,
+        //              event->jmotion.m13, event->jmotion.m21,
+        //              event->jmotion.m22, event->jmotion.m23,
+        //              event->jmotion.m31, event->jmotion.m32,
+        //              event->jmotion.m33); SDL_Log("Yaw, Pitch, Roll (%f, %f,
+        //              %f)\n", event->jmotion.yaw, event->jmotion.pitch,
+        //              event->jmotion.roll);
 
-//        NJLI_HandleMouse(event->button.button, event->type, event->button.x,
-//                         event->button.y, event->button.clicks);
-        break;
-      //#endif
+        //              float _transform[] =
+        //              {static_cast<float>(event->jmotion.m11),
+        //              static_cast<float>(event->jmotion.m12),
+        //              static_cast<float>(event->jmotion.m13),
+        //              static_cast<float>(event->jmotion.m21),
+        //              static_cast<float>(event->jmotion.m22),
+        //              static_cast<float>(event->jmotion.m23),
+        //              static_cast<float>(event->jmotion.m31),
+        //              static_cast<float>(event->jmotion.m32),
+        //              static_cast<float>(event->jmotion.m33)};
 
-      //#if ((defined(__IPHONEOS__) && __IPHONEOS__) || (defined(__ANDROID__) &&
-      //__ANDROID__))
-      case SDL_FINGERMOTION:
-      case SDL_FINGERDOWN:
-      case SDL_FINGERUP:
-//        NJLI_HandleTouch((int)event->tfinger.touchId,
-//                         (int)event->tfinger.fingerId, event->type,
-//                         event->tfinger.x, event->tfinger.y, event->tfinger.dx,
-//                         event->tfinger.dy, event->tfinger.pressure);
+        //              glm::mat4 transform = glm::make_mat4(_transform);
+        //              NJLI_HandleVRCameraRotation(static_cast<float>(event->jmotion.m11),
+        //              static_cast<float>(event->jmotion.m12),
+        //              static_cast<float>(event->jmotion.m13),
+        //              static_cast<float>(event->jmotion.m21),
+        //              static_cast<float>(event->jmotion.m22),
+        //              static_cast<float>(event->jmotion.m23),
+        //              static_cast<float>(event->jmotion.m31),
+        //              static_cast<float>(event->jmotion.m32),
+        //              static_cast<float>(event->jmotion.m33));
+
+        //              NJLI_HandleVRCameraRotationYPR(static_cast<float>(event->jmotion.yaw),
+        //                                             static_cast<float>(event->jmotion.pitch),
+        //                                             static_cast<float>(event->jmotion.roll));
+        // = glm::mat4(event->jmotion.m11, event->jmotion.m12,
+        // event->jmotion.m13, event->jmotion.m21, event->jmotion.m22,
+        // event->jmotion.m23, event->jmotion.m31, event->jmotion.m32,
+        // event->jmotion.m33);
+
+    } break;
+    //#if ((defined(__MACOSX__) && __MACOSX__) || (defined(__EMSCRIPTEN__) &&
+    //__EMSCRIPTEN__))
+    case SDL_MOUSEMOTION:
+    case SDL_MOUSEBUTTONDOWN:
+    case SDL_MOUSEBUTTONUP:
+
+        //        NJLI_HandleMouse(event->button.button, event->type,
+        //        event->button.x,
+        //                         event->button.y, event->button.clicks);
         break;
-      //#endif
-      default:
+    //#endif
+
+    //#if ((defined(__IPHONEOS__) && __IPHONEOS__) || (defined(__ANDROID__) &&
+    //__ANDROID__))
+    case SDL_FINGERMOTION:
+    case SDL_FINGERDOWN:
+    case SDL_FINGERUP:
+        //        NJLI_HandleTouch((int)event->tfinger.touchId,
+        //                         (int)event->tfinger.fingerId, event->type,
+        //                         event->tfinger.x, event->tfinger.y,
+        //                         event->tfinger.dx, event->tfinger.dy,
+        //                         event->tfinger.pressure);
         break;
-      }
+    //#endif
+    default:
+        break;
+    }
 
 #if ((defined(__IPHONEOS__) && __IPHONEOS__) ||                                \
      (defined(__ANDROID__) && __ANDROID__))
@@ -318,498 +339,434 @@ std::mutex g_update_mutex;
 #endif
 
     return 1;
-  }
+}
 #endif
 
-static void RenderFrame(void *param)
-{
-//  njli::NJLIGameEngine::update(1.0f / ((float)gDisplayMode.refresh_rate));
-    
-//    TestClass::get()->update();
+static void RenderFrame(void *param) {
+    //  njli::NJLIGameEngine::update(1.0f / ((float)gDisplayMode.refresh_rate));
 
-  Graphics *graphics = (Graphics *)param;
-  graphics->update();
+    //    TestClass::get()->update();
+
+    Graphics *graphics = (Graphics *)param;
+    graphics->update();
 }
 
-static void handleInput()
-  {
+static void handleInput() {
     bool callFinishKeys = false;
     SDL_Event event;
     SDL_PumpEvents();
-    while (SDL_PollEvent(&event))
-      {
-//        njli::NJLIGameEngine::handleEvent(&event);
-//        SDLTest_PrintEvent(&event);
-        switch (event.type)
-          {
+    while (SDL_PollEvent(&event)) {
+        //        njli::NJLIGameEngine::handleEvent(&event);
+        //        SDLTest_PrintEvent(&event);
+        switch (event.type) {
 
 #if defined(__MACOSX__) || defined(__EMSCRIPTEN__) || defined(__ANDROID__)
-          case SDL_MOUSEMOTION:
-          case SDL_MOUSEBUTTONDOWN:
-          case SDL_MOUSEBUTTONUP:
+        case SDL_MOUSEMOTION:
+        case SDL_MOUSEBUTTONDOWN:
+        case SDL_MOUSEBUTTONUP:
 
-//            NJLI_HandleMouse(event.button.button, event.type, event.button.x,
-//                             event.button.y, event.button.clicks);
+            //            NJLI_HandleMouse(event.button.button, event.type,
+            //            event.button.x,
+            //                             event.button.y, event.button.clicks);
             break;
 #endif
 
 #if (defined(__ANDROID__) && __ANDROID__)
-          case SDL_FINGERMOTION:
-          case SDL_FINGERDOWN:
-          case SDL_FINGERUP:
-//            NJLI_HandleTouch((int)event.tfinger.touchId,
-//                             (int)event.tfinger.fingerId, event.type,
-//                             event.tfinger.x, event.tfinger.y, event.tfinger.dx,
-//                             event.tfinger.dy, event.tfinger.pressure);
+        case SDL_FINGERMOTION:
+        case SDL_FINGERDOWN:
+        case SDL_FINGERUP:
+            //            NJLI_HandleTouch((int)event.tfinger.touchId,
+            //                             (int)event.tfinger.fingerId,
+            //                             event.type, event.tfinger.x,
+            //                             event.tfinger.y, event.tfinger.dx,
+            //                             event.tfinger.dy,
+            //                             event.tfinger.pressure);
             break;
 #endif
-          case SDL_APP_DIDENTERFOREGROUND:
+        case SDL_APP_DIDENTERFOREGROUND:
             SDL_Log("SDL_APP_DIDENTERFOREGROUND");
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
-            SDL_iPhoneSetAnimationCallback(gWindow, 1, RenderFrame, gGraphics.get());
+            SDL_iPhoneSetAnimationCallback(gWindow, 1, RenderFrame,
+                                           gGraphics.get());
 #endif
-//            NJLI_HandleResume();
+            //            NJLI_HandleResume();
             break;
 
-          case SDL_APP_DIDENTERBACKGROUND:
+        case SDL_APP_DIDENTERBACKGROUND:
             SDL_Log("SDL_APP_DIDENTERBACKGROUND");
 
-//            njli::NJLIGameEngine::didEnterBackground();
+            //            njli::NJLIGameEngine::didEnterBackground();
             break;
 
-          case SDL_APP_LOWMEMORY:
+        case SDL_APP_LOWMEMORY:
             SDL_Log("SDL_APP_LOWMEMORY");
-//            NJLI_HandleLowMemory();
+            //            NJLI_HandleLowMemory();
 
             break;
 
-          case SDL_APP_TERMINATING:
+        case SDL_APP_TERMINATING:
             SDL_Log("SDL_APP_TERMINATING");
-//            njli::NJLIGameEngine::willTerminate();
+            //            njli::NJLIGameEngine::willTerminate();
             break;
 
-          case SDL_APP_WILLENTERBACKGROUND:
+        case SDL_APP_WILLENTERBACKGROUND:
             SDL_Log("SDL_APP_WILLENTERBACKGROUND");
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
             SDL_iPhoneSetAnimationCallback(gWindow, 1, nullptr, nullptr);
 #endif
-//            NJLI_HandlePause();
+            //            NJLI_HandlePause();
             break;
 
-          case SDL_APP_WILLENTERFOREGROUND:
+        case SDL_APP_WILLENTERFOREGROUND:
             SDL_Log("SDL_APP_WILLENTERFOREGROUND");
 
-//            njli::NJLIGameEngine::willEnterForeground();
+            //            njli::NJLIGameEngine::willEnterForeground();
             break;
 
-          case SDL_WINDOWEVENT:
-            switch (event.window.event)
-              {
-              case SDL_WINDOWEVENT_RESTORED:
-//                NJLI_HandleResume();
+        case SDL_WINDOWEVENT:
+            switch (event.window.event) {
+            case SDL_WINDOWEVENT_RESTORED:
+                //                NJLI_HandleResume();
                 break;
-              case SDL_WINDOWEVENT_MINIMIZED:
-//                NJLI_HandlePause();
+            case SDL_WINDOWEVENT_MINIMIZED:
+                //                NJLI_HandlePause();
                 break;
-              case SDL_WINDOWEVENT_RESIZED:
-              case SDL_WINDOWEVENT_SIZE_CHANGED:
-                {
-                  int w, h;
+            case SDL_WINDOWEVENT_RESIZED:
+            case SDL_WINDOWEVENT_SIZE_CHANGED: {
+                int w, h;
 #if defined(__MACOSX__)
-                  SDL_GetWindowSize(gWindow, &w, &h);
+                SDL_GetWindowSize(gWindow, &w, &h);
 #else
-                  SDL_GL_GetDrawableSize(gWindow, &w, &h);
+                SDL_GL_GetDrawableSize(gWindow, &w, &h);
 #endif
-                    TestClass::get()->resize(w,h);
-                    
-//                  NJLI_HandleResize(w, h, gDisplayMode.format,
-//                                    gDisplayMode.refresh_rate);
-                }
-                break;
-              case SDL_WINDOWEVENT_CLOSE:
-                {
-                  SDL_Window *window =
-                      SDL_GetWindowFromID(event.window.windowID);
-                  if (window)
-                    {
-                      if (window == gWindow)
-                        {
-                          SDL_DestroyWindow(gWindow);
-                          gWindow = NULL;
-                          break;
-                        }
+                TestClass::getInstance()->resize(w, h);
+
+                //                  NJLI_HandleResize(w, h, gDisplayMode.format,
+                //                                    gDisplayMode.refresh_rate);
+            } break;
+            case SDL_WINDOWEVENT_CLOSE: {
+                SDL_Window *window = SDL_GetWindowFromID(event.window.windowID);
+                if (window) {
+                    if (window == gWindow) {
+                        SDL_DestroyWindow(gWindow);
+                        gWindow = NULL;
+                        break;
                     }
                 }
-                break;
-              }
-            break;
-          case SDL_KEYUP:
-            {
-              callFinishKeys = true;
-              int temp = SDL_GetModState();
-              temp = temp & KMOD_CAPS;
-              bool withCapsLock = (temp == KMOD_CAPS);
-
-              bool withControl = !!(event.key.keysym.mod & KMOD_CTRL);
-              bool withShift = !!(event.key.keysym.mod & KMOD_SHIFT);
-              bool withAlt = !!(event.key.keysym.mod & KMOD_ALT);
-              bool withGui = !!(event.key.keysym.mod & KMOD_GUI);
-
-//              NJLI_HandleKeyUp(SDL_GetScancodeName(event.key.keysym.scancode),
-//                               withCapsLock, withControl, withShift, withAlt,
-//                               withGui);
+            } break;
             }
             break;
-          case SDL_KEYDOWN:
-            {
-              callFinishKeys = true;
-              int temp = SDL_GetModState();
-              temp = temp & KMOD_CAPS;
-              bool withCapsLock = (temp == KMOD_CAPS);
+        case SDL_KEYUP: {
+            callFinishKeys = true;
+            int temp = SDL_GetModState();
+            temp = temp & KMOD_CAPS;
+            bool withCapsLock = (temp == KMOD_CAPS);
 
-              bool withControl = !!(event.key.keysym.mod & KMOD_CTRL);
-              bool withShift = !!(event.key.keysym.mod & KMOD_SHIFT);
-              bool withAlt = !!(event.key.keysym.mod & KMOD_ALT);
-              bool withGui = !!(event.key.keysym.mod & KMOD_GUI);
+            bool withControl = !!(event.key.keysym.mod & KMOD_CTRL);
+            bool withShift = !!(event.key.keysym.mod & KMOD_SHIFT);
+            bool withAlt = !!(event.key.keysym.mod & KMOD_ALT);
+            bool withGui = !!(event.key.keysym.mod & KMOD_GUI);
 
-//              NJLI_HandleKeyDown(SDL_GetScancodeName(event.key.keysym.scancode),
-//                                 withCapsLock, withControl, withShift, withAlt,
-//                                 withGui);
+            //              NJLI_HandleKeyUp(SDL_GetScancodeName(event.key.keysym.scancode),
+            //                               withCapsLock, withControl,
+            //                               withShift, withAlt, withGui);
+            g_update_mutex.lock();
+            TestClass::getInstance()->keyUp(
+                SDL_GetScancodeName(event.key.keysym.scancode), withCapsLock,
+                withControl, withShift, withAlt, withGui);
+            g_update_mutex.unlock();
+        } break;
+        case SDL_KEYDOWN: {
+            callFinishKeys = true;
+            int temp = SDL_GetModState();
+            temp = temp & KMOD_CAPS;
+            bool withCapsLock = (temp == KMOD_CAPS);
 
-              switch (event.key.keysym.sym)
-                {
-                /* Add hotkeys here */
-                case SDLK_PRINTSCREEN:
-                  {
+            bool withControl = !!(event.key.keysym.mod & KMOD_CTRL);
+            bool withShift = !!(event.key.keysym.mod & KMOD_SHIFT);
+            bool withAlt = !!(event.key.keysym.mod & KMOD_ALT);
+            bool withGui = !!(event.key.keysym.mod & KMOD_GUI);
+
+            g_update_mutex.lock();
+            TestClass::getInstance()->keyDown(
+                SDL_GetScancodeName(event.key.keysym.scancode), withCapsLock,
+                withControl, withShift, withAlt, withGui);
+            g_update_mutex.unlock();
+            //              NJLI_HandleKeyDown(SDL_GetScancodeName(event.key.keysym.scancode),
+            //                                 withCapsLock, withControl,
+            //                                 withShift, withAlt, withGui);
+
+            switch (event.key.keysym.sym) {
+            /* Add hotkeys here */
+            case SDLK_PRINTSCREEN: {
+                SDL_Window *window = SDL_GetWindowFromID(event.key.windowID);
+                if (window) {
+                    if (window == gWindow) {
+                        //                            SDLTest_ScreenShot(gRenderer);
+                    }
+                }
+            } break;
+            case SDLK_EQUALS:
+                if (withControl) {
+                    /* Ctrl-+ double the size of the window */
                     SDL_Window *window =
                         SDL_GetWindowFromID(event.key.windowID);
-                    if (window)
-                      {
-                        if (window == gWindow)
-                          {
-//                            SDLTest_ScreenShot(gRenderer);
-                          }
-                      }
-                  }
-                  break;
-                case SDLK_EQUALS:
-                  if (withControl)
-                    {
-                      /* Ctrl-+ double the size of the window */
-                      SDL_Window *window =
-                          SDL_GetWindowFromID(event.key.windowID);
-                      if (window)
-                        {
-                          int w, h;
-                          SDL_GetWindowSize(window, &w, &h);
-                          SDL_SetWindowSize(window, w * 2, h * 2);
-                        }
+                    if (window) {
+                        int w, h;
+                        SDL_GetWindowSize(window, &w, &h);
+                        SDL_SetWindowSize(window, w * 2, h * 2);
                     }
-                  break;
-                case SDLK_MINUS:
-                  if (withControl)
-                    {
-                      /* Ctrl-- half the size of the window */
-                      SDL_Window *window =
-                          SDL_GetWindowFromID(event.key.windowID);
-                      if (window)
-                        {
-                          int w, h;
-                          SDL_GetWindowSize(window, &w, &h);
-                          SDL_SetWindowSize(window, w / 2, h / 2);
-                        }
+                }
+                break;
+            case SDLK_MINUS:
+                if (withControl) {
+                    /* Ctrl-- half the size of the window */
+                    SDL_Window *window =
+                        SDL_GetWindowFromID(event.key.windowID);
+                    if (window) {
+                        int w, h;
+                        SDL_GetWindowSize(window, &w, &h);
+                        SDL_SetWindowSize(window, w / 2, h / 2);
                     }
-                  break;
-                case SDLK_o:
-                  if (withControl)
-                    {
+                }
+                break;
+            case SDLK_o:
+                if (withControl) {
 #if !defined(__LINUX__)
-                      /* Ctrl-O (or Ctrl-Shift-O) changes window opacity. */
-                      SDL_Window *window =
-                          SDL_GetWindowFromID(event.key.windowID);
-                      if (window)
-                        {
-                          float opacity;
-                          if (SDL_GetWindowOpacity(window, &opacity) == 0)
-                            {
-                              if (withShift)
-                                {
-                                  opacity += 0.20f;
-                                }
-                              else
-                                {
-                                  opacity -= 0.20f;
-                                }
-                              SDL_SetWindowOpacity(window, opacity);
-                            }
-                        }
-#endif
-                    }
-                  break;
-
-                case SDLK_c:
-                  if (withControl)
-                    {
-                      /* Ctrl-C copy awesome text! */
-                      SDL_SetClipboardText("SDL rocks!\nYou know it!");
-                      printf("Copied text to clipboard\n");
-                    }
-                  if (withAlt)
-                    {
-                      /* Alt-C toggle a render clip rectangle */
-                      int w, h;
-                      if (gRenderer)
-                        {
-                          SDL_Rect clip;
-                          SDL_GetWindowSize(gWindow, &w, &h);
-                          SDL_RenderGetClipRect(gRenderer, &clip);
-                          if (SDL_RectEmpty(&clip))
-                            {
-                              clip.x = w / 4;
-                              clip.y = h / 4;
-                              clip.w = w / 2;
-                              clip.h = h / 2;
-                              SDL_RenderSetClipRect(gRenderer, &clip);
-                            }
-                          else
-                            {
-                              SDL_RenderSetClipRect(gRenderer, NULL);
-                            }
-                        }
-                    }
-                  if (withShift)
-                    {
-                      SDL_Window *current_win = SDL_GetKeyboardFocus();
-                      if (current_win)
-                        {
-                          const bool shouldCapture =
-                              (SDL_GetWindowFlags(current_win) &
-                               SDL_WINDOW_MOUSE_CAPTURE) == 0;
-                          const int rc =
-                              SDL_CaptureMouse((SDL_bool)shouldCapture);
-                          SDL_Log("%sapturing mouse %s!\n",
-                                  shouldCapture ? "C" : "Unc",
-                                  (rc == 0) ? "succeeded" : "failed");
-                        }
-                    }
-                  break;
-                case SDLK_v:
-                  if (withControl)
-                    {
-                      /* Ctrl-V paste awesome text! */
-                      char *text = SDL_GetClipboardText();
-                      if (*text)
-                        {
-                          printf("Clipboard: %s\n", text);
-                        }
-                      else
-                        {
-                          printf("Clipboard is empty\n");
-                        }
-                      SDL_free(text);
-                    }
-                  break;
-                case SDLK_g:
-                  if (withControl)
-                    {
-                      /* Ctrl-G toggle grab */
-                      SDL_Window *window =
-                          SDL_GetWindowFromID(event.key.windowID);
-                      if (window)
-                        {
-                          SDL_SetWindowGrab(window, !SDL_GetWindowGrab(window)
-                                                        ? SDL_TRUE
-                                                        : SDL_FALSE);
-                        }
-                    }
-                  break;
-                case SDLK_m:
-                  if (withControl)
-                    {
-                      /* Ctrl-M maximize */
-                      SDL_Window *window =
-                          SDL_GetWindowFromID(event.key.windowID);
-                      if (window)
-                        {
-                          Uint32 flags = SDL_GetWindowFlags(window);
-                          if (flags & SDL_WINDOW_MAXIMIZED)
-                            {
-                              SDL_RestoreWindow(window);
-                            }
-                          else
-                            {
-                              SDL_MaximizeWindow(window);
-                            }
-                        }
-                    }
-                  break;
-                case SDLK_r:
-                  if (withControl)
-                    {
-                      /* Ctrl-R toggle mouse relative mode */
-                      SDL_SetRelativeMouseMode(
-                          !SDL_GetRelativeMouseMode() ? SDL_TRUE : SDL_FALSE);
-                    }
-                  break;
-                case SDLK_z:
-                  if (withControl)
-                    {
-                      /* Ctrl-Z minimize */
-                      SDL_Window *window =
-                          SDL_GetWindowFromID(event.key.windowID);
-                      if (window)
-                        {
-                          SDL_MinimizeWindow(window);
-                        }
-                    }
-                  break;
-                case SDLK_RETURN:
-                  if (withControl)
-                    {
-                      /* Ctrl-Enter toggle fullscreen */
-                      SDL_Window *window =
-                          SDL_GetWindowFromID(event.key.windowID);
-                      if (window)
-                        {
-                          Uint32 flags = SDL_GetWindowFlags(window);
-                          if (flags & SDL_WINDOW_FULLSCREEN)
-                            {
-                              SDL_SetWindowFullscreen(window, SDL_FALSE);
-                            }
-                          else
-                            {
-                              SDL_SetWindowFullscreen(window,
-                                                      SDL_WINDOW_FULLSCREEN);
-                            }
-                        }
-                    }
-                  else if (withAlt)
-                    {
-                      /* Alt-Enter toggle fullscreen desktop */
-                      SDL_Window *window =
-                          SDL_GetWindowFromID(event.key.windowID);
-                      if (window)
-                        {
-                          Uint32 flags = SDL_GetWindowFlags(window);
-                          if (flags & SDL_WINDOW_FULLSCREEN)
-                            {
-                              SDL_SetWindowFullscreen(window, SDL_FALSE);
-                            }
-                          else
-                            {
-                              SDL_SetWindowFullscreen(
-                                  window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-                            }
-                        }
-                    }
-                  else if (withShift)
-                    {
-                      /* Shift-Enter toggle fullscreen desktop / fullscreen */
-                      SDL_Window *window =
-                          SDL_GetWindowFromID(event.key.windowID);
-                      if (window)
-                        {
-                          Uint32 flags = SDL_GetWindowFlags(window);
-                          if ((flags & SDL_WINDOW_FULLSCREEN_DESKTOP) ==
-                              SDL_WINDOW_FULLSCREEN_DESKTOP)
-                            {
-                              SDL_SetWindowFullscreen(window,
-                                                      SDL_WINDOW_FULLSCREEN);
-                            }
-                          else
-                            {
-                              SDL_SetWindowFullscreen(
-                                  window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-                            }
-                        }
-                    }
-
-                  break;
-                case SDLK_b:
-                  if (withControl)
-                    {
-                      /* Ctrl-B toggle window border */
-                      SDL_Window *window =
-                          SDL_GetWindowFromID(event.key.windowID);
-                      if (window)
-                        {
-                          const Uint32 flags = SDL_GetWindowFlags(window);
-                          const SDL_bool b =
-                              ((flags & SDL_WINDOW_BORDERLESS) != 0)
-                                  ? SDL_TRUE
-                                  : SDL_FALSE;
-                          SDL_SetWindowBordered(window, b);
-                        }
-                    }
-                  break;
-                case SDLK_a:
-                  if (withControl)
-                    {
-                      /* Ctrl-A reports absolute mouse position. */
-                      int x, y;
-                      const Uint32 mask = SDL_GetGlobalMouseState(&x, &y);
-                      SDL_Log("ABSOLUTE MOUSE: (%d, %d)%s%s%s%s%s\n", x, y,
-                              (mask & SDL_BUTTON_LMASK) ? " [LBUTTON]" : "",
-                              (mask & SDL_BUTTON_MMASK) ? " [MBUTTON]" : "",
-                              (mask & SDL_BUTTON_RMASK) ? " [RBUTTON]" : "",
-                              (mask & SDL_BUTTON_X1MASK) ? " [X2BUTTON]" : "",
-                              (mask & SDL_BUTTON_X2MASK) ? " [X2BUTTON]" : "");
-                    }
-                  break;
-                case SDLK_0:
-                  if (withControl)
-                    {
-                      SDL_Window *window =
-                          SDL_GetWindowFromID(event.key.windowID);
-                      SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
-                                               "Test Message",
-                                               "You're awesome!", window);
-                    }
-                  break;
-                case SDLK_1:
-                  if (withControl)
-                    {
-//                      FullscreenTo(0, event.key.windowID);
-                    }
-                  break;
-                case SDLK_2:
-                  if (withControl)
-                    {
-//                      FullscreenTo(1, event.key.windowID);
-                    }
-                  break;
-                case SDLK_ESCAPE:
-                        g_display_mutex.lock();
-                  gDone = 1;
-                        g_display_mutex.unlock();
-                  break;
-                case SDLK_SPACE:
-                  {/*
-                    char message[256];
+                    /* Ctrl-O (or Ctrl-Shift-O) changes window opacity. */
                     SDL_Window *window =
                         SDL_GetWindowFromID(event.key.windowID);
-                    SDL_snprintf(message, sizeof(message),
-                                 "(%i, %i), rel (%i, %i)\n", gLastEvent.x,
-                                 gLastEvent.y, gLastEvent.xrel,
-                                 gLastEvent.yrel);
-                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
-                                             "Last mouse position", message,
-                                             window);*/
-                    break;
-                  }
-                default:
-                  break;
+                    if (window) {
+                        float opacity;
+                        if (SDL_GetWindowOpacity(window, &opacity) == 0) {
+                            if (withShift) {
+                                opacity += 0.20f;
+                            } else {
+                                opacity -= 0.20f;
+                            }
+                            SDL_SetWindowOpacity(window, opacity);
+                        }
+                    }
+#endif
                 }
-              break;
-            }
-          case SDL_QUIT:
+                break;
 
-//            NJLI_HandleQuit();
+            case SDLK_c:
+                if (withControl) {
+                    /* Ctrl-C copy awesome text! */
+                    SDL_SetClipboardText("SDL rocks!\nYou know it!");
+                    printf("Copied text to clipboard\n");
+                }
+                if (withAlt) {
+                    /* Alt-C toggle a render clip rectangle */
+                    int w, h;
+                    if (gRenderer) {
+                        SDL_Rect clip;
+                        SDL_GetWindowSize(gWindow, &w, &h);
+                        SDL_RenderGetClipRect(gRenderer, &clip);
+                        if (SDL_RectEmpty(&clip)) {
+                            clip.x = w / 4;
+                            clip.y = h / 4;
+                            clip.w = w / 2;
+                            clip.h = h / 2;
+                            SDL_RenderSetClipRect(gRenderer, &clip);
+                        } else {
+                            SDL_RenderSetClipRect(gRenderer, NULL);
+                        }
+                    }
+                }
+                if (withShift) {
+                    SDL_Window *current_win = SDL_GetKeyboardFocus();
+                    if (current_win) {
+                        const bool shouldCapture =
+                            (SDL_GetWindowFlags(current_win) &
+                             SDL_WINDOW_MOUSE_CAPTURE) == 0;
+                        const int rc =
+                            SDL_CaptureMouse((SDL_bool)shouldCapture);
+                        SDL_Log("%sapturing mouse %s!\n",
+                                shouldCapture ? "C" : "Unc",
+                                (rc == 0) ? "succeeded" : "failed");
+                    }
+                }
+                break;
+            case SDLK_v:
+                if (withControl) {
+                    /* Ctrl-V paste awesome text! */
+                    char *text = SDL_GetClipboardText();
+                    if (*text) {
+                        printf("Clipboard: %s\n", text);
+                    } else {
+                        printf("Clipboard is empty\n");
+                    }
+                    SDL_free(text);
+                }
+                break;
+            case SDLK_g:
+                if (withControl) {
+                    /* Ctrl-G toggle grab */
+                    SDL_Window *window =
+                        SDL_GetWindowFromID(event.key.windowID);
+                    if (window) {
+                        SDL_SetWindowGrab(window, !SDL_GetWindowGrab(window)
+                                                      ? SDL_TRUE
+                                                      : SDL_FALSE);
+                    }
+                }
+                break;
+            case SDLK_m:
+                if (withControl) {
+                    /* Ctrl-M maximize */
+                    SDL_Window *window =
+                        SDL_GetWindowFromID(event.key.windowID);
+                    if (window) {
+                        Uint32 flags = SDL_GetWindowFlags(window);
+                        if (flags & SDL_WINDOW_MAXIMIZED) {
+                            SDL_RestoreWindow(window);
+                        } else {
+                            SDL_MaximizeWindow(window);
+                        }
+                    }
+                }
+                break;
+            case SDLK_r:
+                if (withControl) {
+                    /* Ctrl-R toggle mouse relative mode */
+                    SDL_SetRelativeMouseMode(
+                        !SDL_GetRelativeMouseMode() ? SDL_TRUE : SDL_FALSE);
+                }
+                break;
+            case SDLK_z:
+                if (withControl) {
+                    /* Ctrl-Z minimize */
+                    SDL_Window *window =
+                        SDL_GetWindowFromID(event.key.windowID);
+                    if (window) {
+                        SDL_MinimizeWindow(window);
+                    }
+                }
+                break;
+            case SDLK_RETURN:
+                if (withControl) {
+                    /* Ctrl-Enter toggle fullscreen */
+                    SDL_Window *window =
+                        SDL_GetWindowFromID(event.key.windowID);
+                    if (window) {
+                        Uint32 flags = SDL_GetWindowFlags(window);
+                        if (flags & SDL_WINDOW_FULLSCREEN) {
+                            SDL_SetWindowFullscreen(window, SDL_FALSE);
+                        } else {
+                            SDL_SetWindowFullscreen(window,
+                                                    SDL_WINDOW_FULLSCREEN);
+                        }
+                    }
+                } else if (withAlt) {
+                    /* Alt-Enter toggle fullscreen desktop */
+                    SDL_Window *window =
+                        SDL_GetWindowFromID(event.key.windowID);
+                    if (window) {
+                        Uint32 flags = SDL_GetWindowFlags(window);
+                        if (flags & SDL_WINDOW_FULLSCREEN) {
+                            SDL_SetWindowFullscreen(window, SDL_FALSE);
+                        } else {
+                            SDL_SetWindowFullscreen(
+                                window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+                        }
+                    }
+                } else if (withShift) {
+                    /* Shift-Enter toggle fullscreen desktop / fullscreen */
+                    SDL_Window *window =
+                        SDL_GetWindowFromID(event.key.windowID);
+                    if (window) {
+                        Uint32 flags = SDL_GetWindowFlags(window);
+                        if ((flags & SDL_WINDOW_FULLSCREEN_DESKTOP) ==
+                            SDL_WINDOW_FULLSCREEN_DESKTOP) {
+                            SDL_SetWindowFullscreen(window,
+                                                    SDL_WINDOW_FULLSCREEN);
+                        } else {
+                            SDL_SetWindowFullscreen(
+                                window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+                        }
+                    }
+                }
+
+                break;
+            case SDLK_b:
+                if (withControl) {
+                    /* Ctrl-B toggle window border */
+                    SDL_Window *window =
+                        SDL_GetWindowFromID(event.key.windowID);
+                    if (window) {
+                        const Uint32 flags = SDL_GetWindowFlags(window);
+                        const SDL_bool b =
+                            ((flags & SDL_WINDOW_BORDERLESS) != 0) ? SDL_TRUE
+                                                                   : SDL_FALSE;
+                        SDL_SetWindowBordered(window, b);
+                    }
+                }
+                break;
+            case SDLK_a:
+                if (withControl) {
+                    /* Ctrl-A reports absolute mouse position. */
+                    int x, y;
+                    const Uint32 mask = SDL_GetGlobalMouseState(&x, &y);
+                    SDL_Log("ABSOLUTE MOUSE: (%d, %d)%s%s%s%s%s\n", x, y,
+                            (mask & SDL_BUTTON_LMASK) ? " [LBUTTON]" : "",
+                            (mask & SDL_BUTTON_MMASK) ? " [MBUTTON]" : "",
+                            (mask & SDL_BUTTON_RMASK) ? " [RBUTTON]" : "",
+                            (mask & SDL_BUTTON_X1MASK) ? " [X2BUTTON]" : "",
+                            (mask & SDL_BUTTON_X2MASK) ? " [X2BUTTON]" : "");
+                }
+                break;
+            case SDLK_0:
+                if (withControl) {
+                    SDL_Window *window =
+                        SDL_GetWindowFromID(event.key.windowID);
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
+                                             "Test Message", "You're awesome!",
+                                             window);
+                }
+                break;
+            case SDLK_1:
+                if (withControl) {
+                    //                      FullscreenTo(0, event.key.windowID);
+                }
+                break;
+            case SDLK_2:
+                if (withControl) {
+                    //                      FullscreenTo(1, event.key.windowID);
+                }
+                break;
+            case SDLK_ESCAPE:
+                g_display_mutex.lock();
+                gDone = 1;
+                g_display_mutex.unlock();
+                break;
+            case SDLK_SPACE: { /*
+                                char message[256];
+                                SDL_Window *window =
+                                    SDL_GetWindowFromID(event.key.windowID);
+                                SDL_snprintf(message, sizeof(message),
+                                             "(%i, %i), rel (%i, %i)\n",
+                                gLastEvent.x, gLastEvent.y, gLastEvent.xrel,
+                                             gLastEvent.yrel);
+                                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
+                                                         "Last mouse position",
+                                message, window);*/
+                break;
+            }
+            default:
+                break;
+            }
+            break;
+        }
+        case SDL_QUIT:
+
+            //            NJLI_HandleQuit();
 
             break;
 
-          case SDL_MOUSEWHEEL:
+        case SDL_MOUSEWHEEL:
             SDL_Log("SDL EVENT: Mouse: wheel scrolled %d in x and %d in y "
                     "(reversed: %d) in window %d",
                     event.wheel.x, event.wheel.y, event.wheel.direction,
@@ -822,81 +779,93 @@ static void handleInput()
             // SDL_MouseWheelEvent wheel = event.wheel;
 
             break;
-          case SDL_DROPFILE:
-            {
-              char *dropped_filedir = event.drop.file;
-//              NJLI_HandleDropFile(dropped_filedir);
-              SDL_free(dropped_filedir);
-            }
-            break;
+        case SDL_DROPFILE: {
+            char *dropped_filedir = event.drop.file;
+            //              NJLI_HandleDropFile(dropped_filedir);
+            SDL_free(dropped_filedir);
+        } break;
 #if !defined(__LINUX__)
-          case SDL_DROPTEXT:
-            {
-              char *dropped_filedir = event.drop.file;
-//              NJLI_HandleDropFile(dropped_filedir);
-              SDL_free(dropped_filedir);
-            }
-            break;
-          case SDL_DROPBEGIN:
-            {
-              printf("Dropped file begin: %u\n", event.drop.windowID);
-            }
-            break;
-          case SDL_DROPCOMPLETE:
-            {
-              printf("Dropped file begin: %u\n", event.drop.windowID);
-            }
+        case SDL_DROPTEXT: {
+            char *dropped_filedir = event.drop.file;
+            //              NJLI_HandleDropFile(dropped_filedir);
+            SDL_free(dropped_filedir);
+        } break;
+        case SDL_DROPBEGIN: {
+            printf("Dropped file begin: %u\n", event.drop.windowID);
+        } break;
+        case SDL_DROPCOMPLETE: {
+            printf("Dropped file begin: %u\n", event.drop.windowID);
+        }
 #endif
+        break;
+        default:
             break;
-          default:
-            break;
-          }
-      }
+        }
+    }
 
-//    if (callFinishKeys)
-//      NJLI_HandleKeyboardFinish(SDL_GetKeyboardState(NULL), SDL_NUM_SCANCODES);
+    //    if (callFinishKeys)
+    //      NJLI_HandleKeyboardFinish(SDL_GetKeyboardState(NULL),
+    //      SDL_NUM_SCANCODES);
 
 #if !(defined(__MACOSX__) && __MACOSX__)
 #endif
-  }
+}
 
 static void Update() {
-    while(!gDone) {
-        TestClass::get()->update();
-        
-//        std::thread::id this_id = std::this_thread::get_id();
-//        g_display_mutex.lock();
-//        std::cout << "thread " << this_id << " sleeping...\n";
-//        g_display_mutex.unlock();
+    const double FPS = 60.;
+    const double FPms = FPS / 1000.;
+
+    std::chrono::steady_clock::time_point lastFrameTime =
+        std::chrono::steady_clock::now();
+
+    double totalFPS = 0.0;
+    while (!gDone) {
+
+        double step = std::chrono::duration_cast<std::chrono::microseconds>(
+                          std::chrono::steady_clock::now() - lastFrameTime)
+                          .count() /
+                      1000.0;
+
+        totalFPS += step;
+
+        if (totalFPS >= FPms) {
+            totalFPS = totalFPS - FPms;
+            step = FPms;
+        }
+
+        TestClass::getInstance()->update(step);
+        lastFrameTime = std::chrono::steady_clock::now();
     }
 }
 
 #if !(defined(__IPHONEOS__) && __IPHONEOS__)
-  static void mainloop()
-  {
+static void mainloop() {
 #if !defined(NDEBUG) && 0
-      // Declare display mode structure to be filled in.
-      SDL_DisplayMode current;
-      // Get current display mode of all displays.
-      for(int i = 0; i < SDL_GetNumVideoDisplays(); ++i){
-          
-          int should_be_zero = SDL_GetCurrentDisplayMode(i, &current);
-          
-          if(should_be_zero != 0)
-              // In case of error...
-              SDL_Log("Could not get display mode for video display #%d: %s", i, SDL_GetError());
-          
-          else
-              // On success, print the current display mode.
-              SDL_Log("Display #%d: current display mode is %dx%dpx @ %dhz.", i, current.w, current.h, current.refresh_rate);
-          
-      }
+    // Declare display mode structure to be filled in.
+    SDL_DisplayMode current;
+    // Get current display mode of all displays.
+    for (int i = 0; i < SDL_GetNumVideoDisplays(); ++i) {
+
+        int should_be_zero = SDL_GetCurrentDisplayMode(i, &current);
+
+        if (should_be_zero != 0)
+            // In case of error...
+            SDL_Log("Could not get display mode for video display #%d: %s", i,
+                    SDL_GetError());
+
+        else
+            // On success, print the current display mode.
+            SDL_Log("Display #%d: current display mode is %dx%dpx @ %dhz.", i,
+                    current.w, current.h, current.refresh_rate);
+    }
 #endif
-      
+
     handleInput();
 
-      TestClass::get()->update();
-      
+#if defined(__EMSCRIPTEN__)
+    TestClass::getInstance()->update(0.1);
+#endif
+
     RenderFrame(gGraphics.get());
 
     int w, h;
@@ -904,26 +873,23 @@ static void Update() {
 
     int w2, h2;
     SDL_GetWindowSize(gWindow, &w2, &h2);
-      
+
 #if defined(__EMSCRIPTEN__) || defined(__ANDROID__)
 
-    
-      TestClass::get()->resize(gDisplayMode.w, gDisplayMode.h);
-      
-//    NJLI_HandleResize(gDisplayMode.w, gDisplayMode.h, gDisplayMode.format,
-//                      gDisplayMode.refresh_rate);
-                      
+    TestClass::getInstance()->resize(gDisplayMode.w, gDisplayMode.h);
+
+    //    NJLI_HandleResize(gDisplayMode.w, gDisplayMode.h, gDisplayMode.format,
+    //                      gDisplayMode.refresh_rate);
 
 #endif
 
 #if defined(__EMSCRIPTEN__)
 
-    if (gDone)
-      {
+    if (gDone) {
         emscripten_cancel_main_loop();
 
-//        njli::NJLIGameEngine::destroy();
-          TestClass::destroy();
+        //        njli::NJLIGameEngine::destroy();
+        TestClass::destroyInstance();
 
         SDL_GL_DeleteContext(gGlContext);
 
@@ -936,25 +902,22 @@ static void Update() {
 
         SDL_DestroyWindow(gWindow);
         SDL_Quit();
-      }
+    }
 
 #endif
-  }
+}
 #endif
 
 #if defined(__MACOSX__)
-static void createRenderer()
-{
+static void createRenderer() {
     int n = SDL_GetNumRenderDrivers();
     SDL_RendererInfo info;
-    
-    for (int j = 0; j < n; ++j)
-    {
+
+    for (int j = 0; j < n; ++j) {
         SDL_GetRenderDriverInfo(j, &info);
         //                SDLTest_PrintRenderer(&info);
         SDL_LogInfo(SDL_LOG_CATEGORY_TEST, "%s", info.name);
-        if (SDL_strcasecmp(info.name, "opengl") == 0)
-        {
+        if (SDL_strcasecmp(info.name, "opengl") == 0) {
             gRenderer = SDL_CreateRenderer(gWindow, j, 0);
             return;
         }
@@ -962,184 +925,176 @@ static void createRenderer()
 }
 #endif
 
-int
-main(int argc, char *argv[])
-{
-      
-      
-      
-      
-      
-//      std::string working_directory("");
-//      bool found_working_dir = false;
-//      for(int i = 0; i < argc; ++i)
-//      {
-//          std::string s(argv[i]);
-//
-//          if(found_working_dir)
-//          {
-//              working_directory = std::string(argv[i]);
-//              working_directory += "/";
-//              found_working_dir = false;
-//
-//              setAssetPath(working_directory.c_str());
-//          }
-//          if(s == "-working_dir")
-//          {
-//              found_working_dir = true;
-//          }
-//
-//      }
-      
-      
+int main(int argc, char *argv[]) {
+
+    //      std::string working_directory("");
+    //      bool found_working_dir = false;
+    //      for(int i = 0; i < argc; ++i)
+    //      {
+    //          std::string s(argv[i]);
+    //
+    //          if(found_working_dir)
+    //          {
+    //              working_directory = std::string(argv[i]);
+    //              working_directory += "/";
+    //              found_working_dir = false;
+    //
+    //              setAssetPath(working_directory.c_str());
+    //          }
+    //          if(s == "-working_dir")
+    //          {
+    //              found_working_dir = true;
+    //          }
+    //
+    //      }
+
 #if (defined(__MACOSX__) && __MACOSX__)
-    if (argc > 1)
-      {
+    if (argc > 1) {
         //        setRunningPath(argv[1]);
-//        setScriptDir(argv[1]);
-      }
+        //        setScriptDir(argv[1]);
+    }
 #endif
 
-      SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
-      
+    SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
+
     /* initialize SDL */
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0)
-      {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
         printf("SDL could not initialize! SDL Error: %s\n", SDL_GetError());
         return 1;
-      }
+    }
 
-      const char *name, *type;
-      int i;
-      SDL_Joystick *joystick;
+    const char *name, *type;
+    int i;
+    SDL_Joystick *joystick;
 
-      /* Print information about the joysticks */
-      SDL_Log("There are %d joysticks attached\n", SDL_NumJoysticks());
-      for ( i = 0; i < SDL_NumJoysticks(); ++i) {
-          name = SDL_JoystickNameForIndex(i);
-          SDL_Log("Joystick %d: %s\n", i, name ? name : "Unknown Joystick");
-          joystick = SDL_JoystickOpen(i);
-          if (joystick == NULL) {
-              SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "SDL_JoystickOpen(%d) failed: %s\n", i,
-                           SDL_GetError());
-          } else {
-              char guid[64];
-              SDL_assert(SDL_JoystickFromInstanceID(SDL_JoystickInstanceID(joystick)) == joystick);
-              SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(joystick),
-                                        guid, sizeof (guid));
-              switch (SDL_JoystickGetType(joystick)) {
-                  case SDL_JOYSTICK_TYPE_GAMECONTROLLER:
-                      type = "Game Controller";
-                      break;
-                  case SDL_JOYSTICK_TYPE_WHEEL:
-                      type = "Wheel";
-                      break;
-                  case SDL_JOYSTICK_TYPE_ARCADE_STICK:
-                      type = "Arcade Stick";
-                      break;
-                  case SDL_JOYSTICK_TYPE_FLIGHT_STICK:
-                      type = "Flight Stick";
-                      break;
-                  case SDL_JOYSTICK_TYPE_DANCE_PAD:
-                      type = "Dance Pad";
-                      break;
-                  case SDL_JOYSTICK_TYPE_GUITAR:
-                      type = "Guitar";
-                      break;
-                  case SDL_JOYSTICK_TYPE_DRUM_KIT:
-                      type = "Drum Kit";
-                      break;
-                  case SDL_JOYSTICK_TYPE_ARCADE_PAD:
-                      type = "Arcade Pad";
-                      break;
-                  case SDL_JOYSTICK_TYPE_THROTTLE:
-                      type = "Throttle";
-                      break;
-                  default:
-                      type = "Unknown";
-                      break;
-              }
-              SDL_Log("       type: %s\n", type);
-              SDL_Log("       axes: %d\n", SDL_JoystickNumAxes(joystick));
-              SDL_Log("      balls: %d\n", SDL_JoystickNumBalls(joystick));
-              SDL_Log("       hats: %d\n", SDL_JoystickNumHats(joystick));
-              SDL_Log("    buttons: %d\n", SDL_JoystickNumButtons(joystick));
-              SDL_Log("instance id: %d\n", SDL_JoystickInstanceID(joystick));
-              SDL_Log("       guid: %s\n", guid);
-              SDL_Log("    VID/PID: 0x%.4x/0x%.4x\n", SDL_JoystickGetVendor(joystick), SDL_JoystickGetProduct(joystick));
-              SDL_JoystickClose(joystick);
-          }
-      }
-      
-      
-      
-#if defined(__ANDROID__) || defined(__IPHONEOS__ )
-      if (SDL_NumJoysticks() > 0) {
-#else
-          if (argv[1]) {
-#endif
-              SDL_bool reportederror = SDL_FALSE;
-              SDL_bool keepGoing = SDL_TRUE;
-              SDL_Event event;
-              int device;
+    /* Print information about the joysticks */
+    SDL_Log("There are %d joysticks attached\n", SDL_NumJoysticks());
+    for (i = 0; i < SDL_NumJoysticks(); ++i) {
+        name = SDL_JoystickNameForIndex(i);
+        SDL_Log("Joystick %d: %s\n", i, name ? name : "Unknown Joystick");
+        joystick = SDL_JoystickOpen(i);
+        if (joystick == NULL) {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+                         "SDL_JoystickOpen(%d) failed: %s\n", i,
+                         SDL_GetError());
+        } else {
+            char guid[64];
+            SDL_assert(SDL_JoystickFromInstanceID(
+                           SDL_JoystickInstanceID(joystick)) == joystick);
+            SDL_JoystickGetGUIDString(SDL_JoystickGetGUID(joystick), guid,
+                                      sizeof(guid));
+            switch (SDL_JoystickGetType(joystick)) {
+            case SDL_JOYSTICK_TYPE_GAMECONTROLLER:
+                type = "Game Controller";
+                break;
+            case SDL_JOYSTICK_TYPE_WHEEL:
+                type = "Wheel";
+                break;
+            case SDL_JOYSTICK_TYPE_ARCADE_STICK:
+                type = "Arcade Stick";
+                break;
+            case SDL_JOYSTICK_TYPE_FLIGHT_STICK:
+                type = "Flight Stick";
+                break;
+            case SDL_JOYSTICK_TYPE_DANCE_PAD:
+                type = "Dance Pad";
+                break;
+            case SDL_JOYSTICK_TYPE_GUITAR:
+                type = "Guitar";
+                break;
+            case SDL_JOYSTICK_TYPE_DRUM_KIT:
+                type = "Drum Kit";
+                break;
+            case SDL_JOYSTICK_TYPE_ARCADE_PAD:
+                type = "Arcade Pad";
+                break;
+            case SDL_JOYSTICK_TYPE_THROTTLE:
+                type = "Throttle";
+                break;
+            default:
+                type = "Unknown";
+                break;
+            }
+            SDL_Log("       type: %s\n", type);
+            SDL_Log("       axes: %d\n", SDL_JoystickNumAxes(joystick));
+            SDL_Log("      balls: %d\n", SDL_JoystickNumBalls(joystick));
+            SDL_Log("       hats: %d\n", SDL_JoystickNumHats(joystick));
+            SDL_Log("    buttons: %d\n", SDL_JoystickNumButtons(joystick));
+            SDL_Log("instance id: %d\n", SDL_JoystickInstanceID(joystick));
+            SDL_Log("       guid: %s\n", guid);
+            SDL_Log("    VID/PID: 0x%.4x/0x%.4x\n",
+                    SDL_JoystickGetVendor(joystick),
+                    SDL_JoystickGetProduct(joystick));
+            SDL_JoystickClose(joystick);
+        }
+    }
+
 #if defined(__ANDROID__) || defined(__IPHONEOS__)
-              device = 0;
+    if (SDL_NumJoysticks() > 0) {
 #else
-              device = atoi(argv[1]);
+    if (argv[1]) {
 #endif
-              joystick = SDL_JoystickOpen(device);
-              if (joystick != NULL) {
-                  SDL_assert(SDL_JoystickFromInstanceID(SDL_JoystickInstanceID(joystick)) == joystick);
-              }
-              
-//              while ( keepGoing ) {
-//                  if (joystick == NULL) {
-//                      if ( !reportederror ) {
-//                          SDL_Log("Couldn't open joystick %d: %s\n", device, SDL_GetError());
-//                          keepGoing = SDL_FALSE;
-//                          reportederror = SDL_TRUE;
-//                      }
-//                  } else {
-//                      reportederror = SDL_FALSE;
-//                      keepGoing = WatchJoystick(joystick);
-//                      SDL_JoystickClose(joystick);
-//                  }
-//
-//                  joystick = NULL;
-//                  if (keepGoing) {
-//                      SDL_Log("Waiting for attach\n");
-//                  }
-//                  while (keepGoing) {
-//                      SDL_WaitEvent(&event);
-//                      if ((event.type == SDL_QUIT) || (event.type == SDL_FINGERDOWN)
-//                          || (event.type == SDL_MOUSEBUTTONDOWN)) {
-//                          keepGoing = SDL_FALSE;
-//                      } else if (event.type == SDL_JOYDEVICEADDED) {
-//                          device = event.jdevice.which;
-//                          joystick = SDL_JoystickOpen(device);
-//                          if (joystick != NULL) {
-//                              SDL_assert(SDL_JoystickFromInstanceID(SDL_JoystickInstanceID(joystick)) == joystick);
-//                          }
-//                          break;
-//                      }
-//                  }
-//              }
-          }
-      
-      
-      
-      
+        SDL_bool reportederror = SDL_FALSE;
+        SDL_bool keepGoing = SDL_TRUE;
+        SDL_Event event;
+        int device;
+#if defined(__ANDROID__) || defined(__IPHONEOS__)
+        device = 0;
+#else
+        device = atoi(argv[1]);
+#endif
+        joystick = SDL_JoystickOpen(device);
+        if (joystick != NULL) {
+            SDL_assert(SDL_JoystickFromInstanceID(
+                           SDL_JoystickInstanceID(joystick)) == joystick);
+        }
+
+        //              while ( keepGoing ) {
+        //                  if (joystick == NULL) {
+        //                      if ( !reportederror ) {
+        //                          SDL_Log("Couldn't open joystick %d: %s\n",
+        //                          device, SDL_GetError()); keepGoing =
+        //                          SDL_FALSE; reportederror = SDL_TRUE;
+        //                      }
+        //                  } else {
+        //                      reportederror = SDL_FALSE;
+        //                      keepGoing = WatchJoystick(joystick);
+        //                      SDL_JoystickClose(joystick);
+        //                  }
+        //
+        //                  joystick = NULL;
+        //                  if (keepGoing) {
+        //                      SDL_Log("Waiting for attach\n");
+        //                  }
+        //                  while (keepGoing) {
+        //                      SDL_WaitEvent(&event);
+        //                      if ((event.type == SDL_QUIT) || (event.type ==
+        //                      SDL_FINGERDOWN)
+        //                          || (event.type == SDL_MOUSEBUTTONDOWN)) {
+        //                          keepGoing = SDL_FALSE;
+        //                      } else if (event.type == SDL_JOYDEVICEADDED) {
+        //                          device = event.jdevice.which;
+        //                          joystick = SDL_JoystickOpen(device);
+        //                          if (joystick != NULL) {
+        //                              SDL_assert(SDL_JoystickFromInstanceID(SDL_JoystickInstanceID(joystick))
+        //                              == joystick);
+        //                          }
+        //                          break;
+        //                      }
+        //                  }
+        //              }
+    }
 
 #if !defined(__ANDROID__)
     SDL_GetDesktopDisplayMode(0, &gDisplayMode);
 #endif
-      
+
 #if defined(__EMSCRIPTEN__)
     gDisplayMode.h = 725.0f;
     float div = gDisplayMode.h / 9.0;
     gDisplayMode.w = div * 16.0f;
-//      gDisplayMode.h = 600.0f;
-          gDisplayMode.refresh_rate = 60.0f;
+    //      gDisplayMode.h = 600.0f;
+    gDisplayMode.refresh_rate = 60.0f;
 #endif
 
 #if defined(__EMSCRIPTEN__) || defined(__ANDROID__) || defined(__IPHONEOS__)
@@ -1150,75 +1105,74 @@ main(int argc, char *argv[])
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-      
-      
-#if defined(__GL_ES2__)
-      
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-      
-#elif defined(__GL_ES3__)
-      
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-      
-#elif defined(__GL_2__)
-      
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-#if defined(__MACOSX__)
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-#endif
-      
-#elif defined(__GL_3__)
-      
-      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-#if defined(__MACOSX__)
-//      SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
-//      SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
-//      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-//      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-//
-      
-//      SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-#endif
-      
-#endif
-      
+    //#if defined(__GL_ES2__)
+    //
+    //      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    //
+    //#elif defined(__GL_ES3__)
+    //
+    //      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    //
+    //#elif defined(__GL_2__)
+
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    //#if defined(__MACOSX__)
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    //#endif
+
+    //#elif defined(__GL_3__)
+    //
+    //      SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    //#if defined(__MACOSX__)
+    ////      SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, 1);
+    ////      SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS,
+    /// SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG); /
+    /// SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4); /
+    /// SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    ////
+    //
+    ////      SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK,
+    /// SDL_GL_CONTEXT_PROFILE_CORE);
+    //#endif
+
+    //#endif
+
 #if defined(__MACOSX__) || defined(__WINDOWS32__) || defined(__WINDOWS64__)
     SDL_EventState(SDL_DROPFILE, SDL_ENABLE);
 #endif
 
-      Uint32 flags = SDL_WINDOW_OPENGL;
-      
-      
+    Uint32 flags = SDL_WINDOW_OPENGL;
+
 #if defined(__MACOSX__)
-      flags |= SDL_WINDOW_RESIZABLE;
-//      flags |= SDL_WINDOW_MAXIMIZED;
-      flags |= SDL_WINDOW_ALWAYS_ON_TOP;
-      flags |= SDL_WINDOW_UTILITY;
+    //      flags |= SDL_WINDOW_RESIZABLE;
+    //      flags |= SDL_WINDOW_MAXIMIZED;
+    flags |= SDL_WINDOW_ALWAYS_ON_TOP;
+    flags |= SDL_WINDOW_UTILITY;
 #endif
 
 #if defined(__ANDROID__) || defined(__IPHONEOS__)
-      flags |= SDL_WINDOW_FULLSCREEN;
+    flags |= SDL_WINDOW_FULLSCREEN;
 #endif
-      
+
 #if defined(__ANDROID__) || defined(__IPHONEOS__) || defined(__MACOSX__)
-      flags |= SDL_WINDOW_ALLOW_HIGHDPI;
+    flags |= SDL_WINDOW_ALLOW_HIGHDPI;
 #endif
-      
+
     /* create window and renderer */
     gWindow =
-        SDL_CreateWindow("NJLIGameEngine", SDL_WINDOWPOS_CENTERED,
-                         SDL_WINDOWPOS_CENTERED, gDisplayMode.w, gDisplayMode.h,
-                         flags);
+        SDL_CreateWindow("JamesFolk_DSSAssignment", SDL_WINDOWPOS_CENTERED,
+                         SDL_WINDOWPOS_CENTERED, 640, 480, flags);
 
 #if defined(__MACOSX__)
     createRenderer();
 #endif
 
-     SDL_SetWindowSize(gWindow, 800, 600);
+    SDL_SetWindowSize(gWindow, 1920, 1080);
 
-//    int w, h;
-//    SDL_GetWindowSize(gWindow, &w, &h);
-//    SDL_Log("SDL_GetWindowSize #%d: current display mode is %dx%dpx", 0, w, h);
+    //    int w, h;
+    //    SDL_GetWindowSize(gWindow, &w, &h);
+    //    SDL_Log("SDL_GetWindowSize #%d: current display mode is %dx%dpx", 0,
+    //    w, h);
 
     //#if defined(__MACOSX__)
     //#if !(defined(NDEBUG))
@@ -1226,14 +1180,14 @@ main(int argc, char *argv[])
     //#endif
     //#endif
 
-//    SDL_GL_GetDrawableSize(gWindow, &w, &h);
-//    SDL_Log("SDL_GL_GetDrawableSize #%d: current display mode is %dx%dpx", 0, w, h);
+    //    SDL_GL_GetDrawableSize(gWindow, &w, &h);
+    //    SDL_Log("SDL_GL_GetDrawableSize #%d: current display mode is %dx%dpx",
+    //    0, w, h);
 
-    if (!gWindow)
-      {
+    if (!gWindow) {
         printf("Could not initialize Window\n");
         return 1;
-      }
+    }
 
 #if (defined(__ANDROID__) && (__ANDROID__))
     SDL_SetWindowFullscreen(gWindow, SDL_TRUE);
@@ -1246,18 +1200,19 @@ main(int argc, char *argv[])
     GLenum e = GLEW_OK;
     e = glewInit();
     if (e != GLEW_OK) { // never fails
-        printf("glewInit initialization failed. GLEW error %s\n", glewGetErrorString(e));
+        printf("glewInit initialization failed. GLEW error %s\n",
+               glewGetErrorString(e));
     }
 #endif
 
-          TestClass::create();
-          TestClass::get()->init();
-//    if (!njli::NJLIGameEngine::create(
-//            DeviceUtil::hardwareDescription().c_str()))
-//      {
-//        cerr << "Error initializing OpenGL" << endl;
-//        return 1;
-//      }
+    TestClass::createInstance();
+    TestClass::getInstance()->init(10);
+    //    if (!njli::NJLIGameEngine::create(
+    //            DeviceUtil::hardwareDescription().c_str()))
+    //      {
+    //        cerr << "Error initializing OpenGL" << endl;
+    //        return 1;
+    //      }
 
     gGraphics = std::unique_ptr<Graphics>(new Graphics(gWindow));
 
@@ -1265,7 +1220,7 @@ main(int argc, char *argv[])
     SDL_AddEventWatch(EventFilter, NULL);
 #endif
 
-//    int drawableW, drawableH;
+    //    int drawableW, drawableH;
     int screen_w, screen_h;
     float pointSizeScale;
 
@@ -1273,14 +1228,13 @@ main(int argc, char *argv[])
      * enabled,
      * due to the increased pixel density of the drawable. */
     SDL_GetWindowSize(gWindow, &screen_w, &screen_h);
-      
-      
+
 //      SDL_GL_GetDrawableSize(gWindow, &w, &h);
 #if !defined(__EMSCRIPTEN__)
-        SDL_GL_GetDrawableSize(gWindow, &gDisplayMode.w, &gDisplayMode.h);
+    SDL_GL_GetDrawableSize(gWindow, &gDisplayMode.w, &gDisplayMode.h);
 #endif
-//      gDisplayMode.w = drawableW;
-//      gDisplayMode.h = drawableH;
+    //      gDisplayMode.w = drawableW;
+    //      gDisplayMode.h = drawableH;
 
     /* In OpenGL, point sizes are always in pixels. We don't want them looking
      * tiny on a retina screen. */
@@ -1292,75 +1246,77 @@ main(int argc, char *argv[])
     //    SDL_GL_GetDrawableSize(gWindow, &w, &h);
     //#endif
     //#if defined(__EMSCRIPTEN__)
-      
-    #if defined(__EMSCRIPTEN__)
-//           int fullScreen = 0;
-//           emscripten_get_canvas_size(&gDisplayMode.w, &gDisplayMode.h, &fullScreen);
 
-//           EMSCRIPTEN_RESULT r = emscripten_get_canvas_element_size("#gameCanvas", &gDisplayMode.w, &gDisplayMode.h);
-//           if (r != EMSCRIPTEN_RESULT_SUCCESS) /* handle error */
-//               EmscriptenFullscreenChangeEvent e;
-//           r = emscripten_get_fullscreen_status(&e);
-//           if (r != EMSCRIPTEN_RESULT_SUCCESS) /* handle error */
-//               fullScreen = e.isFullscreen;
+#if defined(__EMSCRIPTEN__)
+    //           int fullScreen = 0;
+    //           emscripten_get_canvas_size(&gDisplayMode.w, &gDisplayMode.h,
+    //           &fullScreen);
+
+    //           EMSCRIPTEN_RESULT r =
+    //           emscripten_get_canvas_element_size("#gameCanvas",
+    //           &gDisplayMode.w, &gDisplayMode.h); if (r !=
+    //           EMSCRIPTEN_RESULT_SUCCESS) /* handle error */
+    //               EmscriptenFullscreenChangeEvent e;
+    //           r = emscripten_get_fullscreen_status(&e);
+    //           if (r != EMSCRIPTEN_RESULT_SUCCESS) /* handle error */
+    //               fullScreen = e.isFullscreen;
 
 #endif
-          gDisplayMode.w *= pointSizeScale;
-          gDisplayMode.h *= pointSizeScale;
-          
-//    NJLI_HandleResize(gDisplayMode.w, gDisplayMode.h, gDisplayMode.format,
-//                      gDisplayMode.refresh_rate);
-          
-          TestClass::get()->resize(gDisplayMode.w, gDisplayMode.h);
-          
+    gDisplayMode.w *= pointSizeScale;
+    gDisplayMode.h *= pointSizeScale;
+
+    //    NJLI_HandleResize(gDisplayMode.w, gDisplayMode.h, gDisplayMode.format,
+    //                      gDisplayMode.refresh_rate);
+
+    TestClass::getInstance()->resize(gDisplayMode.w, gDisplayMode.h);
+
     //#endif
 
-//      bool vsynch = true;
-//      if(vsynch)
-//      {
-//          SDL_GL_SetSwapInterval(1);
-//      }
-//      else
-//      {
-//          SDL_GL_SetSwapInterval(0);
-//      }
-      
-//    gDone = (njli::NJLIGameEngine::start(argc, argv) == false) ? 1 : 0;
+    //      bool vsynch = true;
+    //      if(vsynch)
+    //      {
+    //          SDL_GL_SetSwapInterval(1);
+    //      }
+    //      else
+    //      {
+    //          SDL_GL_SetSwapInterval(0);
+    //      }
+
+    //    gDone = (njli::NJLIGameEngine::start(argc, argv) == false) ? 1 : 0;
 
 #if defined(__EMSCRIPTEN__)
     emscripten_set_main_loop(mainloop, 0, 0);
 #else
 
-          gUpdateThread = new std::thread(Update);
-          
-          while (!gDone)
-          {
-              
-//              std::thread::id this_id = std::this_thread::get_id();
-//              g_display_mutex.lock();
-//              std::cout << "thread " << this_id << " sleeping...\n";
-//              g_display_mutex.unlock();
+    gUpdateThread = new std::thread(Update);
+
+    while (!gDone) {
+
+        //              std::thread::id this_id = std::this_thread::get_id();
+        //              g_display_mutex.lock();
+        //              std::cout << "thread " << this_id << " sleeping...\n";
+        //              g_display_mutex.unlock();
 
 #if defined(__IPHONEOS__) && __IPHONEOS__
-              handleInput();
+        handleInput();
 #else
-//              mainloop();
-              
-              handleInput();
-              RenderFrame(gGraphics.get());
-#endif
-          }
-          
-          gUpdateThread->join();
-          delete gUpdateThread;
+        mainloop();
 
-//    NJLI_HandleSurfaceDestroyed();
-          TestClass::destroy();
+//              handleInput();
+//              RenderFrame(gGraphics.get());
+#endif
+    }
+
+    gUpdateThread->join();
+    delete gUpdateThread;
+
+    //    NJLI_HandleSurfaceDestroyed();
+    TestClass::destroyInstance();
 
 #endif
 
     return 0;
-  }
+}
 //{
 //    int i;
 //    Uint32 then, now, frames;
@@ -1372,8 +1328,8 @@ main(int argc, char *argv[])
 //    num_objects = NUM_OBJECTS;
 //
 //    /* Initialize test framework */
-//    state = SDLTest_CommonCreateState(argv, SDL_INIT_VIDEO | SDL_INIT_JOYSTICK);
-//    if (!state) {
+//    state = SDLTest_CommonCreateState(argv, SDL_INIT_VIDEO |
+//    SDL_INIT_JOYSTICK); if (!state) {
 //        return 1;
 //    }
 //    for (i = 1; i < argc;) {
@@ -1410,7 +1366,8 @@ main(int argc, char *argv[])
 //            }
 //        }
 //        if (consumed < 0) {
-//            static const char *options[] = { "[--blend none|blend|add|mod]", "[--cyclecolor]", "[--cyclealpha]", NULL };
+//            static const char *options[] = { "[--blend none|blend|add|mod]",
+//            "[--cyclecolor]", "[--cyclealpha]", NULL };
 ////            SDLTest_CommonLogUsage(state, argv[0], options);
 //            return 1;
 //        }
