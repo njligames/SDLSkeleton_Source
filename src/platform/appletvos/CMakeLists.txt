@@ -28,6 +28,9 @@ set_target_properties(curl PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${THIRDPARTY
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/curl)
 
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/rapidjson)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/nlohmann)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/stb)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/glm)
 
 
 
@@ -67,7 +70,7 @@ list(APPEND TARGET_LIBRARIES "-framework UIKit")
 list(APPEND TARGET_LIBRARIES "-framework Foundation")
 list(APPEND TARGET_LIBRARIES "-framework AVFoundation")
 list(APPEND TARGET_LIBRARIES "-framework GameController")
-list(APPEND TARGET_LIBRARIES "-framework CoreMotion")
+# list(APPEND TARGET_LIBRARIES "-framework CoreMotion")
 list(APPEND TARGET_LIBRARIES "-framework CoreGraphics")
 list(APPEND TARGET_LIBRARIES "-framework QuartzCore")
 list(APPEND TARGET_LIBRARIES "-framework Metal")

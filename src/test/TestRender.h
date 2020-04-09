@@ -1,20 +1,32 @@
+//
+//  TestRender.h
+//  SDLSkeleton
+//
+//  Created by James Folk on 4/1/20.
+//
+
+#ifndef TestRender_hpp
+#define TestRender_hpp
+
+#include "GraphicsPlatform.h"
 
 #include "gtest/gtest.h"
 
- #include "SDL_test_common.h"
+#include "SDL_test_common.h"
+#include <mutex>
 #include <thread>
+
 class Graphics;
 
 // The fixture for testing class Foo.
-class TestExample : public ::testing::Test {
+class TestRender : public ::testing::Test {
 
-protected:
-
+  protected:
     // You can do set-up work for each test here.
-    TestExample();
+    TestRender();
 
     // You can do clean-up work that doesn't throw exceptions here.
-    virtual ~TestExample();
+    virtual ~TestRender();
     void handleInput();
     void holdView(unsigned int seconds);
     // If the constructor and destructor are not enough for setting up
@@ -28,7 +40,6 @@ protected:
     // before the destructor).
     virtual void TearDown();
 
-    
     SDLTest_CommonState *state;
     typedef struct {
         SDL_Window *window;
@@ -39,11 +50,28 @@ protected:
         int scale_direction;
     } DrawState;
     DrawState *drawstates;
-    
+
     SDL_GLContext glContext;
-    std::unique_ptr<Graphics> graphics;
+
     std::thread *updateThread;
-    bool done;
+    bool mDone;
+
+    std::mutex mMutex;
+    std::thread *mThread;
+
+    std::unique_ptr<Graphics> mGraphics;
+
+  public:
+    virtual void update(double step);
+    virtual void render();
+
+    void setDone() {
+        mMutex.lock();
+        mDone = true;
+        mMutex.unlock();
+    }
+    bool isDone() const { return mDone; }
+    Graphics *getGraphics() const { return mGraphics.get(); }
 };
 
-
+#endif /* TestRender_hpp */

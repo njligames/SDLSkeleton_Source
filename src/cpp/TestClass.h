@@ -18,6 +18,7 @@ class GameModelViewData;
 class GameModelData;
 class BitmapFont;
 class GameModelData;
+#include "Color.h"
 
 class TestClass { //} : public Subscriber {
     static TestClass *sInstance;
@@ -67,7 +68,10 @@ class TestClass { //} : public Subscriber {
     bool mIsDone;
 
     std::vector<GameModelData *> mGameModelDataVector;
+    
+    Color mColor;
 
+    
     //    NJLIC::Shader *mShader;
     //    NJLIC::Camera *mCamera;
     //    NJLIC::Node *mCameraNode;

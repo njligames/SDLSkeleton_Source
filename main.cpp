@@ -812,29 +812,48 @@ static void handleInput() {
 }
 
 static void Update() {
-    const double FPS = 60.;
-    const double FPms = FPS / 1000.;
+    const double nFPS = 60.;
+    const double FPS = 1.0 / nFPS;
 
     std::chrono::steady_clock::time_point lastFrameTime =
         std::chrono::steady_clock::now();
 
+    clock_t currentClock = clock();
     double totalFPS = 0.0;
+    
     while (!gDone) {
+        
+        
+// Use this for a fixed render looptime
+//        using namespace std;
+//        using namespace std::chrono;
+//
+//        using frames = duration<int64_t, ratio<1, 120>>;  // 5Hz
+//        auto nextFrame = system_clock::now() + frames{0};
+//        auto lastFrame = nextFrame - frames{1};;
+//
+//        while (true)
+//        {
+//            // Perform intersection test
+//
+//            this_thread::sleep_until(nextFrame);
+//            cout << "Time: "  // just for monitoring purposes
+//                 << duration_cast<milliseconds>(system_clock::now() - lastFrame).count()
+//                 << "ms\n";
+//            double step(duration_cast<milliseconds>(system_clock::now() - lastFrame).count() / 1000.0);
+//            TestClass::getInstance()->update(step);
+//            lastFrame = nextFrame;
+//            nextFrame += frames{1};
+//        }
+        
+        
 
-        double step = std::chrono::duration_cast<std::chrono::microseconds>(
-                          std::chrono::steady_clock::now() - lastFrameTime)
-                          .count() /
-                      1000.0;
-
-        totalFPS += step;
-
-        if (totalFPS >= FPms) {
-            totalFPS = totalFPS - FPms;
-            step = FPms;
-        }
-
-        TestClass::getInstance()->update(step);
-        lastFrameTime = std::chrono::steady_clock::now();
+        clock_t diffClock = clock() - currentClock;
+        double cpu_time_used = ((double)diffClock) / (CLOCKS_PER_SEC/1000);
+        
+        TestClass::getInstance()->update(cpu_time_used);
+        currentClock = clock();
+//        lastFrameTime = std::chrono::steady_clock::now();
     }
 }
 

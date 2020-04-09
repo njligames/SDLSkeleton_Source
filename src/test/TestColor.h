@@ -1,16 +1,29 @@
+//
+//  TestColor.hpp
+//  SDLSkeleton
+//
+//  Created by James Folk on 3/31/20.
+//
+
+#ifndef TestColor_hpp
+#define TestColor_hpp
 
 #include "gtest/gtest.h"
 
+#include "Color.h"
+#include "TestRender.h"
+
 // The fixture for testing class Foo.
-class TestCurlExample : public ::testing::Test {
+class TestColor : public TestRender {
 
   protected:
     // You can do set-up work for each test here.
-    TestCurlExample();
+    TestColor();
 
     // You can do clean-up work that doesn't throw exceptions here.
-    virtual ~TestCurlExample();
-
+    virtual ~TestColor();
+    void handleInput();
+    //    virtual void holdView(unsigned int seconds);
     // If the constructor and destructor are not enough for setting up
     // and cleaning up each test, you can define the following methods:
 
@@ -21,4 +34,13 @@ class TestCurlExample : public ::testing::Test {
     // Code here will be called immediately after each test (right
     // before the destructor).
     virtual void TearDown();
+
+  public:
+    virtual void update(double step) final;
+    virtual void render() final;
+
+  private:
+    Color mColor;
 };
+
+#endif /* TestColor_hpp */

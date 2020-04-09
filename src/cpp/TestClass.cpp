@@ -29,6 +29,8 @@
 //#include "ListItemNode.h"
 //#include "MaterialProperty.h"
 
+
+
 static void UpdateFrame(void *param) {
     //  njli::NJLIGameEngine::update(1.0f / ((float)gDisplayMode.refresh_rate));
 
@@ -217,10 +219,15 @@ void TestClass::init(const unsigned int numCards) {
     //    BitmapFont::getInstance()->setCurrentFontName("FranklinGothicMedium");
     //    //    BitmapFont::getInstance()->printf("%s - %d", "jimbo", 100);
     //
-    GLclampf red, green, blue;
-    red = green = blue = (254.0 / 255.0);
+//    GLclampf red, green, blue;
+//    red = green = blue = (254.0 / 255.0);
     //
-    glClearColor(red, 0, 0, 1.0f);
+    
+    mColor.setRGB("FF0000");
+    mColor.setRGB(0xFF00FF);
+    mColor.setRGB(glm::vec4(1.0, 0., 0.0, 1.0));
+    
+    glClearColor(mColor.red(), mColor.green(), mColor.blue(), 1.0f);
     //    //    glEnable(GL_DEPTH_TEST);
     //    glFrontFace(GL_CW);
     //    glCullFace(GL_BACK);
@@ -263,12 +270,20 @@ void TestClass::update(double step) {
     //    mScene->update(step);
 
     SDL_Log("Updating %f\n", step);
+    
+    float h(std::numeric_limits<float>::denorm_min());
+    mColor = Color::modifyHue(mColor, step * 10);
+    
+    
 }
 void TestClass::render() {
     //    mMutex.lock();
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+    
+    glClearColor(mColor.red(), mColor.green(), mColor.blue(), 1.0f);
+    
     //    glDisable(GL_DEPTH_TEST);
     //    NJLIC::BackgroundRenderer::getInstance()->render(1920, 1080);
     //

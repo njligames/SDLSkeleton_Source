@@ -65,3 +65,11 @@ target_link_libraries( ${CMAKE_PROJECT_NAME}-test-framework ${CMAKE_PROJECT_NAME
 
 add_test(NAME ${CMAKE_PROJECT_NAME}-test-framework COMMAND ${CMAKE_PROJECT_NAME}-test-framework)
 
+
+set(CLANG_FORMAT_BIN "/usr/local/bin/clang-format" CACHE STRING "use: `brew install clang-format` to install")
+add_custom_target(
+    clang-format-test
+    COMMAND ${CLANG_FORMAT_BIN} -style=file -i ${TARGET_PROJECT_SOURCES_TEST} -verbose
+    SOURCES
+    "${CMAKE_SOURCE_DIR}/.clang-format"
+    )

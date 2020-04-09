@@ -18,6 +18,24 @@ set_target_properties(SDL2 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${THIRDPARTY
 
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/SDL2)
 
+
+
+
+add_library(curl UNKNOWN IMPORTED)
+set_property(TARGET curl APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/${TARGET_PLATFORM}/libcurl.a")
+list(APPEND TARGET_LIBRARIES curl)
+set_target_properties(curl PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${THIRDPARTY_DIR}/includes/curl)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/curl)
+
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/rapidjson)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/nlohmann)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/stb)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/glm)
+
+
+
+
+
 set(CMAKE_CXX_FLAGS_DEBUG "--js-opts 0 -g4")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -DNDEBUG --llvm-opts 3 --js-opts 1 --closure 1 -s IGNORE_CLOSURE_COMPILER_ERRORS=1")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG --llvm-opts 3 --js-opts 1 --closure 1 -s IGNORE_CLOSURE_COMPILER_ERRORS=1")
@@ -72,60 +90,53 @@ target_link_libraries( ${CMAKE_PROJECT_NAME} ${TARGET_LIBRARIES} ${EXTRA_LDFLAGS
 set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY OUTPUT_NAME "index")
 set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY INCLUDE_DIRECTORIES ${TARGET_INCLUDE_DIRS})
 
-# list(APPEND TARGET_LIBRARIES "-framework CoreVideo")
-# list(APPEND TARGET_LIBRARIES "-framework Cocoa")
-# list(APPEND TARGET_LIBRARIES "-framework IOKit")
-# list(APPEND TARGET_LIBRARIES "-framework ForceFeedback")
-# list(APPEND TARGET_LIBRARIES "-framework Carbon")
-# list(APPEND TARGET_LIBRARIES "-framework CoreAudio")
-# list(APPEND TARGET_LIBRARIES "-framework AudioToolbox")
-# list(APPEND TARGET_LIBRARIES "-framework Metal")
-#
-# set(ASSET_CATALOGUE ${CMAKE_CURRENT_SOURCE_DIR}/resources/Assets.xcassets)
-# list(APPEND TARGET_RESOURCES ${ASSET_CATALOGUE})
-#
-# configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/Info.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
-# set_source_files_properties( ${TARGET_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION ${CMAKE_PROJECT_NAME}/Contents/Resources/)
-#
-# add_executable( ${CMAKE_PROJECT_NAME} MACOSX_BUNDLE ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES} ${TARGET_RESOURCES})
-# target_compile_definitions( ${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
-# target_link_libraries( ${CMAKE_PROJECT_NAME} ${TARGET_LIBRARIES})
-# set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY INCLUDE_DIRECTORIES ${TARGET_INCLUDE_DIRS})
-# set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY RESOURCE ${TARGET_RESOURCES})
-# set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY MACOSX_BUNDLE_INFO_PLIST ${CMAKE_BINARY_DIR}/Info.plist)
-# set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon")
-# set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${TARGET_BUNDLE_ID}.${TARGET_PLATFORM})
-# set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "Mac Developer")
-# set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY MACOSX_BUNDLE TRUE)
-# set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_INSTALL_PATH "/Applications")
-# set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY OUTPUT_NAME "index")
-#
-# set_property(TARGET ${CMAKE_PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "${XCODE_DEVELOPMENT_TEAM}")
-#
-# if(TARGET_PROJECT_SOURCES)
-#     add_library(${CMAKE_PROJECT_NAME}-static STATIC ${TARGET_PROJECT_SOURCES})
-#     target_compile_definitions(${CMAKE_PROJECT_NAME}-static PUBLIC ${TARGET_DEFINITIONS})
-#     target_link_libraries( ${CMAKE_PROJECT_NAME}-static ${TARGET_LIBRARIES})
-#     set_property(TARGET ${CMAKE_PROJECT_NAME}-static PROPERTY INCLUDE_DIRECTORIES ${TARGET_INCLUDE_DIRS})
-#     set_property(TARGET ${CMAKE_PROJECT_NAME}-static PROPERTY OUTPUT_NAME "index")
-#
-#     install(TARGETS ${CMAKE_PROJECT_NAME}-static EXPORT ${CMAKE_PROJECT_NAME}Targets
-#         LIBRARY DESTINATION lib
-#         ARCHIVE DESTINATION archive
-#         RUNTIME DESTINATION bin)
-#
-#     set(INCLUDE_FILES "")
-#     foreach(include_dir ${TARGET_INCLUDE_DIRS})
-#         set(_INCLUDE_FILES "")
-#         file(GLOB _INCLUDE_FILES ${include_dir}/*.h*)
-#         list(APPEND INCLUDE_FILES ${INCLUDE_FILES})
-#     endforeach()
-#
-#     install(FILES ${INCLUDE_FILES} DESTINATION include/${CMAKE_PROJECT_NAME})
-#
-#
-# endif()
-#
-#
-# enable_testing()
-# add_subdirectory(test)
+
+
+
+
+
+
+if(TARGET_PROJECT_SOURCES)
+    add_library(${CMAKE_PROJECT_NAME}-static STATIC ${TARGET_PROJECT_SOURCES})
+    target_compile_definitions(${CMAKE_PROJECT_NAME}-static PUBLIC ${TARGET_DEFINITIONS})
+    target_link_libraries( ${CMAKE_PROJECT_NAME}-static ${TARGET_LIBRARIES})
+    set_property(TARGET ${CMAKE_PROJECT_NAME}-static PROPERTY INCLUDE_DIRECTORIES ${TARGET_INCLUDE_DIRS})
+    set_property(TARGET ${CMAKE_PROJECT_NAME}-static PROPERTY OUTPUT_NAME "${TARGET_EXECUTABLE_NAME}")
+    set_property(TARGET ${CMAKE_PROJECT_NAME}-static PROPERTY XCODE_ATTRIBUTE_PRODUCT_NAME ${TARGET_EXECUTABLE_NAME})
+
+    install(TARGETS ${CMAKE_PROJECT_NAME}-static EXPORT ${CMAKE_PROJECT_NAME}Targets
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION archive
+        RUNTIME DESTINATION bin)
+
+    set(INCLUDE_FILES "")
+    foreach(include_dir ${TARGET_INCLUDE_DIRS})
+        set(_INCLUDE_FILES "")
+        file(GLOB _INCLUDE_FILES ${include_dir}/*.h*)
+        list(APPEND INCLUDE_FILES ${INCLUDE_FILES})
+    endforeach()
+
+    install(FILES ${INCLUDE_FILES} DESTINATION include/${CMAKE_PROJECT_NAME})
+
+    set(CLANG_FORMAT_BIN "/usr/local/bin/clang-format" CACHE STRING "use: `brew install clang-format` to install")
+    add_custom_target(
+        clang-format
+        COMMAND ${CLANG_FORMAT_BIN} -style=file -i ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES} -verbose
+        SOURCES
+        "${CMAKE_SOURCE_DIR}/.clang-format"
+)
+
+endif()
+
+
+
+
+
+
+
+
+
+
+
+enable_testing()
+add_subdirectory(test)

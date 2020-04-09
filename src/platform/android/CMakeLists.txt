@@ -22,6 +22,11 @@ list(APPEND TARGET_LIBRARIES "${GLESv2-lib}")
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/resources/strings.xml.in" "${CMAKE_CURRENT_SOURCE_DIR}/resources/res/values/strings.xml")
 
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/rapidjson)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/nlohmann)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/stb)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/glm)
+
 
 add_library(main SHARED ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES})
 target_compile_definitions(main PUBLIC ${TARGET_DEFINITIONS})
