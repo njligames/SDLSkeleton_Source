@@ -7,6 +7,7 @@ include(CheckCXXCompilerFlag)
 # cmake_policy(SET CMP0078 OLD)
 # cmake_policy(SET CMP0086 OLD)
 
+set(GAME_GIT_URL "https://github.com/njligames/testappcode.git")
 
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
@@ -92,7 +93,7 @@ set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/assets")
 
 if(BUILT_GTEST)
 # Download and unpack googletest at configure time
-    configure_file(CMakeLists.txt.in
+    configure_file(googletest.cmake.in
             googletest-download/CMakeLists.txt)
     execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
@@ -118,6 +119,12 @@ if(BUILT_GTEST)
     endif()
 endif()
 
+configure_file(game.cmake.in game-download/CMakeLists.txt)
+execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/game-download )
+execute_process(COMMAND ${CMAKE_COMMAND} --build . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/game-download )
+list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_BINARY_DIR}/game-src)
+list(APPEND TARGET_LIBRARIES game)
+add_subdirectory(${CMAKE_BINARY_DIR}/game-src ${CMAKE_BINARY_DIR}/game-build)
 
 add_subdirectory(src)
 

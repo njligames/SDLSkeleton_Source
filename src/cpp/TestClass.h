@@ -18,10 +18,12 @@ class GameModelViewData;
 class GameModelData;
 class BitmapFont;
 class GameModelData;
-#include "Color.h"
+
+class NJLICGame;
 
 class TestClass { //} : public Subscriber {
     static TestClass *sInstance;
+
     TestClass();
     virtual ~TestClass();
 
@@ -29,18 +31,18 @@ class TestClass { //} : public Subscriber {
     TestClass &operator=(const TestClass &rhs) = delete;
 
   public:
-    static void createInstance();
+    static void createInstance(NJLICGame *game);
     //    static void create(SDL_Window *window, SDL_Renderer *renderer);
     static void destroyInstance();
     static TestClass *getInstance();
 
   public:
-    bool loadfile(SDL_Renderer *renderer);
+    //    bool loadfile(SDL_Renderer *renderer);
 
     void reset(int n);
     int increment(int n);
 
-    void init(const unsigned int numCards);
+    void init();
     void unInit();
     void update(double step);
     void render();
@@ -50,10 +52,7 @@ class TestClass { //} : public Subscriber {
 
     bool isDone() const;
 
-    void keyDown(const std::string &keycodeName, bool withCapsLock,
-                 bool withControl, bool withShift, bool withAlt, bool withGui);
-    void keyUp(const std::string &keycodeName, bool withCapsLock,
-               bool withControl, bool withShift, bool withAlt, bool withGui);
+    
 
     //    virtual void update(Publisher *who, void *userdata = 0) override;
 
@@ -67,11 +66,6 @@ class TestClass { //} : public Subscriber {
     std::mutex mMutex;
     bool mIsDone;
 
-    std::vector<GameModelData *> mGameModelDataVector;
-    
-    Color mColor;
-
-    
     //    NJLIC::Shader *mShader;
     //    NJLIC::Camera *mCamera;
     //    NJLIC::Node *mCameraNode;

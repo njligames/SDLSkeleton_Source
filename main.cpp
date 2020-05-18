@@ -13,245 +13,24 @@
 
 /* Simple program:  draw as many random objects on the screen as possible */
 
-#include "TestClass.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include "NJLICColorTest.h"
+
+#include "SDL.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #endif
 
-//#include "curl.h"
-//#include "nlohmann/json.hpp"
+#include <future>
 
-//#include "SDL_test_common.h"
-//
-//#define NUM_OBJECTS 100
-//
-// static SDLTest_CommonState *state;
-// static int num_objects;
-// static SDL_bool cycle_color;
-// static SDL_bool cycle_alpha;
-// static int cycle_direction = 1;
-// static int current_alpha = 255;
-// static int current_color = 255;
-// static SDL_BlendMode blendMode = SDL_BLENDMODE_NONE;
-//
-// int done;
-//
-// TestClass testClass;
-//
-// void
-// DrawPoints(SDL_Renderer * renderer)
-//{
-//    int i;
-//    int x, y;
-//    SDL_Rect viewport;
-//
-//    /* Query the sizes */
-//    SDL_RenderGetViewport(renderer, &viewport);
-//
-//    for (i = 0; i < num_objects * 4; ++i) {
-//        /* Cycle the color and alpha, if desired */
-//        if (cycle_color) {
-//            current_color += cycle_direction;
-//            if (current_color < 0) {
-//                current_color = 0;
-//                cycle_direction = -cycle_direction;
-//            }
-//            if (current_color > 255) {
-//                current_color = 255;
-//                cycle_direction = -cycle_direction;
-//            }
-//        }
-//        if (cycle_alpha) {
-//            current_alpha += cycle_direction;
-//            if (current_alpha < 0) {
-//                current_alpha = 0;
-//                cycle_direction = -cycle_direction;
-//            }
-//            if (current_alpha > 255) {
-//                current_alpha = 255;
-//                cycle_direction = -cycle_direction;
-//            }
-//        }
-//        SDL_SetRenderDrawColor(renderer, 255, (Uint8) current_color,
-//                               (Uint8) current_color, (Uint8) current_alpha);
-//
-//        x = rand() % viewport.w;
-//        y = rand() % viewport.h;
-//        SDL_RenderDrawPoint(renderer, x, y);
-//    }
-//}
-//
-// void
-// DrawLines(SDL_Renderer * renderer)
-//{
-//    int i;
-//    int x1, y1, x2, y2;
-//    SDL_Rect viewport;
-//
-//    /* Query the sizes */
-//    SDL_RenderGetViewport(renderer, &viewport);
-//
-//    for (i = 0; i < num_objects; ++i) {
-//        /* Cycle the color and alpha, if desired */
-//        if (cycle_color) {
-//            current_color += cycle_direction;
-//            if (current_color < 0) {
-//                current_color = 0;
-//                cycle_direction = -cycle_direction;
-//            }
-//            if (current_color > 255) {
-//                current_color = 255;
-//                cycle_direction = -cycle_direction;
-//            }
-//        }
-//        if (cycle_alpha) {
-//            current_alpha += cycle_direction;
-//            if (current_alpha < 0) {
-//                current_alpha = 0;
-//                cycle_direction = -cycle_direction;
-//            }
-//            if (current_alpha > 255) {
-//                current_alpha = 255;
-//                cycle_direction = -cycle_direction;
-//            }
-//        }
-//        SDL_SetRenderDrawColor(renderer, 255, (Uint8) current_color,
-//                               (Uint8) current_color, (Uint8) current_alpha);
-//
-//        if (i == 0) {
-//            SDL_RenderDrawLine(renderer, 0, 0, viewport.w - 1, viewport.h -
-//            1); SDL_RenderDrawLine(renderer, 0, viewport.h - 1, viewport.w -
-//            1, 0); SDL_RenderDrawLine(renderer, 0, viewport.h / 2, viewport.w
-//            - 1, viewport.h / 2); SDL_RenderDrawLine(renderer, viewport.w / 2,
-//            0, viewport.w / 2, viewport.h - 1);
-//        } else {
-//            x1 = (rand() % (viewport.w*2)) - viewport.w;
-//            x2 = (rand() % (viewport.w*2)) - viewport.w;
-//            y1 = (rand() % (viewport.h*2)) - viewport.h;
-//            y2 = (rand() % (viewport.h*2)) - viewport.h;
-//            SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
-//        }
-//    }
-//}
-//
-// void
-// DrawRects(SDL_Renderer * renderer)
-//{
-//    int i;
-//    SDL_Rect rect;
-//    SDL_Rect viewport;
-//
-//    /* Query the sizes */
-//    SDL_RenderGetViewport(renderer, &viewport);
-//
-//    for (i = 0; i < num_objects / 4; ++i) {
-//        /* Cycle the color and alpha, if desired */
-//        if (cycle_color) {
-//            current_color += cycle_direction;
-//            if (current_color < 0) {
-//                current_color = 0;
-//                cycle_direction = -cycle_direction;
-//            }
-//            if (current_color > 255) {
-//                current_color = 255;
-//                cycle_direction = -cycle_direction;
-//            }
-//        }
-//        if (cycle_alpha) {
-//            current_alpha += cycle_direction;
-//            if (current_alpha < 0) {
-//                current_alpha = 0;
-//                cycle_direction = -cycle_direction;
-//            }
-//            if (current_alpha > 255) {
-//                current_alpha = 255;
-//                cycle_direction = -cycle_direction;
-//            }
-//        }
-//        SDL_SetRenderDrawColor(renderer, 255, (Uint8) current_color,
-//                               (Uint8) current_color, (Uint8) current_alpha);
-//
-//        rect.w = rand() % (viewport.h / 2);
-//        rect.h = rand() % (viewport.h / 2);
-//        rect.x = (rand() % (viewport.w*2) - viewport.w) - (rect.w / 2);
-//        rect.y = (rand() % (viewport.h*2) - viewport.h) - (rect.h / 2);
-//        SDL_RenderFillRect(renderer, &rect);
-//    }
-//}
-//
-// void
-// loop()
-//{
-//    int i;
-//    SDL_Event event;
-//
-//    /* Check for events */
-//    while (SDL_PollEvent(&event)) {
-//        SDLTest_CommonEvent(state, &event, &done);
-//    }
-//    for (i = 0; i < state->num_windows; ++i) {
-//        SDL_Renderer *renderer = state->renderers[i];
-//        if (state->windows[i] == NULL)
-//            continue;
-//        SDL_SetRenderDrawColor(renderer, 0xA0, 0xA0, 0xA0, 0xFF);
-//        SDL_RenderClear(renderer);
-//
-//        DrawRects(renderer);
-//        DrawLines(renderer);
-//        DrawPoints(renderer);
-//
-//        testClass.loadfile(renderer);
-//
-//        SDL_RenderPresent(renderer);
-//    }
-//#ifdef __EMSCRIPTEN__
-//    if (done) {
-//        emscripten_cancel_main_loop();
-//    }
-//#endif
-//}
-
-#include "SDL.h"
-#include <memory>
-
-class Graphics {
-  private:
-    SDL_Window *_window;
-
-  public:
-    Graphics(SDL_Window *window) { _window = window; }
-
-    void update() {
-        TestClass::getInstance()->render();
-        //    njli::NJLIGameEngine::render();
-
-        SDL_GL_SwapWindow(_window);
-    }
-};
-
-std::unique_ptr<Graphics> gGraphics;
-
-SDL_Window *gWindow = nullptr;
-SDL_Renderer *gRenderer = nullptr;
-SDL_DisplayMode gDisplayMode;
-SDL_GLContext gGlContext;
-int gDone;
-
-#include <chrono>
-#include <iostream>
-#include <mutex>
-#include <thread>
-
-std::mutex g_display_mutex;
-std::thread *gUpdateThread;
-std::mutex g_update_mutex;
+static SDL_Window *gWindow = nullptr;
+static SDL_Renderer *gRenderer = nullptr;
+static SDL_DisplayMode gDisplayMode;
+static SDL_GLContext gGlContext;
+static std::mutex gMutex;
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
 
-static int EventFilter(void *userdata, SDL_Event *event) {
+static int EventFilter(std::shared_ptr<NJLICGame> game, SDL_Event *event) {
     //#if ((defined(__IPHONEOS__) && __IPHONEOS__) || (defined(__ANDROID__) &&
     //__ANDROID__))
     //    NJLI_HandleStartTouches();
@@ -296,9 +75,11 @@ static int EventFilter(void *userdata, SDL_Event *event) {
         //              static_cast<float>(event->jmotion.m32),
         //              static_cast<float>(event->jmotion.m33));
 
-        //              NJLI_HandleVRCameraRotationYPR(static_cast<float>(event->jmotion.yaw),
-        //                                             static_cast<float>(event->jmotion.pitch),
-        //                                             static_cast<float>(event->jmotion.roll));
+        gMutex.lock();
+        game->vRCameraRotationYPR(static_cast<float>(event->jmotion.yaw),
+                                  static_cast<float>(event->jmotion.pitch),
+                                  static_cast<float>(event->jmotion.roll));
+        gMutex.unlock();
         // = glm::mat4(event->jmotion.m11, event->jmotion.m12,
         // event->jmotion.m13, event->jmotion.m21, event->jmotion.m22,
         // event->jmotion.m23, event->jmotion.m31, event->jmotion.m32,
@@ -322,11 +103,13 @@ static int EventFilter(void *userdata, SDL_Event *event) {
     case SDL_FINGERMOTION:
     case SDL_FINGERDOWN:
     case SDL_FINGERUP:
-        //        NJLI_HandleTouch((int)event->tfinger.touchId,
-        //                         (int)event->tfinger.fingerId, event->type,
-        //                         event->tfinger.x, event->tfinger.y,
-        //                         event->tfinger.dx, event->tfinger.dy,
-        //                         event->tfinger.pressure);
+        gMutex.lock();
+        game->touch((int)event->tfinger.touchId, (int)event->tfinger.fingerId,
+                    event->type, event->tfinger.x, event->tfinger.y,
+                    event->tfinger.dx, event->tfinger.dy,
+                    event->tfinger.pressure);
+        gMutex.unlock();
+
         break;
     //#endif
     default:
@@ -342,16 +125,13 @@ static int EventFilter(void *userdata, SDL_Event *event) {
 }
 #endif
 
-static void RenderFrame(void *param) {
-    //  njli::NJLIGameEngine::update(1.0f / ((float)gDisplayMode.refresh_rate));
+static void RenderFrame(std::shared_ptr<NJLICGame> game) {
 
-    //    TestClass::get()->update();
-
-    Graphics *graphics = (Graphics *)param;
-    graphics->update();
+    SDL_GL_SwapWindow(gWindow);
+    game->render();
 }
 
-static void handleInput() {
+static void handleInput(std::shared_ptr<NJLICGame> game) {
     bool callFinishKeys = false;
     SDL_Event event;
     SDL_PumpEvents();
@@ -365,9 +145,15 @@ static void handleInput() {
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
 
-            //            NJLI_HandleMouse(event.button.button, event.type,
-            //            event.button.x,
-            //                             event.button.y, event.button.clicks);
+            gMutex.lock();
+            game->mouse(event.button.button, event.type, event.button.x,
+                        event.button.y, event.button.clicks);
+            gMutex.unlock();
+
+            //                        NJLI_HandleMouse(event.button.button,
+            //                        event.type, event.button.x,
+            //                                         event.button.y,
+            //                                         event.button.clicks);
             break;
 #endif
 
@@ -387,8 +173,7 @@ static void handleInput() {
             SDL_Log("SDL_APP_DIDENTERFOREGROUND");
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
-            SDL_iPhoneSetAnimationCallback(gWindow, 1, RenderFrame,
-                                           gGraphics.get());
+            SDL_iPhoneSetAnimationCallback(gWindow, 1, RenderFrame, game);
 #endif
             //            NJLI_HandleResume();
             break;
@@ -426,11 +211,25 @@ static void handleInput() {
 
         case SDL_WINDOWEVENT:
             switch (event.window.event) {
+            case SDL_WINDOWEVENT_FOCUS_LOST:
+                gMutex.lock();
+                game->stop();
+                gMutex.unlock();
+
+                break;
+            case SDL_WINDOWEVENT_FOCUS_GAINED:
+                gMutex.lock();
+                game->start();
+                gMutex.unlock();
+
+                break;
             case SDL_WINDOWEVENT_RESTORED:
+
                 //                NJLI_HandleResume();
                 break;
             case SDL_WINDOWEVENT_MINIMIZED:
                 //                NJLI_HandlePause();
+
                 break;
             case SDL_WINDOWEVENT_RESIZED:
             case SDL_WINDOWEVENT_SIZE_CHANGED: {
@@ -440,7 +239,11 @@ static void handleInput() {
 #else
                 SDL_GL_GetDrawableSize(gWindow, &w, &h);
 #endif
-                TestClass::getInstance()->resize(w, h);
+                gMutex.lock();
+                game->resize(w, h);
+                gMutex.unlock();
+
+                //                TestClass::getInstance()->resize(w, h);
 
                 //                  NJLI_HandleResize(w, h, gDisplayMode.format,
                 //                                    gDisplayMode.refresh_rate);
@@ -449,8 +252,11 @@ static void handleInput() {
                 SDL_Window *window = SDL_GetWindowFromID(event.window.windowID);
                 if (window) {
                     if (window == gWindow) {
-                        SDL_DestroyWindow(gWindow);
-                        gWindow = NULL;
+                        gMutex.lock();
+                        game->setDone();
+                        gMutex.unlock();
+                        //                        SDL_DestroyWindow(gWindow);
+                        //                        gWindow = NULL;
                         break;
                     }
                 }
@@ -471,11 +277,12 @@ static void handleInput() {
             //              NJLI_HandleKeyUp(SDL_GetScancodeName(event.key.keysym.scancode),
             //                               withCapsLock, withControl,
             //                               withShift, withAlt, withGui);
-            g_update_mutex.lock();
-            TestClass::getInstance()->keyUp(
-                SDL_GetScancodeName(event.key.keysym.scancode), withCapsLock,
-                withControl, withShift, withAlt, withGui);
-            g_update_mutex.unlock();
+
+            gMutex.lock();
+            game->keyUp(SDL_GetScancodeName(event.key.keysym.scancode),
+                        withCapsLock, withControl, withShift, withAlt, withGui);
+            gMutex.unlock();
+
         } break;
         case SDL_KEYDOWN: {
             callFinishKeys = true;
@@ -488,11 +295,12 @@ static void handleInput() {
             bool withAlt = !!(event.key.keysym.mod & KMOD_ALT);
             bool withGui = !!(event.key.keysym.mod & KMOD_GUI);
 
-            g_update_mutex.lock();
-            TestClass::getInstance()->keyDown(
-                SDL_GetScancodeName(event.key.keysym.scancode), withCapsLock,
-                withControl, withShift, withAlt, withGui);
-            g_update_mutex.unlock();
+            gMutex.lock();
+            game->keyDown(SDL_GetScancodeName(event.key.keysym.scancode),
+                          withCapsLock, withControl, withShift, withAlt,
+                          withGui);
+            gMutex.unlock();
+
             //              NJLI_HandleKeyDown(SDL_GetScancodeName(event.key.keysym.scancode),
             //                                 withCapsLock, withControl,
             //                                 withShift, withAlt, withGui);
@@ -738,9 +546,12 @@ static void handleInput() {
                 }
                 break;
             case SDLK_ESCAPE:
-                g_display_mutex.lock();
-                gDone = 1;
-                g_display_mutex.unlock();
+                gMutex.lock();
+                game->setDone();
+                gMutex.unlock();
+                //                g_display_mutex.lock();
+                //                gDone = 1;
+                //                g_display_mutex.unlock();
                 break;
             case SDLK_SPACE: { /*
                                 char message[256];
@@ -811,7 +622,7 @@ static void handleInput() {
 #endif
 }
 
-static void Update() {
+static void updateLoop(std::shared_ptr<NJLICGame> game) {
     const double nFPS = 60.;
     const double FPS = 1.0 / nFPS;
 
@@ -820,45 +631,22 @@ static void Update() {
 
     clock_t currentClock = clock();
     double totalFPS = 0.0;
-    
-    while (!gDone) {
-        
-        
-// Use this for a fixed render looptime
-//        using namespace std;
-//        using namespace std::chrono;
-//
-//        using frames = duration<int64_t, ratio<1, 120>>;  // 5Hz
-//        auto nextFrame = system_clock::now() + frames{0};
-//        auto lastFrame = nextFrame - frames{1};;
-//
-//        while (true)
-//        {
-//            // Perform intersection test
-//
-//            this_thread::sleep_until(nextFrame);
-//            cout << "Time: "  // just for monitoring purposes
-//                 << duration_cast<milliseconds>(system_clock::now() - lastFrame).count()
-//                 << "ms\n";
-//            double step(duration_cast<milliseconds>(system_clock::now() - lastFrame).count() / 1000.0);
-//            TestClass::getInstance()->update(step);
-//            lastFrame = nextFrame;
-//            nextFrame += frames{1};
-//        }
-        
-        
+
+    while (!game->isDone()) {
 
         clock_t diffClock = clock() - currentClock;
-        double cpu_time_used = ((double)diffClock) / (CLOCKS_PER_SEC/1000);
-        
-        TestClass::getInstance()->update(cpu_time_used);
+        double cpu_time_used = ((double)diffClock) / (CLOCKS_PER_SEC / 1000);
+
+        gMutex.lock();
+        game->update(cpu_time_used);
+        gMutex.unlock();
+
         currentClock = clock();
-//        lastFrameTime = std::chrono::steady_clock::now();
     }
 }
 
 #if !(defined(__IPHONEOS__) && __IPHONEOS__)
-static void mainloop() {
+static void mainloop(std::shared_ptr<NJLICGame> game) {
 #if !defined(NDEBUG) && 0
     // Declare display mode structure to be filled in.
     SDL_DisplayMode current;
@@ -879,23 +667,25 @@ static void mainloop() {
     }
 #endif
 
-    handleInput();
+    handleInput(game);
 
 #if defined(__EMSCRIPTEN__)
-    TestClass::getInstance()->update(0.1);
+//    TestClass::getInstance()->update(0.1);
 #endif
 
-    RenderFrame(gGraphics.get());
+    RenderFrame(game);
 
-    int w, h;
-    SDL_GL_GetDrawableSize(gWindow, &w, &h);
+    //    RenderFrame(gGraphics.get());
 
-    int w2, h2;
-    SDL_GetWindowSize(gWindow, &w2, &h2);
+    //    int w, h;
+    //    SDL_GL_GetDrawableSize(gWindow, &w, &h);
+    //
+    //    int w2, h2;
+    //    SDL_GetWindowSize(gWindow, &w2, &h2);
 
 #if defined(__EMSCRIPTEN__) || defined(__ANDROID__)
 
-    TestClass::getInstance()->resize(gDisplayMode.w, gDisplayMode.h);
+    //    TestClass::getInstance()->resize(gDisplayMode.w, gDisplayMode.h);
 
     //    NJLI_HandleResize(gDisplayMode.w, gDisplayMode.h, gDisplayMode.format,
     //                      gDisplayMode.refresh_rate);
@@ -904,13 +694,16 @@ static void mainloop() {
 
 #if defined(__EMSCRIPTEN__)
 
-    if (gDone) {
+    if (game->isDone()) {
         emscripten_cancel_main_loop();
 
         //        njli::NJLIGameEngine::destroy();
-        TestClass::destroyInstance();
+        //        TestClass::destroyInstance();
 
-        SDL_GL_DeleteContext(gGlContext);
+        //        SDL_DestroyWindow(gWindow);
+        //        SDL_Quit();
+
+        game->unInit();
 
         // while (!gGameJoysticks.empty())
         //   {
@@ -918,8 +711,15 @@ static void mainloop() {
         //     gGameJoysticks.pop_back();
         //     SDL_JoystickClose(joystick);
         //   }
+        if (gRenderer)
+            SDL_DestroyRenderer(gRenderer);
+        gRenderer = nullptr;
+
+        SDL_GL_DeleteContext(gGlContext);
 
         SDL_DestroyWindow(gWindow);
+        gWindow = nullptr;
+
         SDL_Quit();
     }
 
@@ -938,6 +738,7 @@ static void createRenderer() {
         SDL_LogInfo(SDL_LOG_CATEGORY_TEST, "%s", info.name);
         if (SDL_strcasecmp(info.name, "opengl") == 0) {
             gRenderer = SDL_CreateRenderer(gWindow, j, 0);
+
             return;
         }
     }
@@ -945,6 +746,8 @@ static void createRenderer() {
 #endif
 
 int main(int argc, char *argv[]) {
+
+    std::shared_ptr<NJLICGame> game(new NJLICColorTest);
 
     //      std::string working_directory("");
     //      bool found_working_dir = false;
@@ -1163,7 +966,7 @@ int main(int argc, char *argv[]) {
     Uint32 flags = SDL_WINDOW_OPENGL;
 
 #if defined(__MACOSX__)
-    //      flags |= SDL_WINDOW_RESIZABLE;
+    flags |= SDL_WINDOW_RESIZABLE;
     //      flags |= SDL_WINDOW_MAXIMIZED;
     flags |= SDL_WINDOW_ALWAYS_ON_TOP;
     flags |= SDL_WINDOW_UTILITY;
@@ -1224,8 +1027,10 @@ int main(int argc, char *argv[]) {
     }
 #endif
 
-    TestClass::createInstance();
-    TestClass::getInstance()->init(10);
+    game->init(argc, argv);
+
+    //    TestClass::createInstance();
+    //    TestClass::getInstance()->init();
     //    if (!njli::NJLIGameEngine::create(
     //            DeviceUtil::hardwareDescription().c_str()))
     //      {
@@ -1233,10 +1038,10 @@ int main(int argc, char *argv[]) {
     //        return 1;
     //      }
 
-    gGraphics = std::unique_ptr<Graphics>(new Graphics(gWindow));
+    //    gGraphics = std::unique_ptr<Graphics>(new Graphics(gWindow));
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
-    SDL_AddEventWatch(EventFilter, NULL);
+    SDL_AddEventWatch(EventFilter, game);
 #endif
 
     //    int drawableW, drawableH;
@@ -1287,7 +1092,9 @@ int main(int argc, char *argv[]) {
     //    NJLI_HandleResize(gDisplayMode.w, gDisplayMode.h, gDisplayMode.format,
     //                      gDisplayMode.refresh_rate);
 
-    TestClass::getInstance()->resize(gDisplayMode.w, gDisplayMode.h);
+    //    TestClass::getInstance()->resize(gDisplayMode.w, gDisplayMode.h);
+
+    game->resize(gDisplayMode.w, gDisplayMode.h);
 
     //#endif
 
@@ -1302,134 +1109,51 @@ int main(int argc, char *argv[]) {
     //      }
 
     //    gDone = (njli::NJLIGameEngine::start(argc, argv) == false) ? 1 : 0;
+    //        gDone = false;
+    game->start();
 
 #if defined(__EMSCRIPTEN__)
     emscripten_set_main_loop(mainloop, 0, 0);
 #else
 
-    gUpdateThread = new std::thread(Update);
+    auto future = std::async(std::launch::async, updateLoop, game);
 
-    while (!gDone) {
-
-        //              std::thread::id this_id = std::this_thread::get_id();
-        //              g_display_mutex.lock();
-        //              std::cout << "thread " << this_id << " sleeping...\n";
-        //              g_display_mutex.unlock();
+    while (!game->isDone()) {
 
 #if defined(__IPHONEOS__) && __IPHONEOS__
-        handleInput();
+        handleInput(game);
 #else
-        mainloop();
+        mainloop(game);
 
 //              handleInput();
 //              RenderFrame(gGraphics.get());
 #endif
     }
 
-    gUpdateThread->join();
-    delete gUpdateThread;
+    game->unInit();
+    // while (!gGameJoysticks.empty())
+    //   {
+    //     SDL_Joystick *joystick = gGameJoysticks.back();
+    //     gGameJoysticks.pop_back();
+    //     SDL_JoystickClose(joystick);
+    //   }
+    if (gRenderer)
+        SDL_DestroyRenderer(gRenderer);
+    gRenderer = nullptr;
+
+    SDL_GL_DeleteContext(gGlContext);
+
+    SDL_DestroyWindow(gWindow);
+    gWindow = nullptr;
+
+    SDL_Quit();
 
     //    NJLI_HandleSurfaceDestroyed();
-    TestClass::destroyInstance();
+    //    TestClass::destroyInstance();
 
 #endif
 
     return 0;
 }
-//{
-//    int i;
-//    Uint32 then, now, frames;
-//
-//    /* Enable standard application logging */
-//    SDL_LogSetPriority(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO);
-//
-//    /* Initialize parameters */
-//    num_objects = NUM_OBJECTS;
-//
-//    /* Initialize test framework */
-//    state = SDLTest_CommonCreateState(argv, SDL_INIT_VIDEO |
-//    SDL_INIT_JOYSTICK); if (!state) {
-//        return 1;
-//    }
-//    for (i = 1; i < argc;) {
-//        int consumed;
-//
-//        consumed = SDLTest_CommonArg(state, i);
-//        if (consumed == 0) {
-//            consumed = -1;
-//            if (SDL_strcasecmp(argv[i], "--blend") == 0) {
-//                if (argv[i + 1]) {
-//                    if (SDL_strcasecmp(argv[i + 1], "none") == 0) {
-//                        blendMode = SDL_BLENDMODE_NONE;
-//                        consumed = 2;
-//                    } else if (SDL_strcasecmp(argv[i + 1], "blend") == 0) {
-//                        blendMode = SDL_BLENDMODE_BLEND;
-//                        consumed = 2;
-//                    } else if (SDL_strcasecmp(argv[i + 1], "add") == 0) {
-//                        blendMode = SDL_BLENDMODE_ADD;
-//                        consumed = 2;
-//                    } else if (SDL_strcasecmp(argv[i + 1], "mod") == 0) {
-//                        blendMode = SDL_BLENDMODE_MOD;
-//                        consumed = 2;
-//                    }
-//                }
-//            } else if (SDL_strcasecmp(argv[i], "--cyclecolor") == 0) {
-//                cycle_color = SDL_TRUE;
-//                consumed = 1;
-//            } else if (SDL_strcasecmp(argv[i], "--cyclealpha") == 0) {
-//                cycle_alpha = SDL_TRUE;
-//                consumed = 1;
-//            } else if (SDL_isdigit(*argv[i])) {
-//                num_objects = SDL_atoi(argv[i]);
-//                consumed = 1;
-//            }
-//        }
-//        if (consumed < 0) {
-//            static const char *options[] = { "[--blend none|blend|add|mod]",
-//            "[--cyclecolor]", "[--cyclealpha]", NULL };
-////            SDLTest_CommonLogUsage(state, argv[0], options);
-//            return 1;
-//        }
-//        i += consumed;
-//    }
-//    if (!SDLTest_CommonInit(state)) {
-//        return 2;
-//    }
-//
-//    /* Create the windows and initialize the renderers */
-//    for (i = 0; i < state->num_windows; ++i) {
-//        SDL_Renderer *renderer = state->renderers[i];
-//        SDL_SetRenderDrawBlendMode(renderer, blendMode);
-//        SDL_SetRenderDrawColor(renderer, 0xA0, 0xA0, 0xA0, 0xFF);
-//        SDL_RenderClear(renderer);
-//    }
-//
-//    srand((unsigned int)time(NULL));
-//
-//    /* Main render loop */
-//    frames = 0;
-//    then = SDL_GetTicks();
-//    done = 0;
-//
-//#ifdef __EMSCRIPTEN__
-//    emscripten_set_main_loop(loop, 0, 1);
-//#else
-//    while (!done) {
-//        ++frames;
-//        loop();
-//    }
-//#endif
-//
-//
-//    SDLTest_CommonQuit(state);
-//
-//    /* Print out some timing information */
-//    now = SDL_GetTicks();
-//    if (now > then) {
-//        double fps = ((double) frames * 1000) / (now - then);
-//        SDL_Log("%2.2f frames per second\n", fps);
-//    }
-//    return 0;
-//}
 
 /* vi: set ts=4 sw=4 expandtab: */
