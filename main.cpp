@@ -161,12 +161,12 @@ static void handleInput(std::shared_ptr<NJLICGame> game) {
         case SDL_FINGERMOTION:
         case SDL_FINGERDOWN:
         case SDL_FINGERUP:
-            //            NJLI_HandleTouch((int)event.tfinger.touchId,
-            //                             (int)event.tfinger.fingerId,
-            //                             event.type, event.tfinger.x,
-            //                             event.tfinger.y, event.tfinger.dx,
-            //                             event.tfinger.dy,
-            //                             event.tfinger.pressure);
+                        game->touch((int)event.tfinger.touchId,
+                                         (int)event.tfinger.fingerId,
+                                         event.type, event.tfinger.x,
+                                         event.tfinger.y, event.tfinger.dx,
+                                         event.tfinger.dy,
+                                         event.tfinger.pressure);
             break;
 #endif
         case SDL_APP_DIDENTERFOREGROUND:

@@ -13,7 +13,6 @@
 #include "GraphicsPlatform.h"
 
 
-#include "NJLICGame.h"
 
 static void UpdateFrame(void *param) {
     //  njli::NJLIGameEngine::update(1.0f / ((float)gDisplayMode.refresh_rate));

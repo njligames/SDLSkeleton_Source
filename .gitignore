@@ -3,3 +3,4 @@ buildbot_*
 .build_*
 
 .DS_Store
+game-src/
