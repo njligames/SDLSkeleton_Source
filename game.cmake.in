@@ -5,7 +5,7 @@ project(game-download NONE)
 include(ExternalProject)
 ExternalProject_Add(game
   GIT_REPOSITORY    ${GAME_GIT_URL}
-  GIT_TAG           master
+  GIT_TAG           mac
   SOURCE_DIR        "${CMAKE_SOURCE_DIR}/game-src"
   BINARY_DIR        "${CMAKE_BINARY_DIR}/game-build"
   CONFIGURE_COMMAND ""

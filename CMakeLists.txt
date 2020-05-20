@@ -122,7 +122,7 @@ endif()
 configure_file(game.cmake.in game-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/game-download )
 execute_process(COMMAND ${CMAKE_COMMAND} --build . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/game-download )
-list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/game-src)
+list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/game-src/src)
 list(APPEND TARGET_LIBRARIES game)
 add_subdirectory(${CMAKE_SOURCE_DIR}/game-src ${CMAKE_BINARY_DIR}/game-build)
 
