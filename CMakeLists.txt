@@ -4,6 +4,8 @@ project(SDLSkeleton)
 
 include(CheckCXXCompilerFlag)
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/detectGL.cmake)
+
 # cmake_policy(SET CMP0078 OLD)
 # cmake_policy(SET CMP0086 OLD)
 
