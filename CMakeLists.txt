@@ -91,38 +91,40 @@ endif()
 
 set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/assets")
 
-if(BUILT_GTEST)
-# Download and unpack googletest at configure time
-    configure_file(googletest.cmake.in
-            googletest-download/CMakeLists.txt)
-    execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
-    execute_process(COMMAND ${CMAKE_COMMAND} --build .
-            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
-
-# Prevent GoogleTest from overriding our compiler/linker options
-# when building with Visual Studio
-    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-
-# Add googletest directly to our build. This adds
-# the following targets: gtest, gtest_main, gmock
-# and gmock_main
-    add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
-            ${CMAKE_BINARY_DIR}/googletest-build)
-
-# The gtest/gmock targets carry header search path
-# dependencies automatically when using CMake 2.8.11 or
-# later. Otherwise we have to add them here ourselves.
-    if (CMAKE_VERSION VERSION_LESS 2.8.11)
-        include_directories("${gtest_SOURCE_DIR}/include"
-                "${gmock_SOURCE_DIR}/include")
-    endif()
-endif()
+# if(BUILT_GTEST)
+# # Download and unpack googletest at configure time
+#     configure_file(googletest.cmake.in
+#             googletest-download/CMakeLists.txt)
+#     execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
+#             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+#     execute_process(COMMAND ${CMAKE_COMMAND} --build .
+#             WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+#
+# # Prevent GoogleTest from overriding our compiler/linker options
+# # when building with Visual Studio
+#     set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+#
+# # Add googletest directly to our build. This adds
+# # the following targets: gtest, gtest_main, gmock
+# # and gmock_main
+#     add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
+#             ${CMAKE_BINARY_DIR}/googletest-build)
+#
+# # The gtest/gmock targets carry header search path
+# # dependencies automatically when using CMake 2.8.11 or
+# # later. Otherwise we have to add them here ourselves.
+#     if (CMAKE_VERSION VERSION_LESS 2.8.11)
+#         include_directories("${gtest_SOURCE_DIR}/include"
+#                 "${gmock_SOURCE_DIR}/include")
+#     endif()
+# endif()
 
 configure_file(game.cmake.in game-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/game-download )
 execute_process(COMMAND ${CMAKE_COMMAND} --build . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/game-download )
-list(APPEND TARGET_INCLUDE_DIRS ${CMAKE_SOURCE_DIR}/game-src/src)
+set(GAME_PUBLIC_DIRS ${CMAKE_SOURCE_DIR}/game-src/src/public_include ${CMAKE_SOURCE_DIR}/game-src/src/platform/${TARGET_PLATFORM}/public_include)
+# message(FATAL_ERROR "GAME_PUBLIC_DIRS ${GAME_PUBLIC_DIRS}")
+list(APPEND TARGET_INCLUDE_DIRS ${GAME_PUBLIC_DIRS})
 list(APPEND TARGET_LIBRARIES game)
 add_subdirectory(${CMAKE_SOURCE_DIR}/game-src ${CMAKE_BINARY_DIR}/game-build)
 
