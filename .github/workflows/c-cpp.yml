@@ -14,13 +14,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       
-    - name: install doygen
-      run: brew install doxygen
-      
     - name: run cmake
       run: cmake . -DCMAKE_INSTALL_PREFIX=install -G "Xcode"
       
     - name: build debug build
-      run: cmake --build . --config Debug --target install
+      run: cmake --build . --config Debug --target SDLSkeleton
       
       
