@@ -14,9 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       
-    - name: install dot
-      run: brew install dot
-      
     - name: install doygen
       run: brew install doxygen
       
