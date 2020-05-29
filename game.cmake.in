@@ -4,9 +4,9 @@ project(game-download NONE)
 
 include(ExternalProject)
 ExternalProject_Add(game
-  GIT_REPOSITORY    ${GAME_GIT_URL}
+  GIT_REPOSITORY    https://github.com/njligames/testappcode.git
   GIT_TAG           master
-  SOURCE_DIR        "${CMAKE_SOURCE_DIR}/game-src"
+  SOURCE_DIR        "${CMAKE_BINARY_DIR}/game-src"
   BINARY_DIR        "${CMAKE_BINARY_DIR}/game-build"
   CONFIGURE_COMMAND ""
   BUILD_COMMAND     ""

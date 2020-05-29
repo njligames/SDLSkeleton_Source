@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.5.1)
+cmake_minimum_required(VERSION 3.10.2)
 
 project(SDLSkeleton)
 
@@ -9,7 +9,7 @@ include(${CMAKE_CURRENT_SOURCE_DIR}/src/cmake/detectGL.cmake)
 # cmake_policy(SET CMP0078 OLD)
 # cmake_policy(SET CMP0086 OLD)
 
-set(GAME_GIT_URL "https://github.com/njligames/testappcode.git")
+
 
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
@@ -124,11 +124,11 @@ set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/assets")
 configure_file(game.cmake.in game-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/game-download )
 execute_process(COMMAND ${CMAKE_COMMAND} --build . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/game-download )
-set(GAME_PUBLIC_DIRS ${CMAKE_SOURCE_DIR}/game-src/src/public_include ${CMAKE_SOURCE_DIR}/game-src/src/platform/${TARGET_PLATFORM}/public_include)
+set(GAME_PUBLIC_DIRS ${CMAKE_BINARY_DIR}/game-src/src/public_include ${CMAKE_BINARY_DIR}/game-src/src/platform/${TARGET_PLATFORM}/public_include)
 # message(FATAL_ERROR "GAME_PUBLIC_DIRS ${GAME_PUBLIC_DIRS}")
 list(APPEND TARGET_INCLUDE_DIRS ${GAME_PUBLIC_DIRS})
 list(APPEND TARGET_LIBRARIES game)
-add_subdirectory(${CMAKE_SOURCE_DIR}/game-src ${CMAKE_BINARY_DIR}/game-build)
+add_subdirectory(${CMAKE_BINARY_DIR}/game-src ${CMAKE_BINARY_DIR}/game-build)
 
 add_subdirectory(src)
 
