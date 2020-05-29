@@ -17,7 +17,7 @@ jobs:
     - name: run cmake
       run: cmake . -DCMAKE_INSTALL_PREFIX=install -G "Xcode"
       
-    - name: build debug build
+    - name: build the debug build
       run: cmake --build . --config Debug --target SDLSkeleton
       
       
