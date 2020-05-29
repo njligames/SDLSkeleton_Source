@@ -16,9 +16,6 @@ jobs:
       with:
         submodules: recursive
       
-    - name: Checkout submodules
-      uses: textbook/git-checkout-submodule-action@master
-      
     - name: install swig
       run: brew install swig
       
