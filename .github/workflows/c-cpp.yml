@@ -14,6 +14,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       
+    - name: Checkout submodules
+      uses: textbook/git-checkout-submodule-action@master
+      
     - name: install swig
       run: brew install swig
       
