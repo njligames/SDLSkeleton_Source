@@ -30,7 +30,9 @@ static std::mutex gMutex;
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
 
-static int EventFilter(std::shared_ptr<NJLICGame> game, SDL_Event *event) {
+//typedef int (SDLCALL * SDL_EventFilter) (void *userdata, SDL_Event * event);
+static int EventFilter(void *userdata, SDL_Event *event) {
+//static int EventFilter(std::shared_ptr<NJLICGame> game, SDL_Event *event) {
     //#if ((defined(__IPHONEOS__) && __IPHONEOS__) || (defined(__ANDROID__) &&
     //__ANDROID__))
     //    NJLI_HandleStartTouches();
@@ -39,6 +41,8 @@ static int EventFilter(std::shared_ptr<NJLICGame> game, SDL_Event *event) {
     //    njli::NJLIGameEngine::handleEvent(&event);
     //    SDLTest_PrintEvent(event);
 
+    NJLICGame *game = static_cast<NJLICGame*>(userdata);
+    
     Uint32 eventType = event->type;
 
     switch (eventType) {
@@ -125,8 +129,11 @@ static int EventFilter(std::shared_ptr<NJLICGame> game, SDL_Event *event) {
 }
 #endif
 
-static void RenderFrame(std::shared_ptr<NJLICGame> game) {
+//static void RenderFrame(std::shared_ptr<NJLICGame> game) {
+static void RenderFrame(void *userdata) {
 
+    NJLICGame *game = static_cast<NJLICGame*>(userdata);
+    
     SDL_GL_SwapWindow(gWindow);
     game->render();
 }
@@ -173,7 +180,7 @@ static void handleInput(std::shared_ptr<NJLICGame> game) {
             SDL_Log("SDL_APP_DIDENTERFOREGROUND");
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
-            SDL_iPhoneSetAnimationCallback(gWindow, 1, RenderFrame, game);
+                SDL_iPhoneSetAnimationCallback(gWindow, 1, RenderFrame, (void*)game.get());
 #endif
             //            NJLI_HandleResume();
             break;
@@ -673,7 +680,7 @@ static void mainloop(std::shared_ptr<NJLICGame> game) {
 //    TestClass::getInstance()->update(0.1);
 #endif
 
-    RenderFrame(game);
+    RenderFrame((void*)game.get());
 
     //    RenderFrame(gGraphics.get());
 
@@ -1041,7 +1048,7 @@ int main(int argc, char *argv[]) {
     //    gGraphics = std::unique_ptr<Graphics>(new Graphics(gWindow));
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
-    SDL_AddEventWatch(EventFilter, game);
+        SDL_AddEventWatch(EventFilter,(void*) game.get());
 #endif
 
     //    int drawableW, drawableH;

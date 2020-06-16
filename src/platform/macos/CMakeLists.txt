@@ -42,6 +42,22 @@ list(APPEND TARGET_RESOURCES ${ASSET_CATALOGUE})
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/resources/Info.plist.in ${CMAKE_BINARY_DIR}/Info.plist)
 set_source_files_properties( ${TARGET_RESOURCES} PROPERTIES MACOSX_PACKAGE_LOCATION ${CMAKE_PROJECT_NAME}/Contents/Resources/)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 add_executable( ${CMAKE_PROJECT_NAME} MACOSX_BUNDLE ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES} ${TARGET_RESOURCES})
 target_compile_definitions( ${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
 target_link_libraries( ${CMAKE_PROJECT_NAME} ${TARGET_LIBRARIES})
