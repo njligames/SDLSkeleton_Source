@@ -138,7 +138,8 @@ static void RenderFrame(void *userdata) {
     game->render();
 }
 
-static void handleInput(std::shared_ptr<NJLICGame> game) {
+static void handleInput(void *userdata) {
+    NJLICGame *game = static_cast<NJLICGame*>(userdata);
     bool callFinishKeys = false;
     SDL_Event event;
     SDL_PumpEvents();
@@ -653,8 +654,10 @@ static void updateLoop(std::shared_ptr<NJLICGame> game) {
 }
 
 #if !(defined(__IPHONEOS__) && __IPHONEOS__)
-static void mainloop(std::shared_ptr<NJLICGame> game) {
+static void mainloop(void *userdata) {
+    NJLICGame *game = static_cast<NJLICGame*>(userdata);
 #if !defined(NDEBUG) && 0
+    
     // Declare display mode structure to be filled in.
     SDL_DisplayMode current;
     // Get current display mode of all displays.
@@ -680,7 +683,7 @@ static void mainloop(std::shared_ptr<NJLICGame> game) {
 //    TestClass::getInstance()->update(0.1);
 #endif
 
-    RenderFrame((void*)game.get());
+    RenderFrame(game);
 
     //    RenderFrame(gGraphics.get());
 
@@ -1120,7 +1123,7 @@ int main(int argc, char *argv[]) {
     game->start();
 
 #if defined(__EMSCRIPTEN__)
-    emscripten_set_main_loop(mainloop, 0, 0);
+        emscripten_set_main_loop_arg(mainloop, (void*) game.get(), 0, 0);
 #else
 
     auto future = std::async(std::launch::async, updateLoop, game);
@@ -1130,7 +1133,7 @@ int main(int argc, char *argv[]) {
 #if defined(__IPHONEOS__) && __IPHONEOS__
         handleInput(game);
 #else
-        mainloop(game);
+        mainloop((void*)game.get());
 
 //              handleInput();
 //              RenderFrame(gGraphics.get());

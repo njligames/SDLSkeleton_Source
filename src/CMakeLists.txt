@@ -14,7 +14,7 @@ set( TARGET_PROJECT_SOURCES_TEST ${SRCS_TEST_CPP} ${SRCS_TEST_C} ${HDRS_TEST} )
 
 add_subdirectory(platform)
 
-if(NOT ANDROID)
+if(NOT ANDROID AND BUILD_DOC)
     add_subdirectory(doc)
 endif()
 

@@ -31,6 +31,7 @@ list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/rapidjson)
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/nlohmann)
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/stb)
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/glm)
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/NJLICEngine)
 
 
 
@@ -128,15 +129,7 @@ if(TARGET_PROJECT_SOURCES)
 
 endif()
 
-
-
-
-
-
-
-
-
-
-
-enable_testing()
-add_subdirectory(test)
+if(BUILD_TEST)
+    enable_testing()
+    add_subdirectory(test)
+endif()

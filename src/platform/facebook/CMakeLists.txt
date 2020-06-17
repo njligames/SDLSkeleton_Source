@@ -83,5 +83,7 @@ if(TARGET_PROJECT_SOURCES)
 endif()
 
 
-enable_testing()
-add_subdirectory(test)
+if(BUILD_TEST)
+    enable_testing()
+    add_subdirectory(test)
+endif()

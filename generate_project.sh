@@ -2,8 +2,8 @@
 
 PLATFORM=$1
 # BOT=$2
-# CONFIGURATION=Debug
-CONFIGURATION=Release
+CONFIGURATION=Debug
+# CONFIGURATION=Release
 INSTALL_PREFIX=install
 
 if [ "${PLATFORM}" != "android" ]
@@ -17,11 +17,12 @@ fi
 
 if [ "${PLATFORM}" == "emscripten" ]
 then
-    source ${EMSDK_DIR}/emsdk_env.sh
+    # source ${EMSDK_DIR}/emsdk_env.sh
 
-    export EMSCRIPTEN_INCLUDE_LOCATION=${EMSDK_DIR}/system/include
+    # export EMSCRIPTEN_INCLUDE_LOCATION=${EMSDK_DIR}/system/include
 
     emcmake cmake .. \
+        -DCMAKE_BUILD_TYPE=${CONFIGURATION} \
         -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
         -G "Ninja"
 
@@ -112,8 +113,8 @@ else
   cmake -E env CFLAGS='-O0 -g' cmake .. -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX}
 fi
 
-# cmake --build . --target clean
-# cmake --build . --config ${CONFIGURATION} --target install
+cmake --build . --target clean
+cmake --build . --config ${CONFIGURATION} --target install
 # cmake --build . --config ${CONFIGURATION} --target package
 
 cd ..
