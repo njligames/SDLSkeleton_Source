@@ -27,6 +27,8 @@ static SDL_Renderer *gRenderer = nullptr;
 static SDL_DisplayMode gDisplayMode;
 static SDL_GLContext gGlContext;
 static std::mutex gMutex;
+std::shared_ptr<NJLICGame> gGame(new NJLICColorTest);
+clock_t gCurrentClock = clock();
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
 
@@ -637,23 +639,26 @@ static void updateLoop(std::shared_ptr<NJLICGame> game) {
     std::chrono::steady_clock::time_point lastFrameTime =
         std::chrono::steady_clock::now();
 
-    clock_t currentClock = clock();
+    gCurrentClock = clock();
     double totalFPS = 0.0;
 
     while (!game->isDone()) {
 
-        clock_t diffClock = clock() - currentClock;
+        clock_t diffClock = clock() - gCurrentClock;
         double cpu_time_used = ((double)diffClock) / (CLOCKS_PER_SEC / 1000);
 
         gMutex.lock();
         game->update(cpu_time_used);
         gMutex.unlock();
 
-        currentClock = clock();
+        gCurrentClock = clock();
     }
 }
 
 #if !(defined(__IPHONEOS__) && __IPHONEOS__)
+#ifdef __EMSCRIPTEN__
+EMSCRIPTEN_KEEPALIVE
+#endif
 static void mainloop(void *userdata) {
     NJLICGame *game = static_cast<NJLICGame*>(userdata);
 #if !defined(NDEBUG) && 0
@@ -680,6 +685,10 @@ static void mainloop(void *userdata) {
     handleInput(game);
 
 #if defined(__EMSCRIPTEN__)
+        clock_t diffClock = clock() - gCurrentClock;
+        double cpu_time_used = ((double)diffClock) / (CLOCKS_PER_SEC / 1000);
+        game->update(cpu_time_used);
+        gCurrentClock = clock();
 //    TestClass::getInstance()->update(0.1);
 #endif
 
@@ -757,7 +766,7 @@ static void createRenderer() {
 
 int main(int argc, char *argv[]) {
 
-    std::shared_ptr<NJLICGame> game(new NJLICColorTest);
+
 
     //      std::string working_directory("");
     //      bool found_working_dir = false;
@@ -992,7 +1001,7 @@ int main(int argc, char *argv[]) {
 
     /* create window and renderer */
     gWindow =
-        SDL_CreateWindow("JamesFolk_DSSAssignment", SDL_WINDOWPOS_CENTERED,
+        SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED,
                          SDL_WINDOWPOS_CENTERED, 640, 480, flags);
 
 #if defined(__MACOSX__)
@@ -1037,7 +1046,7 @@ int main(int argc, char *argv[]) {
     }
 #endif
 
-    game->init(argc, argv);
+    gGame->init(argc, argv);
 
     //    TestClass::createInstance();
     //    TestClass::getInstance()->init();
@@ -1051,7 +1060,7 @@ int main(int argc, char *argv[]) {
     //    gGraphics = std::unique_ptr<Graphics>(new Graphics(gWindow));
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
-        SDL_AddEventWatch(EventFilter,(void*) game.get());
+        SDL_AddEventWatch(EventFilter,(void*) gGame.get());
 #endif
 
     //    int drawableW, drawableH;
@@ -1104,7 +1113,7 @@ int main(int argc, char *argv[]) {
 
     //    TestClass::getInstance()->resize(gDisplayMode.w, gDisplayMode.h);
 
-    game->resize(gDisplayMode.w, gDisplayMode.h);
+    gGame->resize(gDisplayMode.w, gDisplayMode.h);
 
     //#endif
 
@@ -1120,27 +1129,27 @@ int main(int argc, char *argv[]) {
 
     //    gDone = (njli::NJLIGameEngine::start(argc, argv) == false) ? 1 : 0;
     //        gDone = false;
-    game->start();
+    gGame->start();
 
 #if defined(__EMSCRIPTEN__)
-        emscripten_set_main_loop_arg(mainloop, (void*) game.get(), 0, 0);
+        emscripten_set_main_loop_arg(mainloop, (void*) gGame.get(), 0, 0);
 #else
 
-    auto future = std::async(std::launch::async, updateLoop, game);
+    auto future = std::async(std::launch::async, updateLoop, gGame);
 
-    while (!game->isDone()) {
+    while (!gGame->isDone()) {
 
 #if defined(__IPHONEOS__) && __IPHONEOS__
-        handleInput(game);
+        handleInput(gGame);
 #else
-        mainloop((void*)game.get());
+        mainloop((void*)gGame.get());
 
 //              handleInput();
 //              RenderFrame(gGraphics.get());
 #endif
     }
 
-    game->unInit();
+    gGame->unInit();
     // while (!gGameJoysticks.empty())
     //   {
     //     SDL_Joystick *joystick = gGameJoysticks.back();
