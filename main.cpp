@@ -183,7 +183,7 @@ static void handleInput(void *userdata) {
             SDL_Log("SDL_APP_DIDENTERFOREGROUND");
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
-                SDL_iPhoneSetAnimationCallback(gWindow, 1, RenderFrame, (void*)game.get());
+                SDL_iPhoneSetAnimationCallback(gWindow, 1, RenderFrame, (void*)game);
 #endif
             //            NJLI_HandleResume();
             break;
@@ -1140,7 +1140,7 @@ int main(int argc, char *argv[]) {
     while (!gGame->isDone()) {
 
 #if defined(__IPHONEOS__) && __IPHONEOS__
-        handleInput(gGame);
+        handleInput((void*)gGame.get());
 #else
         mainloop((void*)gGame.get());
 

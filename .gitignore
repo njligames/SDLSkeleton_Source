@@ -4,3 +4,4 @@ buildbot_*
 
 .DS_Store
 game-src/
+.idea/

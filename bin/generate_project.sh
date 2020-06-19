@@ -21,7 +21,7 @@ then
 
     # export EMSCRIPTEN_INCLUDE_LOCATION=${EMSDK_DIR}/system/include
 
-    emcmake cmake .. \
+    emcmake cmake ../.. \
         -DCMAKE_BUILD_TYPE=${CONFIGURATION} \
         -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
         -G "Ninja"
@@ -29,7 +29,7 @@ then
 elif [ "${PLATFORM}" == "facebook" ]
 then
 
-  emcmake cmake .. \
+  emcmake cmake ../.. \
   -DFACEBOOK-APP-ID="344740292600474" \
   -DFACEBOOK-API-VERSION="v2.12" \
   -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
@@ -39,14 +39,14 @@ then
 elif [ "${PLATFORM}" == "windows" ]
 then
 
-  cmake .. \
+  cmake ../.. \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
     -G "Visual Studio 16 2019"
 
 elif [ "${PLATFORM}" == "macOS" ]
 then
 
-  cmake .. \
+  cmake ../.. \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
     -G "Xcode"
 
@@ -55,14 +55,14 @@ then
   export CC=/usr/bin/cc
   export CXX=/usr/bin/c++
 
-  cmake .. \
+  cmake ../.. \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
     -G "Unix Makefiles"
 
 elif [ "${PLATFORM}" == "ios" ]
 then
 
-  cmake .. \
+  cmake ../.. \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
     -G "Xcode" \
     -DIOS:BOOL=TRUE
@@ -70,7 +70,7 @@ then
 elif [ "${PLATFORM}" == "appletv" ]
 then
 
-  cmake .. \
+  cmake ../.. \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
     -G "Xcode" \
     -DTVOS:BOOL=TRUE
@@ -80,7 +80,7 @@ then
 
   rm -rf android/app/.externalNativeBuild
 
-  cd android
+  cd ../android
   ./gradlew clean
   ./gradlew assemble${CONFIGURATION}
 
@@ -103,7 +103,7 @@ then
 elif [ "${PLATFORM}" == "vr_ios" ]
 then
 
-  cmake .. \
+  cmake ../.. \
     -DVR=TRUE \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
     -G "Xcode" \
@@ -114,8 +114,8 @@ else
 fi
 
 cmake --build . --target clean
-cmake --build . --config ${CONFIGURATION} --target install
-# cmake --build . --config ${CONFIGURATION} --target package
+# cmake --build . --config ${CONFIGURATION} --target install
+cmake --build . --config ${CONFIGURATION} --target package
 
 cd ..
 
