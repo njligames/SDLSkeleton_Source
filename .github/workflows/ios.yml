@@ -24,10 +24,6 @@ jobs:
       with:
         submodules: true
 
-    - name: view home
-      run: |
-        ls .github
-        pwd
 
     - uses: apple-actions/import-codesign-certs@v1
       with: 
