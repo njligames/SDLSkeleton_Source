@@ -1,4 +1,4 @@
 [submodule "thirdparty"]
 	path = thirdparty
-	url = https://github.com/jfolk1/SDLSkeleton_Thirdparty.git
+	url = https://github.com/njligames/SDLSkeleton_Thirdparty.git
     dirty = ignore
