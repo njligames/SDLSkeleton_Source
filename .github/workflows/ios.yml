@@ -42,7 +42,7 @@ jobs:
         export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
         cmake --version
         cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE
-        cmake --build . --config Release --target package
+        cmake --build . --config Release --target package -allowProvisioningUpdates
         
     - uses: actions/upload-artifact@v2
       with:
