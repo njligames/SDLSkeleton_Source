@@ -38,7 +38,6 @@ jobs:
       
     - name: build iphonesimulator
       run: |
-
         export XCODE_DEVELOPMENT_TEAM=${{ secrets.XCODE_DEVELOPMENT_TEAM }}
         export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
         cmake --version
