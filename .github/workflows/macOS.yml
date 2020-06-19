@@ -42,7 +42,7 @@ jobs:
       
     - name: build macOS
       run: |
-        export XCODE_DEVELOPMENT_TEAM=SRBQ5SCF5X
+        export XCODE_DEVELOPMENT_TEAM=${{ secrets.XCODE_DEVELOPMENT_TEAM }}
         cmake --version
         cmake . -DCMAKE_INSTALL_PREFIX=install -G "Xcode"
         cmake --build . --config Release --target package
