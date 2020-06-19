@@ -1,3 +1,5 @@
+![macOS-swig-lua](https://github.com/njligames/SDLSkeleton_Source/workflows/macOS-swig-lua/badge.svg?branch=master)
+
 Instructions:
 
 The app specific files are as follows:
