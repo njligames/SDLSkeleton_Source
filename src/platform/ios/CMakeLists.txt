@@ -72,6 +72,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         XCODE_ATTRIBUTE_SDKROOT "iphoneos"
         XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer"
         XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER "com.njligames.*"
+        XCODE_ATTRIBUTE_DEVELOPMENT_TEAM "SRBQ5SCF5X"
     )
 
 # set_target_properties(
