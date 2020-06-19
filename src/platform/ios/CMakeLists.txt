@@ -70,6 +70,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         INCLUDE_DIRECTORIES "${TARGET_INCLUDE_DIRS}"
         XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2"
         XCODE_ATTRIBUTE_SDKROOT "iphoneos"
+        XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer"
     )
 
 # set_target_properties(
