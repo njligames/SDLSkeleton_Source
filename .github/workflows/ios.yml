@@ -40,6 +40,7 @@ jobs:
       
     - name: build iphonesimulator
       run: |
+        /usr/bin/env xcrun security find-identity -v -p codesigning
         export XCODE_DEVELOPMENT_TEAM=${{ secrets.XCODE_DEVELOPMENT_TEAM }}
         export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
         cmake --version
