@@ -78,7 +78,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
         XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer: James Folk (FWZPKCY3PH)"
         XCODE_ATTRIBUTE_DEVELOPMENT_TEAM $ENV{XCODE_DEVELOPMENT_TEAM}
-        XCODE_ATTRIBUTE_PROVISIONING_PROFILE "sdlskeleton_ios_provisioning_profile"
+        XCODE_ATTRIBUTE_PROVISIONING_PROFILE "sdlskeleton ios bundle"
 
     )
 
