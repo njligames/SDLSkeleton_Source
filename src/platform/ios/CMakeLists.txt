@@ -80,7 +80,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         # XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer"
         XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "iPhone Developer: James Folk (FWZPKCY3PH)"
         XCODE_ATTRIBUTE_DEVELOPMENT_TEAM $ENV{XCODE_DEVELOPMENT_TEAM}
-        XCODE_ATTRIBUTE_PROVISIONING_PROFILE_NAME "njligames wildcard development"
+        XCODE_ATTRIBUTE_PROVISIONING_PROFILE_SPECIFIER "njligames wildcard development"
 
     )
 
