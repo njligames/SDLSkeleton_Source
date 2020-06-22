@@ -54,8 +54,17 @@ jobs:
         export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
         cmake --version
         cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE
-        xcodebuild build -project SDLSkeleton.xcodeproj/ -allowProvisioningUpdates
+        # xcodebuild build -project SDLSkeleton.xcodeproj/ -allowProvisioningUpdates
         # cmake --build . --config Release --target package
+        xcodebuild archive \
+            -project SDLSkeleton.xcodeproj/ \
+            -scheme SDLSkeleton \
+            -sdk iphoneos13.2 \
+            -configuration Release \
+            -archivePath $PWD/build/SDLSkeleton.xcarchive \
+            IPHONEOS_DEPLOYMENT_TARGET=9.0
+            PROVISIONING_PROFILE="9316fadd-a5b2-47e0-be48-c0bdcc25e734" \
+            CODE_SIGN_IDENTITY="iPhone Developer: James Folk (FWZPKCY3PH)"
         
     - uses: actions/upload-artifact@v2
       with:
