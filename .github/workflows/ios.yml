@@ -58,6 +58,7 @@ jobs:
         # xcodebuild build -project SDLSkeleton.xcodeproj/ -allowProvisioningUpdates
         # cmake --build . --config Release --target package
         xcodebuild build \
+        -allowProvisioningUpdates \
             -project SDLSkeleton.xcodeproj/ \
             # -scheme SDLSkeleton \
             -sdk iphoneos13.2 \
