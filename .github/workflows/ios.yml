@@ -25,10 +25,10 @@ jobs:
         submodules: true
 
 
-    - uses: apple-actions/import-codesign-certs@v1
-      with: 
-        p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-        p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+        # - uses: apple-actions/import-codesign-certs@v1
+        #   with: 
+        #     p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+        #     p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
 
     - name: install lua
       run: brew install lua
@@ -37,6 +37,11 @@ jobs:
     
     - name: install swig
       run: brew install swig
+
+    - name: Setup provisioning profile
+      run: ./.github/secrets/decrypt_secrets.sh
+      env:
+        IOS_PROFILE_KEY: ${{ secrets.IOS_PROFILE_KEY }}
       
     - name: build iphonesimulator
       run: |
@@ -46,8 +51,8 @@ jobs:
         export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
         cmake --version
         cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE
-        xcodebuild build -project SDLSkeleton.xcodeproj/ -allowProvisioningUpdates
-        # cmake --build . --config Release --target package
+        # xcodebuild build -project SDLSkeleton.xcodeproj/ -allowProvisioningUpdates
+        cmake --build . --config Release --target package
         
     - uses: actions/upload-artifact@v2
       with:
