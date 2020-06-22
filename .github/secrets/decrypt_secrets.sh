@@ -19,3 +19,5 @@ security unlock-keychain -p "$CERTIFICATES_P12_PASSWORD" ~/Library/Keychains/bui
 
 security set-key-partition-list -S apple-tool:,apple: -s -k "$CERTIFICATES_P12_PASSWORD" ~/Library/Keychains/build.keychain
 
+ls ~/Library/MobileDevice/Provisioning\ Profiles/
+

@@ -65,7 +65,7 @@ jobs:
             -archivePath $PWD/build/SDLSkeleton.xcarchive \
             # IPHONEOS_DEPLOYMENT_TARGET=9.0
             DEVELOPMENT_TEAM="SRBQ5SCF5X" \
-            PROVISIONING_PROFILE="9316fadd-a5b2-47e0-be48-c0bdcc25e734" \
+            PROVISIONING_PROFILE="b233159e-cbac-463a-9b1d-ceefaa02015a" \
             CODE_SIGN_IDENTITY="iPhone Developer: James Folk (FWZPKCY3PH)"
         
     - uses: actions/upload-artifact@v2
