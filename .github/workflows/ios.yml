@@ -24,6 +24,12 @@ jobs:
       with:
         submodules: true
 
+    - name: Install gpg
+      run: brew install gnupg
+
+    - name: Switch XCode Version
+      run: sudo xcode-select -s /Applications/Xcode_11.2.app
+
     - name: Setup provisioning profile
       run: ./.github/secrets/decrypt_secrets.sh
       env:
