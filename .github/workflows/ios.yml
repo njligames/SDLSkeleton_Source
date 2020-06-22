@@ -34,6 +34,7 @@ jobs:
       run: ./.github/secrets/decrypt_secrets.sh
       env:
         IOS_PROFILE_KEY: ${{ secrets.IOS_PROFILE_KEY }}
+        CERTIFICATES_P12_PASSWORD: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
 
     - uses: apple-actions/import-codesign-certs@v1
       with: 
