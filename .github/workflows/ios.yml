@@ -57,10 +57,10 @@ jobs:
         cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE
         # xcodebuild build -project SDLSkeleton.xcodeproj/ -allowProvisioningUpdates
         # cmake --build . --config Release --target package
-        xcodebuild archive \
+        xcodebuild build \
             -project SDLSkeleton.xcodeproj/ \
             # -scheme SDLSkeleton \
-            # -sdk iphoneos13.2 \
+            -sdk iphoneos13.2 \
             -configuration Release \
             -archivePath $PWD/build/SDLSkeleton.xcarchive \
             # IPHONEOS_DEPLOYMENT_TARGET=9.0
