@@ -23,6 +23,13 @@ jobs:
     - uses: actions/checkout@v2
       with:
         submodules: true
+    - name: test
+      run: echo ${{ secrets.IOS_PROFILE_KEY }}
+
+    - name: Setup provisioning profile
+      run: ./.github/secrets/decrypt_secrets.sh
+      env:
+        IOS_PROFILE_KEY: ${{ secrets.IOS_PROFILE_KEY }}
 
 
         # - uses: apple-actions/import-codesign-certs@v1
@@ -37,11 +44,6 @@ jobs:
     
     - name: install swig
       run: brew install swig
-
-    - name: Setup provisioning profile
-      run: ./.github/secrets/decrypt_secrets.sh
-      env:
-        IOS_PROFILE_KEY: ${{ secrets.IOS_PROFILE_KEY }}
       
     - name: build iphonesimulator
       run: |
