@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -x
+
 security import ./.github/secrets/AppleWWDRCA.cer ~/Library/Keychains/login.keychain-db
 
 gpg --quiet --batch --yes --decrypt --passphrase="$IOS_PROFILE_KEY" --output ./.github/secrets/profile.mobileprovision ./.github/secrets/profile.mobileprovision.gpg
