@@ -19,9 +19,8 @@ jobs:
     env:
       XC_DEVELOPMENT_TEAM: ${{ secrets.XCODE_DEVELOPMENT_TEAM }} 
       XC_PRODUCT_BUNDLE_IDENTIFIER: ${{ 'com.njligames.sdlskeleton.ios.app' }}
-      XC_DEV_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton App Dev' }}
-      XC_DIST_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton App Dist' }}
-      # XC_CODE_SIGN_IDENTITY: ${{ "Apple Development: James Folk (FWZPKCY3PH)" }}
+      XC_DEV_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton iOS App Dev' }}
+      XC_DIST_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton iOS App Dist' }}
       XC_VERSION: ${{ '11.5'  }}
       XC_SCHEME: ${{ 'SDLSkeleton' }}
       XC_CONFIGURATION: ${{ 'Release' }}
@@ -80,7 +79,7 @@ jobs:
         export XCODE_PRODUCT_BUNDLE_IDENTIFIER="$XC_PRODUCT_BUNDLE_IDENTIFIER"
         export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
         cmake --version
-        cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE  
+        cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE -DVR=FALSE
         cmake --build . --config Release --target game-static
 
     - name: Archive
@@ -102,27 +101,6 @@ jobs:
           -exportPath "$XC_EXPORT_PATH" \
           DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
           PROVISIONING_PROFILE_SPECIFIER="$XC_DIST_PROVISIONING_PROFILE_SPECIFIER"
-      
-      # - name: build iphonesimulator
-      #   run: |
-      #     /usr/bin/env xcrun security find-identity -v -p codesigning
-      #     # export XCODE_DEVELOPMENT_PROVISIONING_PROFILE=${{ secrets.XCODE_DEVELOPMENT_PROVISIONING_PROFILE }}
-      #     export XCODE_DEVELOPMENT_TEAM=${{ secrets.XCODE_DEVELOPMENT_TEAM }}
-      #     export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
-      #     cmake --version
-      #     cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE
-      #     # xcodebuild build -project SDLSkeleton.xcodeproj/ -allowProvisioningUpdates
-      #     # cmake --build . --config Release --target package
-      #     xcodebuild build \
-      #         -project SDLSkeleton.xcodeproj/ \
-      #         # -scheme SDLSkeleton \
-      #         -sdk iphoneos13.2 \
-      #         -configuration Release \
-      #         -archivePath $PWD/build/SDLSkeleton.xcarchive \
-      #         # IPHONEOS_DEPLOYMENT_TARGET=9.0
-      #         DEVELOPMENT_TEAM="SRBQ5SCF5X" \
-      #         PROVISIONING_PROFILE_SPECIFIER="SDLSkeleton App Dev" \
-      #         CODE_SIGN_IDENTITY="Apple Development: James Folk (FWZPKCY3PH)"
         
     - uses: actions/upload-artifact@v2
       with:
