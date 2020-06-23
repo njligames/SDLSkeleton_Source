@@ -1,4 +1,4 @@
-W# This is a basic workflow to help you get started with Actions name: ios-swig-lua
+# This is a basic workflow to help you get started with Actions name: ios-swig-lua
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
