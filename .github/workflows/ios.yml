@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: ios-swig-lua
+name: OLD-ios-swig-lua
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -65,8 +65,8 @@ jobs:
             -archivePath $PWD/build/SDLSkeleton.xcarchive \
             # IPHONEOS_DEPLOYMENT_TARGET=9.0
             DEVELOPMENT_TEAM="SRBQ5SCF5X" \
-            PROVISIONING_PROFILE="b233159e-cbac-463a-9b1d-ceefaa02015a" \
-            CODE_SIGN_IDENTITY="iPhone Developer: James Folk (FWZPKCY3PH)"
+            PROVISIONING_PROFILE_SPECIFIER="SDLSkeleton App Dev" \
+            CODE_SIGN_IDENTITY="Apple Development: James Folk (FWZPKCY3PH)"
         
     - uses: actions/upload-artifact@v2
       with:

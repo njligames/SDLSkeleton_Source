@@ -1,0 +1,140 @@
+W# This is a basic workflow to help you get started with Actions name: ios-swig-lua
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: macOS-latest
+    env:
+      XC_VERSION: ${{ '11.5'  }}
+      XC_SCHEME: ${{ 'SDLSkeleton' }}
+      XC_CONFIGURATION: ${{ 'Release' }}
+      XC_WORKSPACE: ${{ 'SDLSkeleton.xcworkspace' }}
+      XC_ARCHIVE_PATH: ${{ './SDLSkeleton.xcarchive' }}
+      XC_EXPORT_PATH: ${{ './artifacts/' }}
+      XC_EXPORT_OPTIONS_FILE_PATH: ${{ './.github/data/ExportOptions.plist' }}
+      ENCRYPTED_CERTS_FILE_PATH: ${{ './.github/data/Certificates.p12.gpg' }}
+      DECRYPTED_CERTS_FILE_PATH: ${{ './.github/data/Certificates.p12' }}
+      ENCRYPTED_PROVISION_FILE_PATH: ${{ './.github/data/provisioning.tar.gz.gpg' }}
+      DECRYPTED_PROVISION_FILE_PATH: ${{ './.github/data/provisioning.tar.gz' }}
+      CERTS_ENCRYPTION_PWD: ${{ secrets.CERTS_ENCRYPTION_PWD }}
+      PROVISION_ENCRYPTION_PWD: ${{ secrets.PROVISION_ENCRYPTION_PWD }}
+      CERTS_EXPORT_PWD: ${{ secrets.CERTS_EXPORT_PWD }}
+      KEYCHAIN: ${{ 'test.keychain' }}
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    - name: Select latest Xcode
+      run: "sudo xcode-select -s /Applications/Xcode_$XC_VERSION.app"
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+    - name: Configure Keychain
+      run: |
+        security create-keychain -p "" "$KEYCHAIN"
+        security list-keychain -s "" "$KEYCHAIN"
+        security default-keychain -s "" "$KEYCHAIN"
+        security unlock-keychain -p "" "$KEYCHAIN"
+        security set-keychain-settings
+        security list-keychains
+    - name: Configure Code Signing
+      run: |
+        gpg -d -o "$DECRYPTED_CERTS_FILE_PATH" --pinentry-mode=loopback --passphrase "$CERTS_ENCRYPTION_PWD" "$ENCRYPTED_CERTS_FILE_PATH"
+        gpg -d -o "$DECRYPTED_PROVISION_FILE_PATH" --pinentry-mode=loopback --passphrase "$PROVISION_ENCRYPTION_PWD" "$ENCRYPTED_PROVISION_FILE_PATH"
+        security import "$DECRYPTED_CERTS_FILE_PATH" -k "$KEYCHAIN" -P "$CERTS_EXPORT_PWD" -A
+        security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN"
+        tar xzvf $DECRYPTED_PROVISION_FILE_PATH
+        mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+        for PROVISION in `ls ./*.mobileprovision`
+        do
+          UUID=`/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< $(security cms -D -i ./$PROVISION)`
+          cp "./$PROVISION" "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
+        done
+      
+
+        # - name: Install gpg
+        #   run: brew install gnupg
+
+        # - name: Switch XCode Version
+        #   run: sudo xcode-select -s /Applications/Xcode_11.2.app
+
+        # - name: Setup provisioning profile
+        #   run: ./.github/secrets/decrypt_secrets.sh
+        #   env:
+        #     IOS_PROFILE_KEY: ${{ secrets.IOS_PROFILE_KEY }}
+        #     CERTIFICATES_P12_PASSWORD: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+
+        # - uses: apple-actions/import-codesign-certs@v1
+        #   with: 
+        #     p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
+        #     p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+
+    - name: install lua
+      run: brew install lua
+    
+    - name: install swig
+      run: brew install swig
+    - name: Run CMake
+      run: |
+        export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
+        cmake --version
+        cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE  
+        cmake --build . --config Release --target game-static
+    - name: Archive
+      run: |
+        /usr/bin/xcodebuild archive \
+          -project "$XC_WORKSPACE" \
+          -scheme "$XC_SCHEME" \
+          -configuration "$XC_CONFIGURATION" \
+          -archivePath "$XC_ARCHIVE_PATH" \
+          DEVELOPMENT_TEAM="SRBQ5SCF5X" \
+          PROVISIONING_PROFILE_SPECIFIER="SDLSkeleton App Dev" \
+          CODE_SIGN_IDENTITY="Apple Development: James Folk (FWZPKCY3PH)"
+    - name: Export for App Store
+      run: |
+        /usr/bin/xcodebuild -exportArchive \
+          -archivePath "$XC_ARCHIVE_PATH" \
+          -exportOptionsPlist "$XC_EXPORT_OPTIONS_FILE_PATH" \
+          -exportPath "$XC_EXPORT_PATH" \
+          DEVELOPMENT_TEAM="SRBQ5SCF5X" \
+          PROVISIONING_PROFILE_SPECIFIER="SDLSkeleton App Dist"
+    - name: Upload artifacts
+      uses: actions/upload-artiface@v1.0.0
+      with:
+        name: Artifacts
+        path: ./artifacts
+      
+      # - name: build iphonesimulator
+      #   run: |
+      #     /usr/bin/env xcrun security find-identity -v -p codesigning
+      #     # export XCODE_DEVELOPMENT_PROVISIONING_PROFILE=${{ secrets.XCODE_DEVELOPMENT_PROVISIONING_PROFILE }}
+      #     export XCODE_DEVELOPMENT_TEAM=${{ secrets.XCODE_DEVELOPMENT_TEAM }}
+      #     export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
+      #     cmake --version
+      #     cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE
+      #     # xcodebuild build -project SDLSkeleton.xcodeproj/ -allowProvisioningUpdates
+      #     # cmake --build . --config Release --target package
+      #     xcodebuild build \
+      #         -project SDLSkeleton.xcodeproj/ \
+      #         # -scheme SDLSkeleton \
+      #         -sdk iphoneos13.2 \
+      #         -configuration Release \
+      #         -archivePath $PWD/build/SDLSkeleton.xcarchive \
+      #         # IPHONEOS_DEPLOYMENT_TARGET=9.0
+      #         DEVELOPMENT_TEAM="SRBQ5SCF5X" \
+      #         PROVISIONING_PROFILE_SPECIFIER="SDLSkeleton App Dev" \
+      #         CODE_SIGN_IDENTITY="Apple Development: James Folk (FWZPKCY3PH)"
+        
+    - uses: actions/upload-artifact@v2
+      with:
+        name: my-artifact
+        path: game-*-Darwin.dmg
