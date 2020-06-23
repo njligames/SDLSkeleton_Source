@@ -21,7 +21,7 @@ jobs:
       XC_PRODUCT_BUNDLE_IDENTIFIER: ${{ 'com.njligames.sdlskeleton.ios.app' }}
       XC_DEV_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton App Dev' }}
       XC_DIST_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton App Dist' }}
-      XC_CODE_SIGN_IDENTITY: ${{ "Apple Development: James Folk (FWZPKCY3PH)" }}
+      # XC_CODE_SIGN_IDENTITY: ${{ "Apple Development: James Folk (FWZPKCY3PH)" }}
       XC_VERSION: ${{ '11.5'  }}
       XC_SCHEME: ${{ 'SDLSkeleton' }}
       XC_CONFIGURATION: ${{ 'Release' }}
@@ -92,7 +92,7 @@ jobs:
           -archivePath "$XC_ARCHIVE_PATH" \
           DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
           PROVISIONING_PROFILE_SPECIFIER="$XC_DEV_PROVISIONING_PROFILE_SPECIFIER" \
-          CODE_SIGN_IDENTITY="$XC_CODE_SIGN_IDENTITY"
+          CODE_SIGN_IDENTITY="Apple Development: James Folk (FWZPKCY3PH)"
 
     - name: Export for App Store
       run: |
