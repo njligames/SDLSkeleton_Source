@@ -17,6 +17,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: macOS-latest
     env:
+      XC_DEVELOPMENT_TEAM: ${{ ${{ secrets.XCODE_DEVELOPMENT_TEAM }} }}
       XC_VERSION: ${{ '11.5'  }}
       XC_SCHEME: ${{ 'SDLSkeleton' }}
       XC_CONFIGURATION: ${{ 'Release' }}
@@ -68,12 +69,20 @@ jobs:
     
     - name: install swig
       run: brew install swig
-    - name: Run CMake
+
+    - name: Run CMake and Build the Package
       run: |
+        export XCODE_DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM"
         export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
         cmake --version
         cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE  
-        cmake --build . --config Release --target game-static
+        cmake --build . --config Release --target package
+        
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Package
+        path: game-*-Darwin-ios.dmg
+
     - name: Archive
       run: |
         /usr/bin/xcodebuild archive \
@@ -81,16 +90,17 @@ jobs:
           -scheme "$XC_SCHEME" \
           -configuration "$XC_CONFIGURATION" \
           -archivePath "$XC_ARCHIVE_PATH" \
-          DEVELOPMENT_TEAM="SRBQ5SCF5X" \
+          DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
           PROVISIONING_PROFILE_SPECIFIER="SDLSkeleton App Dev" \
           CODE_SIGN_IDENTITY="Apple Development: James Folk (FWZPKCY3PH)"
+
     - name: Export for App Store
       run: |
         /usr/bin/xcodebuild -exportArchive \
           -archivePath "$XC_ARCHIVE_PATH" \
           -exportOptionsPlist "$XC_EXPORT_OPTIONS_FILE_PATH" \
           -exportPath "$XC_EXPORT_PATH" \
-          DEVELOPMENT_TEAM="SRBQ5SCF5X" \
+          DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
           PROVISIONING_PROFILE_SPECIFIER="SDLSkeleton App Dist"
       
       # - name: build iphonesimulator
