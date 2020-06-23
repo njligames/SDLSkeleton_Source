@@ -1,6 +1,9 @@
 # This is a basic workflow to help you get started with Actions name: ios-swig-lua
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
+
+name: ios-swig-lua
+
 on:
   push:
     branches: [ master ]
@@ -50,9 +53,6 @@ jobs:
       run: |
         gpg --quiet --batch --yes --decrypt --passphrase="$CERTS_ENCRYPTION_PWD" --output "$DECRYPTED_CERTS_FILE_PATH" "$ENCRYPTED_CERTS_FILE_PATH"
         gpg --quiet --batch --yes --decrypt --passphrase="$PROVISION_ENCRYPTION_PWD" --output "$DECRYPTED_PROVISION_FILE_PATH" "$ENCRYPTED_PROVISION_FILE_PATH"
-
-        # gpg -d -o "$DECRYPTED_CERTS_FILE_PATH" --pinentry-mode=loopback --passphrase "$CERTS_ENCRYPTION_PWD" "$ENCRYPTED_CERTS_FILE_PATH"
-        # gpg -d -o "$DECRYPTED_PROVISION_FILE_PATH" --pinentry-mode=loopback --passphrase "$PROVISION_ENCRYPTION_PWD" "$ENCRYPTED_PROVISION_FILE_PATH"
         security import "$DECRYPTED_CERTS_FILE_PATH" -k "$KEYCHAIN" -P "$CERTS_EXPORT_PWD" -A
         security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN"
         tar xzvf $DECRYPTED_PROVISION_FILE_PATH
@@ -62,24 +62,6 @@ jobs:
           UUID=`/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< $(security cms -D -i ./$PROVISION)`
           cp "./$PROVISION" "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
         done
-      
-
-        # - name: Install gpg
-        #   run: brew install gnupg
-
-        # - name: Switch XCode Version
-        #   run: sudo xcode-select -s /Applications/Xcode_11.2.app
-
-        # - name: Setup provisioning profile
-        #   run: ./.github/secrets/decrypt_secrets.sh
-        #   env:
-        #     IOS_PROFILE_KEY: ${{ secrets.IOS_PROFILE_KEY }}
-        #     CERTIFICATES_P12_PASSWORD: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
-
-        # - uses: apple-actions/import-codesign-certs@v1
-        #   with: 
-        #     p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-        #     p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
 
     - name: install lua
       run: brew install lua
