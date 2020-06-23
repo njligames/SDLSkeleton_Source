@@ -9,7 +9,9 @@
  <key>provisioningProfiles</key>
  <dict>
   <key>com.njligames.sdlskeleton.ios.app</key>
-  <string>SDLSkeleton App Dist</string>
+  <string>SDLSkeleton iOS App Dist</string>
+  <key>com.njligames.sdlskeleton.iosvr.app</key>
+  <string>SDLSkeleton iOS VR App Dist</string>
  </dict>
  <key>signingCertificate</key>
  <string>Apple Distribution</string>
