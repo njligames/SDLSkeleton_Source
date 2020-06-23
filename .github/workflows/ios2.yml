@@ -42,7 +42,7 @@ jobs:
       run: |
         security create-keychain -p "" "$KEYCHAIN"
         security list-keychain -s "" "$KEYCHAIN"
-        security default-keychain -s "" "$KEYCHAIN"
+        # security default-keychain -s "" "$KEYCHAIN"
         security unlock-keychain -p "" "$KEYCHAIN"
         security set-keychain-settings
         security list-keychains
