@@ -107,11 +107,6 @@ jobs:
           -exportPath "$XC_EXPORT_PATH" \
           DEVELOPMENT_TEAM="SRBQ5SCF5X" \
           PROVISIONING_PROFILE_SPECIFIER="SDLSkeleton App Dist"
-    - name: Upload artifacts
-      uses: actions/upload-artiface@v1.0.0
-      with:
-        name: Artifacts
-        path: ./artifacts
       
       # - name: build iphonesimulator
       #   run: |
@@ -136,5 +131,5 @@ jobs:
         
     - uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
-        path: game-*-Darwin.dmg
+        name: Artifacts
+        path: ./artifacts
