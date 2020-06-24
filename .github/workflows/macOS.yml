@@ -89,7 +89,7 @@ jobs:
           -configuration "$XC_CONFIGURATION" \
           -archivePath "$XC_ARCHIVE_PATH" \
           DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
-          PROVISIONING_PROFILE_SPECIFIER="$XC_DEV_PROVISIONING_PROFILE_SPECIFIER" \
+                                                 # PROVISIONING_PROFILE_SPECIFIER="$XC_DEV_PROVISIONING_PROFILE_SPECIFIER" \
           CODE_SIGN_IDENTITY="Mac Developer"
 
     - name: Export for App Store
@@ -98,8 +98,8 @@ jobs:
           -archivePath "$XC_ARCHIVE_PATH" \
           -exportOptionsPlist "$XC_EXPORT_OPTIONS_FILE_PATH" \
           -exportPath "$XC_EXPORT_PATH" \
-          DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
-          PROVISIONING_PROFILE_SPECIFIER="$XC_DIST_PROVISIONING_PROFILE_SPECIFIER"
+          DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" #\
+                                                 # PROVISIONING_PROFILE_SPECIFIER="$XC_DIST_PROVISIONING_PROFILE_SPECIFIER"
         
     - uses: actions/upload-artifact@v2
       with:
