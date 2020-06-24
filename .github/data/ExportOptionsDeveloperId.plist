@@ -5,21 +5,12 @@
  <key>destination</key>
  <string>export</string>
  <key>method</key>
- <string>ad-hoc</string>
+ <string>developer-id</string>
  <key>provisioningProfiles</key>
  <dict>
 
-  <key>com.njligames.sdlskeleton.ios.app</key>
-  <string>SDLSkeleton ios dist adhoc</string>
-
-  <key>com.njligames.sdlskeleton.iosvr.app</key>
-  <string>SDLSkeleton ios_vr dist adhoc</string>
-
   <key>com.njligames.sdlskeleton.macos.app</key>
   <string>SDLSkeleton macos dist</string>
-
-  <key>com.njligames.sdlskeleton.appletvos.app</key>
-  <string>SDLSkeleton appletvos dist adhoc</string>
       
  </dict>
  <key>signingCertificate</key>

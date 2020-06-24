@@ -27,7 +27,7 @@ jobs:
       XC_PROJECT: ${{ 'SDLSkeleton.xcodeproj' }}
       XC_ARCHIVE_PATH: ${{ './SDLSkeleton.xcarchive' }}
       XC_EXPORT_PATH: ${{ './artifacts/' }}
-      XC_EXPORT_OPTIONS_FILE_PATH: ${{ './.github/data/ExportOptions.plist' }}
+      XC_EXPORT_OPTIONS_FILE_PATH: ${{ './.github/data/ExportOptionsAdHoc.plist' }}
       ENCRYPTED_CERTS_FILE_PATH: ${{ './.github/data/Certificates.p12.gpg' }}
       DECRYPTED_CERTS_FILE_PATH: ${{ './.github/data/Certificates.p12' }}
       ENCRYPTED_PROVISION_FILE_PATH: ${{ './.github/data/provisioning.tar.gz.gpg' }}

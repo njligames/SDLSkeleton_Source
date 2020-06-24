@@ -27,7 +27,7 @@ jobs:
       XC_PROJECT: ${{ 'SDLSkeleton.xcodeproj' }}
       XC_ARCHIVE_PATH: ${{ './SDLSkeleton.xcarchive' }}
       XC_EXPORT_PATH: ${{ './artifacts/' }}
-      XC_EXPORT_OPTIONS_FILE_PATH: ${{ './.github/data/ExportOptions.plist' }}
+      XC_EXPORT_OPTIONS_FILE_PATH: ${{ './.github/data/ExportOptionsDeveloperId.plist' }}
       ENCRYPTED_CERTS_FILE_PATH: ${{ './.github/data/Certificates.p12.gpg' }}
       DECRYPTED_CERTS_FILE_PATH: ${{ './.github/data/Certificates.p12' }}
       ENCRYPTED_PROVISION_FILE_PATH: ${{ './.github/data/provisioning.tar.gz.gpg' }}
@@ -98,8 +98,8 @@ jobs:
           -archivePath "$XC_ARCHIVE_PATH" \
           -exportOptionsPlist "$XC_EXPORT_OPTIONS_FILE_PATH" \
           -exportPath "$XC_EXPORT_PATH" \
-          DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" #\
-                                                 # PROVISIONING_PROFILE_SPECIFIER="$XC_DIST_PROVISIONING_PROFILE_SPECIFIER"
+          DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
+          PROVISIONING_PROFILE_SPECIFIER="$XC_DIST_PROVISIONING_PROFILE_SPECIFIER"
         
     - uses: actions/upload-artifact@v2
       with:
