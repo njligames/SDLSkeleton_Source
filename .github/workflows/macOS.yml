@@ -99,7 +99,8 @@ jobs:
           -exportOptionsPlist "$XC_EXPORT_OPTIONS_FILE_PATH" \
           -exportPath "$XC_EXPORT_PATH" \
           DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
-          PROVISIONING_PROFILE_SPECIFIER="$XC_DIST_PROVISIONING_PROFILE_SPECIFIER"
+          PROVISIONING_PROFILE_SPECIFIER="$XC_DIST_PROVISIONING_PROFILE_SPECIFIER" \
+          CODE_SIGN_IDENTITY="Developer ID Application"
         
     - uses: actions/upload-artifact@v2
       with:
