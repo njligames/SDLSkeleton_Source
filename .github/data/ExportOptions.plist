@@ -12,6 +12,10 @@
   <string>SDLSkeleton iOS App Dist</string>
   <key>com.njligames.sdlskeleton.iosvr.app</key>
   <string>SDLSkeleton iOS VR App Dist</string>
+  <key>com.njligames.sdlskeleton.macos.app</key>
+  <string>SDLSkeleton MacOS App Dist</string>
+  <key>com.njligames.sdlskeleton.appletvos.app</key>
+  <string>SDLSkeleton tvOS App Dist</string>
  </dict>
  <key>signingCertificate</key>
  <string>Apple Distribution</string>

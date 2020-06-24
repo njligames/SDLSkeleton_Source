@@ -1,9 +1,9 @@
-# This is a basic workflow to help you get started with Actions
-
-name: appletv-swig-lua
-
+# This is a basic workflow to help you get started with Actions name: ios-swig-lua
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
+
+name: ios-swig-lua
+
 on:
   push:
     branches: [ master ]
@@ -16,39 +16,93 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: macOS-latest
+    env:
+      XC_DEVELOPMENT_TEAM: ${{ secrets.XCODE_DEVELOPMENT_TEAM }} 
+      XC_PRODUCT_BUNDLE_IDENTIFIER: ${{ 'com.njligames.sdlskeleton.appletvos.app' }}
+      XC_DEV_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton tvOS App Dev' }}
+      XC_DIST_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton tvOS App Dist' }}
+      XC_VERSION: ${{ '11.5'  }}
+      XC_SCHEME: ${{ 'SDLSkeleton' }}
+      XC_CONFIGURATION: ${{ 'Release' }}
+      XC_PROJECT: ${{ 'SDLSkeleton.xcodeproj' }}
+      XC_ARCHIVE_PATH: ${{ './SDLSkeleton.xcarchive' }}
+      XC_EXPORT_PATH: ${{ './artifacts/' }}
+      XC_EXPORT_OPTIONS_FILE_PATH: ${{ './.github/data/ExportOptions.plist' }}
+      ENCRYPTED_CERTS_FILE_PATH: ${{ './.github/data/Certificates.p12.gpg' }}
+      DECRYPTED_CERTS_FILE_PATH: ${{ './.github/data/Certificates.p12' }}
+      ENCRYPTED_PROVISION_FILE_PATH: ${{ './.github/data/provisioning.tar.gz.gpg' }}
+      DECRYPTED_PROVISION_FILE_PATH: ${{ './.github/data/provisioning.tar.gz' }}
+      CERTS_ENCRYPTION_PWD: ${{ secrets.CERTS_ENCRYPTION_PWD }}
+      PROVISION_ENCRYPTION_PWD: ${{ secrets.PROVISION_ENCRYPTION_PWD }}
+      CERTS_EXPORT_PWD: ${{ secrets.CERTS_EXPORT_PWD }}
+      KEYCHAIN: ${{ 'test.keychain' }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+    - name: Select latest Xcode
+      run: "sudo xcode-select -s /Applications/Xcode_$XC_VERSION.app"
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
       with:
         submodules: true
-
-    - name: view home
+    - name: Configure Keychain
       run: |
-        ls .github
-        pwd
-
-    - uses: apple-actions/import-codesign-certs@v1
-      with: 
-        p12-file-base64: ${{ secrets.CERTIFICATES_P12 }}
-        p12-password: ${{ secrets.CERTIFICATES_P12_PASSWORD }}
+        security create-keychain -p "" "$KEYCHAIN"
+        security list-keychain -s "" "$KEYCHAIN"
+        # security default-keychain -s "" "$KEYCHAIN"
+        security unlock-keychain -p "" "$KEYCHAIN"
+        security set-keychain-settings
+        security list-keychains
+    - name: Configure Code Signing
+      run: |
+        gpg --quiet --batch --yes --decrypt --passphrase="$CERTS_ENCRYPTION_PWD" --output "$DECRYPTED_CERTS_FILE_PATH" "$ENCRYPTED_CERTS_FILE_PATH"
+        gpg --quiet --batch --yes --decrypt --passphrase="$PROVISION_ENCRYPTION_PWD" --output "$DECRYPTED_PROVISION_FILE_PATH" "$ENCRYPTED_PROVISION_FILE_PATH"
+        security import "$DECRYPTED_CERTS_FILE_PATH" -k "$KEYCHAIN" -P "$CERTS_EXPORT_PWD" -A
+        security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN"
+        tar xzvf $DECRYPTED_PROVISION_FILE_PATH
+        mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles"
+        for PROVISION in `ls ./*.mobileprovision`
+        do
+          UUID=`/usr/libexec/PlistBuddy -c 'Print :UUID' /dev/stdin <<< $(security cms -D -i ./$PROVISION)`
+          cp "./$PROVISION" "$HOME/Library/MobileDevice/Provisioning Profiles/$UUID.mobileprovision"
+        done
 
     - name: install lua
       run: brew install lua
     
     - name: install swig
       run: brew install swig
-      
-    - name: build appletvsimulator
+
+    - name: Run CMake and Build the Package
       run: |
-        export XCODE_DEVELOPMENT_TEAM=${{ secrets.XCODE_DEVELOPMENT_TEAM }}
-        export EFFECTIVE_PLATFORM_NAME='-appletvsimulator'
+        export XCODE_DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM"
+        export XCODE_PRODUCT_BUNDLE_IDENTIFIER="$XC_PRODUCT_BUNDLE_IDENTIFIER"
+        export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
         cmake --version
-        cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DTVOS:BOOL=TRUE
-        cmake --build . --config Release --target package
+        cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE -DVR=FALSE
+        cmake --build . --config Release --target game-static
+
+    - name: Archive
+      run: |
+        /usr/bin/xcodebuild archive \
+          -project "$XC_PROJECT" \
+          -scheme "$XC_SCHEME" \
+          -configuration "$XC_CONFIGURATION" \
+          -archivePath "$XC_ARCHIVE_PATH" \
+          DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
+          PROVISIONING_PROFILE_SPECIFIER="$XC_DEV_PROVISIONING_PROFILE_SPECIFIER" \
+          CODE_SIGN_IDENTITY="Apple Development: James Folk (FWZPKCY3PH)"
+
+    - name: Export for App Store
+      run: |
+        /usr/bin/xcodebuild -exportArchive \
+          -archivePath "$XC_ARCHIVE_PATH" \
+          -exportOptionsPlist "$XC_EXPORT_OPTIONS_FILE_PATH" \
+          -exportPath "$XC_EXPORT_PATH" \
+          DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
+          PROVISIONING_PROFILE_SPECIFIER="$XC_DIST_PROVISIONING_PROFILE_SPECIFIER"
         
     - uses: actions/upload-artifact@v2
       with:
-        name: my-artifact
-        path: game-*-Darwin.dmg
+        name: Artifacts
+        path: ./artifacts
