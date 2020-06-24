@@ -79,29 +79,29 @@ jobs:
         export XCODE_PRODUCT_BUNDLE_IDENTIFIER="$XC_PRODUCT_BUNDLE_IDENTIFIER"
         cmake --version
         cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode"
-        cmake --build . --config Release --target game-static
+        cmake --build . --config Release --target package
 
-    - name: Archive
-      run: |
-        /usr/bin/xcodebuild archive \
-          -project "$XC_PROJECT" \
-          -scheme "$XC_SCHEME" \
-          -configuration "$XC_CONFIGURATION" \
-          -archivePath "$XC_ARCHIVE_PATH" \
-          DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
-          PROVISIONING_PROFILE_SPECIFIER="$XC_DEV_PROVISIONING_PROFILE_SPECIFIER" \
-          CODE_SIGN_IDENTITY="Apple Development: James Folk (FWZPKCY3PH)"
+        # - name: Archive
+        #   run: |
+        #     /usr/bin/xcodebuild archive \
+        #       -project "$XC_PROJECT" \
+        #       -scheme "$XC_SCHEME" \
+        #       -configuration "$XC_CONFIGURATION" \
+        #       -archivePath "$XC_ARCHIVE_PATH" \
+        #       DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
+        #       PROVISIONING_PROFILE_SPECIFIER="$XC_DEV_PROVISIONING_PROFILE_SPECIFIER" \
+        #       CODE_SIGN_IDENTITY="Apple Development: James Folk (FWZPKCY3PH)"
 
-    - name: Export for App Store
-      run: |
-        /usr/bin/xcodebuild -exportArchive \
-          -archivePath "$XC_ARCHIVE_PATH" \
-          -exportOptionsPlist "$XC_EXPORT_OPTIONS_FILE_PATH" \
-          -exportPath "$XC_EXPORT_PATH" \
-          DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
-          PROVISIONING_PROFILE_SPECIFIER="$XC_DIST_PROVISIONING_PROFILE_SPECIFIER"
+        # - name: Export for App Store
+        #   run: |
+        #     /usr/bin/xcodebuild -exportArchive \
+        #       -archivePath "$XC_ARCHIVE_PATH" \
+        #       -exportOptionsPlist "$XC_EXPORT_OPTIONS_FILE_PATH" \
+        #       -exportPath "$XC_EXPORT_PATH" \
+        #       DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM" \
+        #       PROVISIONING_PROFILE_SPECIFIER="$XC_DIST_PROVISIONING_PROFILE_SPECIFIER"
         
     - uses: actions/upload-artifact@v2
       with:
-        name: Artifacts
-        path: ./artifacts
+        name: Package
+        path: game-*-Darwin.dmg

@@ -93,7 +93,7 @@ jobs:
           PROVISIONING_PROFILE_SPECIFIER="$XC_DEV_PROVISIONING_PROFILE_SPECIFIER" \
           CODE_SIGN_IDENTITY="Apple Development: James Folk (FWZPKCY3PH)"
 
-    - name: Export for App Store
+    - name: Export for Ad-Hoc
       run: |
         /usr/bin/xcodebuild -exportArchive \
           -archivePath "$XC_ARCHIVE_PATH" \
