@@ -79,7 +79,7 @@ jobs:
         export XCODE_PRODUCT_BUNDLE_IDENTIFIER="$XC_PRODUCT_BUNDLE_IDENTIFIER"
         export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
         cmake --version
-        cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DIOS:BOOL=TRUE -DVR=FALSE
+        cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DTVOS:BOOL=TRUE
         cmake --build . --config Release --target game-static
 
     - name: Archive
