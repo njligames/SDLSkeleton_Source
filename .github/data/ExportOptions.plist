@@ -5,7 +5,7 @@
  <key>destination</key>
  <string>export</string>
  <key>method</key>
- <string>app-store</string>
+ <string>ad-hoc</string>
  <key>provisioningProfiles</key>
  <dict>
 
@@ -13,7 +13,7 @@
   <string>SDLSkeleton ios dist adhoc</string>
 
   <key>com.njligames.sdlskeleton.iosvr.app</key>
-  <string>SDLSkeleton ios vr dist adhoc</string>
+  <string>SDLSkeleton ios_vr dist adhoc</string>
 
   <key>com.njligames.sdlskeleton.macos.app</key>
   <string>SDLSkeleton macos dist</string>
