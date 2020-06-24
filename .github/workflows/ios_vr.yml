@@ -19,8 +19,8 @@ jobs:
     env:
       XC_DEVELOPMENT_TEAM: ${{ secrets.XCODE_DEVELOPMENT_TEAM }} 
       XC_PRODUCT_BUNDLE_IDENTIFIER: ${{ 'com.njligames.sdlskeleton.iosvr.app' }}
-      XC_DEV_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton iOS VR App Dev' }}
-      XC_DIST_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton iOS VR App Dist' }}
+      XC_DEV_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton ios_vr dev' }}
+      XC_DIST_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton ios_vr dist adhoc' }}
       XC_VERSION: ${{ '11.5'  }}
       XC_SCHEME: ${{ 'SDLSkeleton' }}
       XC_CONFIGURATION: ${{ 'Release' }}
