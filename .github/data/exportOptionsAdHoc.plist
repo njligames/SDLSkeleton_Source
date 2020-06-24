@@ -4,6 +4,23 @@
 <dict>
 	<key>method</key>
 	<string>ad-hoc</string>
+
+ <key>provisioningProfiles</key>
+ <dict>
+
+  <key>com.njligames.sdlskeleton.ios.app</key>
+  <string>SDLSkeleton ios dist adhoc</string>
+
+  <key>com.njligames.sdlskeleton.iosvr.app</key>
+  <string>SDLSkeleton ios vr dist adhoc</string>
+
+  <key>com.njligames.sdlskeleton.macos.app</key>
+  <string>SDLSkeleton macos dist</string>
+
+  <key>com.njligames.sdlskeleton.appletvos.app</key>
+  <string>SDLSkeleton appletvos dist adhoc</string>
+      
+ </dict>
 </dict>
 </plist>
 
