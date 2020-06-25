@@ -61,5 +61,5 @@ jobs:
     - uses: actions/upload-artifact@v2
       with:
         name: my-artifact
-        path: SDLSkeleton-*-Emscripten.zip
+        path: game-*-Emscripten.zip
 
