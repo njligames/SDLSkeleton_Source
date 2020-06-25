@@ -35,17 +35,30 @@ jobs:
     - name: install swig
       run: brew install swig
     
-    - name: install emscripten
-      run: brew install emscripten
-      
-    - name: build emscripten
+    - name: install ninja
+      run: brew install ninja
+    
+    - name: Install emscripten and build.
       run: |
-        emcmake cmake .. \
+        set -x
+
+        git clone https://github.com/emscripten-core/emsdk.git
+        cd emsdk
+        # git pull
+        ./emsdk install latest
+        ./emsdk activate latest
+        source ./emsdk_env.sh
+        cd ../
+        
+        emcmake cmake . \
         -DCMAKE_INSTALL_PREFIX=install \
         -G "Ninja"
         cmake --build . --config Release --target package
+      
+   
+        
         
     - uses: actions/upload-artifact@v2
       with:
         name: my-artifact
-        path: game*
+        path: *-Emscripten.zip
