@@ -26,14 +26,14 @@ list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/NJLICEngine)
 add_library(main SHARED ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES})
 target_compile_definitions(main PUBLIC ${TARGET_DEFINITIONS})
 target_link_libraries( main ${TARGET_LIBRARIES})
-# set_target_properties(main PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${TARGET_INCLUDE_DIRS}")
+set_target_properties(main PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${TARGET_INCLUDE_DIRS}")
 include_directories(${TARGET_INCLUDE_DIRS})
 
 
 add_library(native-lib SHARED ${TARGET_PROJECT_SOURCES} "${CMAKE_CURRENT_SOURCE_DIR}/native-lib.cpp")
 target_compile_definitions(native-lib PUBLIC ${TARGET_DEFINITIONS})
 target_link_libraries( native-lib ${TARGET_LIBRARIES})
-# set_target_properties(native-lib PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${TARGET_INCLUDE_DIRS}")
+set_target_properties(native-lib PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${TARGET_INCLUDE_DIRS}")
 include_directories(${TARGET_INCLUDE_DIRS})
 
 
