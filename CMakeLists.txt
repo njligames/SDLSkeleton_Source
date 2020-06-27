@@ -132,7 +132,9 @@ set(GAME_PUBLIC_DIRS ${CMAKE_BINARY_DIR}/game-src/src/public_include ${CMAKE_BIN
 list(APPEND TARGET_INCLUDE_DIRS ${GAME_PUBLIC_DIRS})
 list(APPEND TARGET_LIBRARIES game-static)
 # add_subdirectory(${CMAKE_BINARY_DIR}/game-src ${CMAKE_BINARY_DIR}/game-build)
-add_subdirectory(${CMAKE_BINARY_DIR}/game-src)
+IF(EXISTS ${CMAKE_BINARY_DIR}/game-src)
+    add_subdirectory(${CMAKE_BINARY_DIR}/game-src)
+endif()
 
 add_subdirectory(src)
 
