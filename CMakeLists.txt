@@ -127,14 +127,17 @@ set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/assets")
 configure_file(game.cmake.in game-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/game-download )
 execute_process(COMMAND ${CMAKE_COMMAND} --build . WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/game-download )
-set(GAME_PUBLIC_DIRS ${CMAKE_BINARY_DIR}/game-src/src/public_include ${CMAKE_BINARY_DIR}/game-src/src/platform/${TARGET_PLATFORM}/public_include)
-# message(FATAL_ERROR "GAME_PUBLIC_DIRS ${GAME_PUBLIC_DIRS}")
-list(APPEND TARGET_INCLUDE_DIRS ${GAME_PUBLIC_DIRS})
-list(APPEND TARGET_LIBRARIES game-static)
-add_subdirectory(${CMAKE_BINARY_DIR}/game-src ${CMAKE_BINARY_DIR}/game-build)
-# IF(EXISTS ${CMAKE_BINARY_DIR}/game-src)
-#     add_subdirectory(${CMAKE_BINARY_DIR}/game-src)
-# endif()
+
+IF(EXISTS ${CMAKE_BINARY_DIR}/game-src AND EXISTS ${CMAKE_BINARY_DIR}/game-build)
+
+    set(GAME_PUBLIC_DIRS ${CMAKE_BINARY_DIR}/game-src/src/public_include ${CMAKE_BINARY_DIR}/game-src/src/platform/${TARGET_PLATFORM}/public_include)
+
+    list(APPEND TARGET_INCLUDE_DIRS ${GAME_PUBLIC_DIRS})
+    list(APPEND TARGET_LIBRARIES game-static)
+
+    add_subdirectory(${CMAKE_BINARY_DIR}/game-src ${CMAKE_BINARY_DIR}/game-build)
+
+endif()
 
 add_subdirectory(src)
 
