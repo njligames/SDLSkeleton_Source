@@ -19,6 +19,7 @@ jobs:
     env:
       XC_DEVELOPMENT_TEAM: ${{ secrets.XCODE_DEVELOPMENT_TEAM }} 
       XC_PRODUCT_BUNDLE_IDENTIFIER: ${{ 'com.njligames.sdlskeleton.appletvos.app' }}
+      XC_CODE_SIGN_STYLE: ${{ 'Manual' }}
       XC_DEV_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton appletvos dev' }}
       XC_DIST_PROVISIONING_PROFILE_SPECIFIER: ${{ 'SDLSkeleton appletvos dist adhoc' }}
       XC_VERSION: ${{ '11.5'  }}
@@ -77,7 +78,8 @@ jobs:
       run: |
         export XCODE_DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM"
         export XCODE_PRODUCT_BUNDLE_IDENTIFIER="$XC_PRODUCT_BUNDLE_IDENTIFIER"
-        export EFFECTIVE_PLATFORM_NAME='-iphonesimulator'
+        export CODE_SIGN_STYLE="$XC_CODE_SIGN_STYLE"
+        export EFFECTIVE_PLATFORM_NAME='-appletvsimulator'
         cmake --version
         cmake . -DSWIG_LUA:BOOL=TRUE -DCMAKE_INSTALL_PREFIX=install -G "Xcode" -DTVOS:BOOL=TRUE
         cmake --build . --config Release --target game-static

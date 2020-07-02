@@ -99,8 +99,8 @@ if(TARGET_PROJECT_SOURCES)
         XCODE_ATTRIBUTE_PRODUCT_NAME ${TARGET_EXECUTABLE_NAME}
         )
 
-    # target_compile_definitions( ${PROJECT_NAME}-static PUBLIC ${TARGET_DEFINITIONS})
-    # target_link_libraries( ${PROJECT_NAME}-static ${TARGET_LIBRARIES})
+    target_compile_definitions( ${PROJECT_NAME}-static PUBLIC ${TARGET_DEFINITIONS})
+    target_link_libraries( ${PROJECT_NAME}-static ${TARGET_LIBRARIES})
 
 
     # add_library( ${PROJECT_NAME}Framework ${TARGET_PROJECT_SOURCES} ${TARGET_INCLUDE_DIRS} )
