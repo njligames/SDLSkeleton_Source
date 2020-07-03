@@ -5,11 +5,13 @@ PLATFORM=$1
 # CONFIGURATION=Debug
 CONFIGURATION=Release
 INSTALL_PREFIX=install
+BUILD_DOC=OFF
+BUILD_TEST=OFF
 
 if [ "${PLATFORM}" != "android" ]
 then
   BUILD_DIR=.build_$PLATFORM
-  rm -rf $BUILD_DIR
+  rm -rf CMakeCache.txt
 
   mkdir -p $BUILD_DIR
   cd $BUILD_DIR
@@ -24,6 +26,8 @@ then
     emcmake cmake ../.. \
         -DCMAKE_BUILD_TYPE=${CONFIGURATION} \
         -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+        -DBUILD_DOC=${BUILD_DOC} \
+        -DBUILD_TEST=${BUILD_TEST} \
         -G "Ninja"
 
 elif [ "${PLATFORM}" == "facebook" ]
@@ -33,6 +37,8 @@ then
   -DFACEBOOK-APP-ID="344740292600474" \
   -DFACEBOOK-API-VERSION="v2.12" \
   -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+  -DBUILD_DOC=${BUILD_DOC} \
+  -DBUILD_TEST=${BUILD_TEST} \
   -DFACEBOOK:BOOL=TRUE \
   -G "Ninja"
 
@@ -41,6 +47,8 @@ then
 
   cmake ../.. \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+    -DBUILD_DOC=${BUILD_DOC} \
+    -DBUILD_TEST=${BUILD_TEST} \
     -G "Visual Studio 16 2019"
 
 elif [ "${PLATFORM}" == "macOS" ]
@@ -48,6 +56,8 @@ then
 
   cmake ../.. \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+    -DBUILD_DOC=${BUILD_DOC} \
+    -DBUILD_TEST=${BUILD_TEST} \
     -G "Xcode"
 
 elif [ "${PLATFORM}" == "linux" ]
@@ -57,6 +67,8 @@ then
 
   cmake ../.. \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+    -DBUILD_DOC=${BUILD_DOC} \
+    -DBUILD_TEST=${BUILD_TEST} \
     -G "Unix Makefiles"
 
 elif [ "${PLATFORM}" == "ios" ]
@@ -64,6 +76,8 @@ then
 
   cmake ../.. \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+    -DBUILD_DOC=${BUILD_DOC} \
+    -DBUILD_TEST=${BUILD_TEST} \
     -G "Xcode" \
     -DIOS:BOOL=TRUE
 
@@ -72,6 +86,8 @@ then
 
   cmake ../.. \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+    -DBUILD_DOC=${BUILD_DOC} \
+    -DBUILD_TEST=${BUILD_TEST} \
     -G "Xcode" \
     -DTVOS:BOOL=TRUE
 
@@ -90,6 +106,8 @@ then
   cmake .. \
     -DOCULUS=TRUE \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+    -DBUILD_DOC=${BUILD_DOC} \
+    -DBUILD_TEST=${BUILD_TEST} \
     -G "Visual Studio 16 2019"
 
 elif [ "${PLATFORM}" == "oculus_macOS" ]
@@ -98,6 +116,8 @@ then
   cmake .. \
     -DOCULUS=TRUE \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+    -DBUILD_DOC=${BUILD_DOC} \
+    -DBUILD_TEST=${BUILD_TEST} \
     -G "Xcode"
 
 elif [ "${PLATFORM}" == "vr_ios" ]
@@ -106,6 +126,8 @@ then
   cmake ../.. \
     -DVR=TRUE \
     -DCMAKE_INSTALL_PREFIX=${INSTALL_PREFIX} \
+    -DBUILD_DOC=${BUILD_DOC} \
+    -DBUILD_TEST=${BUILD_TEST} \
     -G "Xcode" \
     -DIOS:BOOL=TRUE
 

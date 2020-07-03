@@ -28,7 +28,7 @@ if (DOXYGEN_FOUND)
     set_property(DIRECTORY PROPERTY ADDITIONAL_MAKE_CLEAN_FILES ${TARGET_GENERATED_FILES})
     set_source_files_properties( ${TARGET_GENERATED_FILES} PROPERTIES GENERATED TRUE )
 
-    # INSTALL(DIRECTORY ${CMAKE_BINARY_DIR}/doc/html DESTINATION ${CMAKE_BINARY_DIR}/doc)
+    INSTALL(DIRECTORY ${CMAKE_BINARY_DIR}/doc/html DESTINATION ${CMAKE_BINARY_DIR}/doc)
 
 else (DOXYGEN_FOUND)
     message("Doxygen need to be installed to generate the doxygen documentation")
