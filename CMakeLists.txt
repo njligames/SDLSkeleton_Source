@@ -79,7 +79,9 @@ elseif(APPLE)
 elseif(UNIX AND NOT APPLE AND NOT ANDROID)
     set(BUILT_GTEST TRUE)
 
-    if(LINUX)
+    if(CMAKE_SYSTEM_NAME MATCHES ".*Linux")
+        cmake_policy(SET CMP0072 NEW)
+
         set(TARGET_PLATFORM "linux")
         list(APPEND TARGET_DEFINITIONS "__LINUX__=1")
         if(OCULUS)
