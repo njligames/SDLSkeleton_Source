@@ -15,7 +15,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -24,19 +24,31 @@ jobs:
       with:
         submodules: true
 
-    - name: install swig
-      run: sudo apt-get install swig
-
-    - name: install opengl
-      run: sudo apt-get install libglu1-mesa-dev freeglut3-dev mesa-common-dev
-      
-    - name: build linux
+    - name: view home
       run: |
-        cmake --version
-        cmake . -DCMAKE_INSTALL_PREFIX=install -G "Unix Makefiles"
+        ls .github
+        pwd
+
+    - name: install lua
+      run: brew install lua
+    
+    - name: install swig
+      run: brew install swig
+    
+    - name: install ninja
+      run: brew install ninja
+    
+    - name: Build.
+      run: |
+        set -x
+
+        cmake . \
+        -DCMAKE_INSTALL_PREFIX=install \
+        -G "Ninja"
         cmake --build . --config Release --target package
         
     - uses: actions/upload-artifact@v2
       with:
         name: my-artifact
-        path: game*
+        path: game-*-*.zip
+
