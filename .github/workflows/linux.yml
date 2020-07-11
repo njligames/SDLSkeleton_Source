@@ -24,8 +24,8 @@ jobs:
       with:
         submodules: true
 
-    - name: install swig, ninja and opengl
-      run: sudo apt-get install swig ninja libglu1-mesa-dev freeglut3-dev mesa-common-dev
+    - name: install swig and opengl
+      run: sudo apt-get install swig libglu1-mesa-dev freeglut3-dev mesa-common-dev
     
     - name: Build
       run: |
@@ -33,7 +33,7 @@ jobs:
 
         cmake . \
         -DCMAKE_INSTALL_PREFIX=install \
-        -G "Ninja"
+        -G "Unix Makefiles"
         cmake --build . --config Release --target package
         
     - uses: actions/upload-artifact@v2
