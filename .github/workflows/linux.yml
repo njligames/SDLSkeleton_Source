@@ -24,6 +24,9 @@ jobs:
       with:
         submodules: true
 
+    - name: search sndio
+      run: apt-cache search sndio
+
     - name: install swig and opengl
       run: sudo apt-get install swig libglu1-mesa-dev freeglut3-dev mesa-common-dev
 
