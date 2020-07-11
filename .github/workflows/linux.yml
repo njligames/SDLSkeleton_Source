@@ -15,7 +15,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: macOS-latest
+    runs-on: Ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -24,21 +24,10 @@ jobs:
       with:
         submodules: true
 
-    - name: view home
-      run: |
-        ls .github
-        pwd
-
-    - name: install lua
-      run: brew install lua
+    - name: install swig, ninja and opengl
+      run: sudo apt-get install swig ninja libglu1-mesa-dev freeglut3-dev mesa-common-dev
     
-    - name: install swig
-      run: brew install swig
-    
-    - name: install ninja
-      run: brew install ninja
-    
-    - name: Build.
+    - name: Build
       run: |
         set -x
 
