@@ -1036,15 +1036,15 @@ int main(int argc, char *argv[]) {
 
     gGlContext = SDL_GL_CreateContext(gWindow);
 
-#if defined(__WINDOWS32__)
-    glewExperimental = true;
-    GLenum e = GLEW_OK;
-    e = glewInit();
-    if (e != GLEW_OK) { // never fails
-        printf("glewInit initialization failed. GLEW error %s\n",
-               glewGetErrorString(e));
-    }
-#endif
+// #if defined(__WINDOWS32__)
+//     glewExperimental = true;
+//     GLenum e = GLEW_OK;
+//     e = glewInit();
+//     if (e != GLEW_OK) { // never fails
+//         printf("glewInit initialization failed. GLEW error %s\n",
+//                glewGetErrorString(e));
+//     }
+// #endif
 
     gGame->init(argc, argv);
 
