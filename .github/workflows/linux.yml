@@ -24,8 +24,20 @@ jobs:
       with:
         submodules: true
 
-    - name: install swig and opengl
-      run: sudo apt-get install swig libglu1-mesa-dev freeglut3-dev mesa-common-dev libsndio-dev
+    - name: install swig
+      run: sudo apt-get install swig
+
+    - name: install libglu1-mesa-dev
+      run: sudo apt-get install libglu1-mesa-dev
+
+    - name: install freeglut3-dev
+      run: sudo apt-get install freeglut3-dev
+
+    - name: install mesa-common-dev
+      run: sudo apt-get install mesa-common-dev
+
+    - name: install libsndio-dev
+      run: sudo apt-get install libsndio-dev
     
     - name: Build
       run: |
