@@ -15,7 +15,7 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: Ubuntu-latest
+    runs-on: Ubuntu-18.04.1
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -27,8 +27,8 @@ jobs:
     - name: install swig
       run: sudo apt-get install swig
 
-      # - name: install libglu1-mesa-dev
-      #   run: sudo apt-get install libglu1-mesa-dev
+    - name: install libglu1-mesa-dev
+      run: sudo apt-get install libglu1-mesa-dev
 
     - name: install freeglut3-dev
       run: sudo apt-get install freeglut3-dev
