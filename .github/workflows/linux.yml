@@ -27,8 +27,8 @@ jobs:
     - name: install swig
       run: sudo apt-get install swig
 
-    - name: install libglu1-mesa-dev
-      run: sudo apt-get install libglu1-mesa-dev
+      # - name: install libglu1-mesa-dev
+      #   run: sudo apt-get install libglu1-mesa-dev
 
     - name: install freeglut3-dev
       run: sudo apt-get install freeglut3-dev
