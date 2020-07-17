@@ -96,6 +96,7 @@ endif()
 
 set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/assets")
 
+
 # if(BUILT_GTEST)
 # # Download and unpack googletest at configure time
 #     configure_file(googletest.cmake.in
