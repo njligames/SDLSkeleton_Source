@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.10.2)
 
 project(SDLSkeleton VERSION 1.0.0.0)
 
-set(BUILD_DOC OFF CACHE BOOL "Build the documentation")
-set(BUILD_TEST OFF CACHE BOOL "Build the tests")
+set(BUILD_DOC ON CACHE BOOL "Build the documentation")
+set(BUILD_TEST ON CACHE BOOL "Build the tests")
 
 include(CheckCXXCompilerFlag)
 
