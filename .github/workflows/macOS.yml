@@ -105,3 +105,14 @@ jobs:
       with:
         name: Package
         path: game-*-Darwin.dmg
+
+    - name: Run GTest
+      run: |
+        export GTEST_OUTPUT="xml"
+        open src/platform/macos/test/cpp/Debug/SDLSkeleton-test-static.app/Contents/MacOS/SDLSkeleton-test-static
+        
+    - uses: actions/upload-artifact@v2
+      with:
+        name: google test result
+        path: test_detail.xml
+
