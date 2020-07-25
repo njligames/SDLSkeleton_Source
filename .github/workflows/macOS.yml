@@ -72,6 +72,9 @@ jobs:
     
     - name: install swig
       run: brew install swig
+    
+    - name: install graphviz
+      run: brew install graphviz
 
     - name: Run CMake and Build the Package
       run: |
