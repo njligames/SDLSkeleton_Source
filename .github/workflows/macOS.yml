@@ -73,6 +73,9 @@ jobs:
     - name: install swig
       run: brew install swig
     
+    - name: install doxygen
+      run: brew install doxygen
+    
     - name: install graphviz
       run: brew install graphviz
 
