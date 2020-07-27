@@ -114,8 +114,18 @@ jobs:
 
     - name: Run GTest
       run: |
-        export GTEST_OUTPUT="xml"
-        open src/platform/macos/test/cpp/Debug/SDLSkeleton-test-static.app/Contents/MacOS/SDLSkeleton-test-static
+        ./src/platform/macos/test/cpp/Debug/game-test-static --gtest_output="xml" || true
+        test=$(echo 'cat //failure/@message' | xmllint --shell "test_detail.xml" | grep -v ">") || true
+
+        if [ -z "$test" ]
+        then
+            echo "PASSED!"
+            exit 0
+        else
+            echo "FAILED!"
+            echo $test
+            exit 1
+        fi
         
     - uses: actions/upload-artifact@v2
       with:
