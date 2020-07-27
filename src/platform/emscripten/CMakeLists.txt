@@ -130,7 +130,7 @@ if(TARGET_PROJECT_SOURCES)
 
 endif()
 
-if(BUILD_TEST)
-    enable_testing()
-    add_subdirectory(test)
-endif()
+# if(BUILD_TEST)
+#     enable_testing()
+#     add_subdirectory(test)
+# endif()
