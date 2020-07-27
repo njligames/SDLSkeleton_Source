@@ -80,7 +80,6 @@ jobs:
     - name: install graphviz
       run: brew install graphviz
 
-
     - name: Run CMake and Build the Package
       run: |
         export XCODE_DEVELOPMENT_TEAM="$XC_DEVELOPMENT_TEAM"
