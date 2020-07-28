@@ -45,6 +45,7 @@ jobs:
     
     - name: install ninja
       run: brew install ninja
+
     
     - name: Install emscripten and build.
       run: |
