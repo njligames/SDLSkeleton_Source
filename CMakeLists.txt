@@ -94,7 +94,7 @@ elseif(ANDROID)
     list(APPEND TARGET_DEFINITIONS "__ANDROID__=1")
 endif()
 
-set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/assets")
+set(TARGET_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/assets_engine")
 
 
 # if(BUILT_GTEST)
@@ -137,6 +137,8 @@ IF(EXISTS ${CMAKE_BINARY_DIR}/game-src AND EXISTS ${CMAKE_BINARY_DIR}/game-build
     list(APPEND TARGET_LIBRARIES game-static)
 
     add_subdirectory(${CMAKE_BINARY_DIR}/game-src ${CMAKE_BINARY_DIR}/game-build)
+
+    list(APPEND TARGET_RESOURCES "${CMAKE_BINARY_DIR}/game-src/src/assets")
 
 endif()
 

@@ -13,7 +13,8 @@
 
 /* Simple program:  draw as many random objects on the screen as possible */
 
-#include "NJLICColorTest.h"
+#include "NJLICSpauldingMedical.h"
+std::shared_ptr<NJLICGame> gGame(new NJLICSpauldingMedical);
 
 #include "SDL.h"
 #ifdef __EMSCRIPTEN__
@@ -27,7 +28,6 @@ static SDL_Renderer *gRenderer = nullptr;
 static SDL_DisplayMode gDisplayMode;
 static SDL_GLContext gGlContext;
 static std::mutex gMutex;
-std::shared_ptr<NJLICGame> gGame(new NJLICColorTest);
 clock_t gCurrentClock = clock();
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
@@ -603,6 +603,7 @@ static void handleInput(void *userdata) {
         case SDL_DROPFILE: {
             char *dropped_filedir = event.drop.file;
             //              NJLI_HandleDropFile(dropped_filedir);
+            gGame->fileDrop(dropped_filedir);
             SDL_free(dropped_filedir);
         } break;
 #if !defined(__LINUX__)
