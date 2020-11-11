@@ -12,8 +12,6 @@
 
 #include "GraphicsPlatform.h"
 
-
-
 static void UpdateFrame(void *param) {
     //  njli::NJLIGameEngine::update(1.0f / ((float)gDisplayMode.refresh_rate));
 
@@ -24,59 +22,31 @@ static void UpdateFrame(void *param) {
     //  graphics->update();
 }
 
-
-
 TestClass *TestClass::sInstance = nullptr;
-
 
 TestClass::TestClass() : mWindow(nullptr), mRenderer(nullptr), mIsDone(true) {}
 
-
-TestClass::~TestClass() {
-    
-
-    unInit();
-}
+TestClass::~TestClass() { unInit(); }
 
 void TestClass::createInstance(NJLICGame *game) {
     if (nullptr == sInstance) {
         sInstance = new TestClass();
-        
     }
 }
-
-
 
 void TestClass::destroyInstance() {
     if (nullptr != sInstance)
         delete sInstance;
-    
-    
 
     sInstance = nullptr;
-    
 }
 
 TestClass *TestClass::getInstance() { return sInstance; }
 
-
-
-void TestClass::init() {
-
-    mIsDone = false;
-    
-}
-void TestClass::unInit() {
-}
-void TestClass::update(double step) {
-    
-
-    SDL_Log("Updating %f\n", step);
-    
-}
-void TestClass::render() {
-    
-}
+void TestClass::init() { mIsDone = false; }
+void TestClass::unInit() {}
+void TestClass::update(double step) { SDL_Log("Updating %f\n", step); }
+void TestClass::render() {}
 
 void TestClass::input() {
     mMutex.lock();
@@ -85,7 +55,7 @@ void TestClass::input() {
     SDL_Event event;
     SDL_PumpEvents();
     while (SDL_PollEvent(&event)) {
-        
+
         //        SDLTest_PrintEvent(&event);
         switch (event.type) {
 
@@ -94,7 +64,6 @@ void TestClass::input() {
         case SDL_MOUSEBUTTONDOWN:
         case SDL_MOUSEBUTTONUP:
 
-                
             break;
 #endif
 
@@ -102,8 +71,6 @@ void TestClass::input() {
         case SDL_FINGERMOTION:
         case SDL_FINGERDOWN:
         case SDL_FINGERUP:
-            
-                
 
             break;
 #endif
@@ -124,7 +91,6 @@ void TestClass::input() {
 
         case SDL_APP_LOWMEMORY:
             SDL_Log("SDL_APP_LOWMEMORY");
-                
 
             break;
 
@@ -192,7 +158,6 @@ void TestClass::input() {
             bool withAlt = !!(event.key.keysym.mod & KMOD_ALT);
             bool withGui = !!(event.key.keysym.mod & KMOD_GUI);
 
-            
         } break;
         case SDL_KEYDOWN: {
             callFinishKeys = true;
@@ -205,13 +170,9 @@ void TestClass::input() {
             bool withAlt = !!(event.key.keysym.mod & KMOD_ALT);
             bool withGui = !!(event.key.keysym.mod & KMOD_GUI);
 
-            
-
             break;
         }
         case SDL_QUIT:
-
-                
 
             break;
 
@@ -220,18 +181,17 @@ void TestClass::input() {
                     "(reversed: %d) in window %d",
                     event.wheel.x, event.wheel.y, event.wheel.direction,
                     event.wheel.windowID);
-                
 
             break;
         case SDL_DROPFILE: {
             char *dropped_filedir = event.drop.file;
-            
+
             SDL_free(dropped_filedir);
         } break;
 #if !defined(__LINUX__)
         case SDL_DROPTEXT: {
             char *dropped_filedir = event.drop.file;
-            
+
             SDL_free(dropped_filedir);
         } break;
         case SDL_DROPBEGIN: {
@@ -247,8 +207,6 @@ void TestClass::input() {
         }
     }
 
-    
-
 #if !(defined(__MACOSX__) && __MACOSX__)
 #endif
 
@@ -258,6 +216,3 @@ void TestClass::input() {
 void TestClass::resize(int w, int h) {}
 
 bool TestClass::isDone() const { return mIsDone; }
-
-
-

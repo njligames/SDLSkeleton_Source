@@ -52,8 +52,6 @@ class TestClass { //} : public Subscriber {
 
     bool isDone() const;
 
-    
-
     //    virtual void update(Publisher *who, void *userdata = 0) override;
 
   protected:

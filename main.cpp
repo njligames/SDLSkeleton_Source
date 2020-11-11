@@ -32,10 +32,10 @@ clock_t gCurrentClock = clock();
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
 
-//typedef int (SDLCALL * SDL_EventFilter) (void *userdata, SDL_Event * event);
+// typedef int (SDLCALL * SDL_EventFilter) (void *userdata, SDL_Event * event);
 static int EventFilter(void *userdata, SDL_Event *event) {
-//static int EventFilter(std::shared_ptr<NJLICGame> game, SDL_Event *event) {
-    //#if ((defined(__IPHONEOS__) && __IPHONEOS__) || (defined(__ANDROID__) &&
+    // static int EventFilter(std::shared_ptr<NJLICGame> game, SDL_Event *event)
+    // { #if ((defined(__IPHONEOS__) && __IPHONEOS__) || (defined(__ANDROID__) &&
     //__ANDROID__))
     //    NJLI_HandleStartTouches();
     //#endif
@@ -43,8 +43,8 @@ static int EventFilter(void *userdata, SDL_Event *event) {
     //    njli::NJLIGameEngine::handleEvent(&event);
     //    SDLTest_PrintEvent(event);
 
-    NJLICGame *game = static_cast<NJLICGame*>(userdata);
-    
+    NJLICGame *game = static_cast<NJLICGame *>(userdata);
+
     Uint32 eventType = event->type;
 
     switch (eventType) {
@@ -131,17 +131,17 @@ static int EventFilter(void *userdata, SDL_Event *event) {
 }
 #endif
 
-//static void RenderFrame(std::shared_ptr<NJLICGame> game) {
+// static void RenderFrame(std::shared_ptr<NJLICGame> game) {
 static void RenderFrame(void *userdata) {
 
-    NJLICGame *game = static_cast<NJLICGame*>(userdata);
-    
+    NJLICGame *game = static_cast<NJLICGame *>(userdata);
+
     SDL_GL_SwapWindow(gWindow);
     game->render();
 }
 
 static void handleInput(void *userdata) {
-    NJLICGame *game = static_cast<NJLICGame*>(userdata);
+    NJLICGame *game = static_cast<NJLICGame *>(userdata);
     bool callFinishKeys = false;
     SDL_Event event;
     SDL_PumpEvents();
@@ -171,19 +171,18 @@ static void handleInput(void *userdata) {
         case SDL_FINGERMOTION:
         case SDL_FINGERDOWN:
         case SDL_FINGERUP:
-                        game->touch((int)event.tfinger.touchId,
-                                         (int)event.tfinger.fingerId,
-                                         event.type, event.tfinger.x,
-                                         event.tfinger.y, event.tfinger.dx,
-                                         event.tfinger.dy,
-                                         event.tfinger.pressure);
+            game->touch((int)event.tfinger.touchId, (int)event.tfinger.fingerId,
+                        event.type, event.tfinger.x, event.tfinger.y,
+                        event.tfinger.dx, event.tfinger.dy,
+                        event.tfinger.pressure);
             break;
 #endif
         case SDL_APP_DIDENTERFOREGROUND:
             SDL_Log("SDL_APP_DIDENTERFOREGROUND");
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
-                SDL_iPhoneSetAnimationCallback(gWindow, 1, RenderFrame, (void*)game);
+            SDL_iPhoneSetAnimationCallback(gWindow, 1, RenderFrame,
+                                           (void *)game);
 #endif
             //            NJLI_HandleResume();
             break;
@@ -603,7 +602,9 @@ static void handleInput(void *userdata) {
         case SDL_DROPFILE: {
             char *dropped_filedir = event.drop.file;
             //              NJLI_HandleDropFile(dropped_filedir);
+            gMutex.lock();
             gGame->fileDrop(dropped_filedir);
+            gMutex.unlock();
             SDL_free(dropped_filedir);
         } break;
 #if !defined(__LINUX__)
@@ -661,9 +662,9 @@ static void updateLoop(std::shared_ptr<NJLICGame> game) {
 EMSCRIPTEN_KEEPALIVE
 #endif
 static void mainloop(void *userdata) {
-    NJLICGame *game = static_cast<NJLICGame*>(userdata);
+    NJLICGame *game = static_cast<NJLICGame *>(userdata);
 #if !defined(NDEBUG) && 0
-    
+
     // Declare display mode structure to be filled in.
     SDL_DisplayMode current;
     // Get current display mode of all displays.
@@ -686,10 +687,10 @@ static void mainloop(void *userdata) {
     handleInput(game);
 
 #if defined(__EMSCRIPTEN__)
-        clock_t diffClock = clock() - gCurrentClock;
-        double cpu_time_used = ((double)diffClock) / (CLOCKS_PER_SEC / 1000);
-        game->update(cpu_time_used);
-        gCurrentClock = clock();
+    clock_t diffClock = clock() - gCurrentClock;
+    double cpu_time_used = ((double)diffClock) / (CLOCKS_PER_SEC / 1000);
+    game->update(cpu_time_used);
+    gCurrentClock = clock();
 //    TestClass::getInstance()->update(0.1);
 #endif
 
@@ -766,8 +767,6 @@ static void createRenderer() {
 #endif
 
 int main(int argc, char *argv[]) {
-
-
 
     //      std::string working_directory("");
     //      bool found_working_dir = false;
@@ -1001,9 +1000,8 @@ int main(int argc, char *argv[]) {
 #endif
 
     /* create window and renderer */
-    gWindow =
-        SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED,
-                         SDL_WINDOWPOS_CENTERED, 640, 480, flags);
+    gWindow = SDL_CreateWindow(nullptr, SDL_WINDOWPOS_CENTERED,
+                               SDL_WINDOWPOS_CENTERED, 640, 480, flags);
 
 #if defined(__MACOSX__)
     createRenderer();
@@ -1037,15 +1035,15 @@ int main(int argc, char *argv[]) {
 
     gGlContext = SDL_GL_CreateContext(gWindow);
 
-// #if defined(__WINDOWS32__)
-//     glewExperimental = true;
-//     GLenum e = GLEW_OK;
-//     e = glewInit();
-//     if (e != GLEW_OK) { // never fails
-//         printf("glewInit initialization failed. GLEW error %s\n",
-//                glewGetErrorString(e));
-//     }
-// #endif
+    // #if defined(__WINDOWS32__)
+    //     glewExperimental = true;
+    //     GLenum e = GLEW_OK;
+    //     e = glewInit();
+    //     if (e != GLEW_OK) { // never fails
+    //         printf("glewInit initialization failed. GLEW error %s\n",
+    //                glewGetErrorString(e));
+    //     }
+    // #endif
 
     gGame->init(argc, argv);
 
@@ -1061,7 +1059,7 @@ int main(int argc, char *argv[]) {
     //    gGraphics = std::unique_ptr<Graphics>(new Graphics(gWindow));
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
-        SDL_AddEventWatch(EventFilter,(void*) gGame.get());
+    SDL_AddEventWatch(EventFilter, (void *)gGame.get());
 #endif
 
     //    int drawableW, drawableH;
@@ -1133,7 +1131,7 @@ int main(int argc, char *argv[]) {
     gGame->start();
 
 #if defined(__EMSCRIPTEN__)
-        emscripten_set_main_loop_arg(mainloop, (void*) gGame.get(), 0, 0);
+    emscripten_set_main_loop_arg(mainloop, (void *)gGame.get(), 0, 0);
 #else
 
     auto future = std::async(std::launch::async, updateLoop, gGame);
@@ -1141,9 +1139,9 @@ int main(int argc, char *argv[]) {
     while (!gGame->isDone()) {
 
 #if defined(__IPHONEOS__) && __IPHONEOS__
-        handleInput((void*)gGame.get());
+        handleInput((void *)gGame.get());
 #else
-        mainloop((void*)gGame.get());
+        mainloop((void *)gGame.get());
 
 //              handleInput();
 //              RenderFrame(gGraphics.get());

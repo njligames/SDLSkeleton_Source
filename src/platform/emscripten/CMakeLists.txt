@@ -18,9 +18,6 @@ set_target_properties(SDL2 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES ${THIRDPARTY
 
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/SDL2)
 
-
-
-
 add_library(curl UNKNOWN IMPORTED)
 set_property(TARGET curl APPEND PROPERTY IMPORTED_LOCATION  "${THIRDPARTY_DIR}/platform/${TARGET_PLATFORM}/libcurl.a")
 list(APPEND TARGET_LIBRARIES curl)
@@ -32,10 +29,7 @@ list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/nlohmann)
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/stb)
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/glm)
 list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/NJLICEngine)
-
-
-
-
+list(APPEND TARGET_INCLUDE_DIRS ${THIRDPARTY_DIR}/includes/debugdraw)
 
 set(CMAKE_CXX_FLAGS_DEBUG "--js-opts 0 -g4 --source-map-base http://localhost:8080/ --emrun -s DEMANGLE_SUPPORT=1")
 set(CMAKE_CXX_FLAGS_MINSIZEREL "-Os -DNDEBUG --llvm-opts 3 --js-opts 1 --closure 1 -s IGNORE_CLOSURE_COMPILER_ERRORS=1")
@@ -85,7 +79,9 @@ set( GAME_RESOURCES "${TARGET_RESOURCES}" )
 list(APPEND TARGET_RESOURCES ${GAME_RESOURCES})
 
 list(APPEND EXTRA_LDFLAGS "--memory-init-file 1")
-list(APPEND EXTRA_LDFLAGS "--embed-file ${GAME_RESOURCES}@/")
+foreach(resource_dir ${GAME_RESOURCES})
+    list(APPEND EXTRA_LDFLAGS "--embed-file ${resource_dir}@/")
+endforeach()
 
 add_executable( ${CMAKE_PROJECT_NAME} ${TARGET_PROJECT_SOURCES} ${TARGET_MAIN_SOURCES} ${TARGET_RESOURCES} ${TARGET_INCLUDE_DIRS})
 target_compile_definitions( ${CMAKE_PROJECT_NAME} PUBLIC ${TARGET_DEFINITIONS})
