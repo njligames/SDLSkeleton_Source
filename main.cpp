@@ -28,6 +28,8 @@ static SDL_Renderer *gRenderer = nullptr;
 static SDL_DisplayMode gDisplayMode;
 static SDL_GLContext gGlContext;
 static std::mutex gMutex;
+static std::thread *gThread;
+
 clock_t gCurrentClock = clock();
 
 #if (defined(__IPHONEOS__) && __IPHONEOS__)
@@ -1134,7 +1136,8 @@ int main(int argc, char *argv[]) {
     emscripten_set_main_loop_arg(mainloop, (void *)gGame.get(), 0, 0);
 #else
 
-    auto future = std::async(std::launch::async, updateLoop, gGame);
+//    auto future = std::async(std::launch::async, updateLoop, gGame);
+        gThread = new std::thread(updateLoop, gGame);
 
     while (!gGame->isDone()) {
 
@@ -1147,6 +1150,8 @@ int main(int argc, char *argv[]) {
 //              RenderFrame(gGraphics.get());
 #endif
     }
+        gThread->join();
+        delete gThread;
 
     gGame->unInit();
     // while (!gGameJoysticks.empty())
