@@ -13,8 +13,11 @@
 
 /* Simple program:  draw as many random objects on the screen as possible */
 
-#include "NJLICSpauldingMedical.h"
-std::shared_ptr<NJLICGame> gGame(new NJLICSpauldingMedical);
+//#include "NJLICSpauldingMedical.h"
+//std::shared_ptr<NJLICGame> gGame(new NJLICSpauldingMedical);
+
+#include "NJLICColorTest.h"
+std::shared_ptr<NJLICGame> gGame(new NJLICColorTest);
 
 #include "SDL.h"
 #ifdef __EMSCRIPTEN__

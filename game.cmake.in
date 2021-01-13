@@ -9,7 +9,7 @@ endif()
 include(ExternalProject)
 ExternalProject_Add(game
   GIT_REPOSITORY    https://github.com/njligames/testappcode.git
-  GIT_TAG           spaulding_medical
+  GIT_TAG           master
   SOURCE_DIR        "${CMAKE_BINARY_DIR}/game-src"
   BINARY_DIR        "${CMAKE_BINARY_DIR}/game-build"
   CONFIGURE_COMMAND ""
